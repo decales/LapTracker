@@ -13,6 +13,9 @@
         android:theme="@style/Theme.LapTrackingApp"
         tools:targetApi="31">
         <activity
+            android:name=".NewTrack"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
