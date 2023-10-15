@@ -1,0 +1,71 @@
+? = Button
+Activity = New screen
+-> = Go to new screen
+
+numSegments = 0
+
+main menu Activity
+	new track?
+	load track?
+end
+
+new track Activity
+	"Go to desired start location and click set start location"
+	Set Start Location? -> SetStartLocation	
+end
+
+SetStartLocation Activity
+	"Hold on a sec getting location"
+	startLocation = SetLocation()
+	-> SettingSegment
+end
+
+SetLocation()
+	Poll GPS location __ times/seconds for 10 seconds
+	take average of polled gps locations
+	return average
+end
+
+SetSegments Activity
+	Set a segment?{yes or no}
+	if yes
+		->SettingSegment
+	-> StartRace
+end
+
+SettingSegment Activity
+	"Walk to segment and press set segment location and hang tight"
+	Set Segment Location? -> segmentLocations[numSegments] = SetLocation()
+	numSegments++
+	->SetSegments
+end
+
+StartRace Activity
+	"Go to start location, set laps"
+	"When ready press Start Race"
+	totalLaps = numberOfLaps?{Fill in blank}
+	StartRace? -> Race
+end
+
+Race Activity
+	i = 0;
+	currentLap = 0;
+	forever
+		In background: poll gps location ___ times/second
+		if location == startLocation
+			record time for lap
+			if currentLap == totalLaps
+				->EndRace
+			else
+				currentLap++
+		if location == segmentLocations[i]
+			record time for segment
+			if i == (numSegments - 1)
+				i = 0;
+			else
+				i++
+end
+
+EndRace Activity
+	...
+end	
