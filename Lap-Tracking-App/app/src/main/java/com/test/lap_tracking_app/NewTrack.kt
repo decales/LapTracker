@@ -9,6 +9,7 @@ class NewTrack : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_new_track)
+        //Receive data from other activity
         var multiScreenVariable = intent.getIntExtra("multiScreenVariable", 0)
         value = findViewById(R.id.multiScreenVar)
         value.text = "$multiScreenVariable"
