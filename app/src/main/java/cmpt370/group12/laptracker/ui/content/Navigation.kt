@@ -18,6 +18,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import cmpt370.group12.laptracker.MainActivity
 
 
 data class NavBarContent(
@@ -27,13 +28,14 @@ data class NavBarContent(
 
 
 @Composable
-fun NavigationView(navController: NavHostController) {
+fun NavigationView(activity: MainActivity, navController: NavHostController) {
     NavHost(navController = navController, startDestination = "Start") {
+
         composable("Configure") {
             ConfigureView()
         }
         composable("Start") {
-            StartView()
+            StartView(activity)
         }
         composable("History") {
             HistoryView()

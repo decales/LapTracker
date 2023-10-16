@@ -16,8 +16,8 @@ import cmpt370.group12.laptracker.ui.content.NavBarContent
 import cmpt370.group12.laptracker.ui.content.NavigationView
 import cmpt370.group12.laptracker.ui.theme.LapTrackerTheme
 
-
 class MainActivity : ComponentActivity() {
+
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,7 +41,7 @@ class MainActivity : ComponentActivity() {
                             ))
                         }
                     ) {
-                        NavigationView(navController = navController)
+                        NavigationView(this, navController = navController)
                     }
                 }
             }

@@ -15,6 +15,11 @@ import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.Priority
+import com.google.android.gms.tasks.CancellationTokenSource
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.awaitCancellation
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -39,7 +44,7 @@ class LocationClient (
     }
 
 
-    private fun getLocationPermission() {
+    fun getLocationPermission() {
         if (!servicesEnabled()) {
             throw Exception("GPS is not available!")
         }
@@ -49,35 +54,14 @@ class LocationClient (
     }
 
 
-    @SuppressLint("MissingPermission")
-    fun requestCurrentLocation() {
-        if (hasLocationPermissions()) {
-            val request = LocationRequest.create().setPriority(Priority.PRIORITY_HIGH_ACCURACY)
-            val callback = object : LocationCallback() {
-                override fun onLocationResult(result: LocationResult) {
-                    result.lastLocation.let { location ->
-                        if (location != null) {
-                            Log.d(null, result.lastLocation.toString())
-                        }
-                    }
-                }
-            }
-            client.requestLocationUpdates(request, callback, Looper.getMainLooper())
-        }
-        else {
-            getLocationPermission()
-        }
-    }
-
 
     @SuppressLint("MissingPermission")
-    fun getLocationFlow(intervalInSeconds: Long) : Flow<Location?>? {
+    fun getLocationFlow(intervalInSeconds: Double) : Flow<Location?>? {
         if (hasLocationPermissions()) {
             return callbackFlow {
-                val request = LocationRequest.create().setPriority(Priority.PRIORITY_HIGH_ACCURACY).setInterval(intervalInSeconds * 1000)
+                val request = LocationRequest.create().setPriority(Priority.PRIORITY_HIGH_ACCURACY).setInterval((intervalInSeconds * 1000).toLong())
                 val callback = object : LocationCallback() {
                     override fun onLocationResult(result: LocationResult) {
-                        //Log.d(null, result.lastLocation.toString())
                         result.lastLocation.let { location ->
                             launch {
                                 send(location)
@@ -95,6 +79,18 @@ class LocationClient (
             getLocationPermission()
             // TODO enable GPS screen
             return null
+        }
+    }
+
+
+    fun checkProximity(locationFlow: Flow<Location>, targetLocation: Location, scope: CoroutineScope) {
+        scope.launch {
+            locationFlow.collect { location ->
+                if (location == targetLocation) { // TODO replace with proximity calc
+                    // TODO location is in proximity, do something
+                    cancel() // Stop flow in coroutine
+                }
+            }
         }
     }
 }
