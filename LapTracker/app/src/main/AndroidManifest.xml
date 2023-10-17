@@ -21,72 +21,72 @@
         <activity
             android:name=".Feature14"
             android:exported="false"
-            android:label="@string/title_activity_feature14"
+            android:label="Feature14"
             android:theme="@style/Theme.LapTracker" />
         <activity
             android:name=".Feature13"
             android:exported="false"
-            android:label="@string/title_activity_feature13"
+            android:label="Feature13"
             android:theme="@style/Theme.LapTracker" />
         <activity
             android:name=".Feature12"
             android:exported="false"
-            android:label="@string/title_activity_feature12"
+            android:label="Feature12"
             android:theme="@style/Theme.LapTracker" />
         <activity
             android:name=".Feature11"
             android:exported="false"
-            android:label="@string/title_activity_feature11"
+            android:label="Feature11"
             android:theme="@style/Theme.LapTracker" />
         <activity
             android:name=".Feature10"
             android:exported="false"
-            android:label="@string/title_activity_feature10"
+            android:label="Feature10"
             android:theme="@style/Theme.LapTracker" />
         <activity
             android:name=".Feature9"
             android:exported="false"
-            android:label="@string/title_activity_feature9"
+            android:label="Feature9"
             android:theme="@style/Theme.LapTracker" />
         <activity
             android:name=".Feature8"
             android:exported="false"
-            android:label="@string/title_activity_feature8"
+            android:label="Feature8"
             android:theme="@style/Theme.LapTracker" />
         <activity
             android:name=".Feature7"
             android:exported="false"
-            android:label="@string/title_activity_feature7"
+            android:label="Feature7"
             android:theme="@style/Theme.LapTracker" />
         <activity
             android:name=".Feature6"
             android:exported="false"
-            android:label="@string/title_activity_feature6"
+            android:label="Feature6"
             android:theme="@style/Theme.LapTracker" />
         <activity
             android:name=".Feature5"
             android:exported="false"
-            android:label="@string/title_activity_feature5"
+            android:label="Feature5"
             android:theme="@style/Theme.LapTracker" />
         <activity
             android:name=".Feature4"
             android:exported="false"
-            android:label="@string/title_activity_feature4"
+            android:label="Featur4"
             android:theme="@style/Theme.LapTracker" />
         <activity
             android:name=".Feature3"
             android:exported="false"
-            android:label="@string/title_activity_feature3"
+            android:label="Feature3"
             android:theme="@style/Theme.LapTracker" />
         <activity
             android:name=".Feature2"
             android:exported="false"
-            android:label="@string/title_activity_feature2"
+            android:label="Feature2"
             android:theme="@style/Theme.LapTracker" />
         <activity
             android:name=".Feature1"
             android:exported="false"
-            android:label="@string/title_activity_feature1"
+            android:label="Feature1"
             android:theme="@style/Theme.LapTracker" />
         <activity
             android:name=".MainActivity"
