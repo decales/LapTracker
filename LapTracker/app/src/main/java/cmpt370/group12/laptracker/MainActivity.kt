@@ -23,29 +23,128 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            LapTrackerTheme {
-                Surface (
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    val navController = rememberNavController()
-                    Scaffold (
-                        bottomBar = {
-                            BottomNavigation(
-                                navController = navController,
-                                onClick = { navController.navigate(it.route)},
-                                items = listOf(
-                                NavBarContent("Configure", R.drawable.configtrack),
-                                NavBarContent("Start", R.drawable.newtrack),
-                                NavBarContent("History", R.drawable.prevtrack)
-                            ))
-                        }
-                    ) {
-                        NavigationView(this, navController = navController)
+            LapTimerTheme {
+                // A surface container using the 'background' color from the theme
+                Column (
+                    modifier = Modifier.fillMaxSize()
+                ){
+                    Spacer(modifier = Modifier.padding(1.dp))
+                    Button(onClick = {
+                        val intent = Intent(this@MainActivity, Feature1::class.java)
+                        startActivity(intent)
+                    }){
+                        Text(text = "Feature1")
+                    }
+                    Spacer(modifier = Modifier.padding(1.dp))
+                    Button(onClick = {
+                        val intent = Intent(this@MainActivity, Feature2::class.java)
+                        startActivity(intent)
+                    }){
+                        Text(text = "Feature2")
+                    }
+                    Spacer(modifier = Modifier.padding(1.dp))
+                    Button(onClick = {
+                        val intent = Intent(this@MainActivity, Feature3::class.java)
+                        startActivity(intent)
+                    }){
+                        Text(text = "Feature3")
+                    }
+                    Spacer(modifier = Modifier.padding(1.dp))
+                    Button(onClick = {
+                        val intent = Intent(this@MainActivity, Feature4::class.java)
+                        startActivity(intent)
+                    }){
+                        Text(text = "Feature4")
+                    }
+                    Spacer(modifier = Modifier.padding(1.dp))
+                    Button(onClick = {
+                        val intent = Intent(this@MainActivity, Feature5::class.java)
+                        startActivity(intent)
+                    }){
+                        Text(text = "Feature5")
+                    }
+                    Spacer(modifier = Modifier.padding(1.dp))
+                    Button(onClick = {
+                        val intent = Intent(this@MainActivity, Feature6::class.java)
+                        startActivity(intent)
+                    }){
+                        Text(text = "Feature6")
+                    }
+                    Spacer(modifier = Modifier.padding(1.dp))
+                    Button(onClick = {
+                        val intent = Intent(this@MainActivity, Feature7::class.java)
+                        startActivity(intent)
+                    }){
+                        Text(text = "Feature7")
+                    }
+                    Spacer(modifier = Modifier.padding(1.dp))
+                    Button(onClick = {
+                        val intent = Intent(this@MainActivity, Feature8::class.java)
+                        startActivity(intent)
+                    }){
+                        Text(text = "Feature8")
+                    }
+                    Spacer(modifier = Modifier.padding(1.dp))
+                    Button(onClick = {
+                        val intent = Intent(this@MainActivity, Feature9::class.java)
+                        startActivity(intent)
+                    }){
+                        Text(text = "Feature9")
+                    }
+                    Spacer(modifier = Modifier.padding(1.dp))
+                    Button(onClick = {
+                        val intent = Intent(this@MainActivity, Feature10::class.java)
+                        startActivity(intent)
+                    }){
+                        Text(text = "Feature10")
+                    }
+                    Spacer(modifier = Modifier.padding(1.dp))
+                    Button(onClick = {
+                        val intent = Intent(this@MainActivity, Feature11::class.java)
+                        startActivity(intent)
+                    }){
+                        Text(text = "Feature11")
+                    }
+                    Spacer(modifier = Modifier.padding(1.dp))
+                    Button(onClick = {
+                        val intent = Intent(this@MainActivity, Feature12::class.java)
+                        startActivity(intent)
+                    }){
+                        Text(text = "Feature12")
+                    }
+                    Spacer(modifier = Modifier.padding(1.dp))
+                    Button(onClick = {
+                        val intent = Intent(this@MainActivity, Feature13::class.java)
+                        startActivity(intent)
+                    }){
+                        Text(text = "Feature13")
+                    }
+                    Spacer(modifier = Modifier.padding(1.dp))
+                    Button(onClick = {
+                        val intent = Intent(this@MainActivity, Feature14::class.java)
+                        startActivity(intent)
+                    }){
+                        Text(text = "Feature14")
                     }
                 }
             }
         }
+    }
+}
+
+@Composable
+fun Greeting(name: String, modifier: Modifier = Modifier) {
+    Text(
+        text = "Hello $name!",
+        modifier = modifier
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun GreetingPreview() {
+    LapTimerTheme {
+        Greeting("Android")
     }
 }
 
