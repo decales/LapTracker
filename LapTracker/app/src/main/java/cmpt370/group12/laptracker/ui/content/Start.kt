@@ -1,6 +1,6 @@
 package cmpt370.group12.laptracker.ui.content
 
-import android.location.Location
+import android.app.Activity
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -17,14 +16,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import cmpt370.group12.laptracker.LocationClient
-import cmpt370.group12.laptracker.MainActivity
 import com.google.android.gms.location.LocationServices
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 @Composable
-fun StartView(activity: MainActivity) {
+fun StartView(activity: Activity) {
 
     val locationClient = LocationClient(activity.applicationContext, activity, LocationServices.getFusedLocationProviderClient(activity))
 
@@ -54,10 +53,18 @@ fun ToggleTrackingButton(locationClient: LocationClient) {
         }
 
         if (isClicked) {
-            Button(onClick = {
-                // TODO
+            val scope = CoroutineScope(Dispatchers.Main)
+            val flow = locationClient.getLocationFlow(1.0)
 
-            }) {
+            Button(onClick = {
+                scope.launch {
+                    val x = locationClient.getAverageLocation(flow, 3)
+                    println(x)
+
+                }
+
+            }
+            ) {
                 Text(text = "Log location")
             }
         }

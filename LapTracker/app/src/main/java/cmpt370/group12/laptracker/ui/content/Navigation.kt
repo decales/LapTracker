@@ -1,5 +1,6 @@
 package cmpt370.group12.laptracker.ui.content
 
+import android.app.Activity
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.size
@@ -28,7 +29,7 @@ data class NavBarContent(
 
 
 @Composable
-fun NavigationView(activity: MainActivity, navController: NavHostController) {
+fun NavigationView(activity: Activity, navController: NavHostController) {
     NavHost(navController = navController, startDestination = "Start") {
 
         composable("Configure") {
