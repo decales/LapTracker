@@ -70,7 +70,7 @@ class LocationClient (
     suspend fun getAverageLocation(flow: Flow<Location?>?, numLocations: Int): Pair<Double, Double> {
         var tLong = 1.0
         var tLat = 1.0
-        flow?.take(numLocations)?.collect{ location -> // Flow collects x locations, then stops
+        flow?.take(numLocations)?.collect{ location -> // Collect x locations from flow, then stop flow
             if (location != null) {
                 tLong += location.longitude
                 tLat += location.latitude

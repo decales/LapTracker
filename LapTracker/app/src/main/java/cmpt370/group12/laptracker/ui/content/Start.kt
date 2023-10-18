@@ -1,5 +1,6 @@
 package cmpt370.group12.laptracker.ui.content
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,9 +10,11 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -24,7 +27,6 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun StartView(activity: Activity) {
-
     val locationClient = LocationClient(activity.applicationContext, activity, LocationServices.getFusedLocationProviderClient(activity))
 
     Box (
@@ -33,52 +35,57 @@ fun StartView(activity: Activity) {
             .fillMaxSize()
     ) {
         Column {
-            ToggleTrackingButton(locationClient)
+            ToggleSetPointsButton(locationClient)
         }
     }
 }
 
 
+@SuppressLint("UnrememberedMutableState")
 @Composable
-fun ToggleTrackingButton(locationClient: LocationClient) {
+fun ToggleSetPointsButton(locationClient: LocationClient) {
 
     var isClicked by remember { mutableStateOf(false) }
-    val text = if (!isClicked) "Start tracking" else "Stop tracking"
+    val text = if (!isClicked) "Set points" else "Done"
     val color = if (!isClicked) Color(10, 120, 40) else Color(190, 0, 0)
+    val pointsSnapshot = mutableStateListOf<Pair<Double,Double>>() // Snapshot of current state of points list
+    val points: List<Pair<Double, Double>> = pointsSnapshot // List of saved legs, <longitude, latitude>
+
 
     Row {
-        Button(onClick = { isClicked = !isClicked })
-        {
+        Button(onClick = { isClicked = !isClicked }
+        ) {
             Text(text = text, color = color)
         }
 
-        if (isClicked) {
-            val scope = CoroutineScope(Dispatchers.Main)
-            val flow = locationClient.getLocationFlow(1.0)
-
-            Button(onClick = {
-                scope.launch {
-                    val x = locationClient.getAverageLocation(flow, 3)
-                    println(x)
-
-                }
-
-            }
-            ) {
-                Text(text = "Log location")
-            }
+        if (isClicked) { // When button is toggled on, display another button to set (and undo) a point
+            SetPointButton(locationClient, pointsSnapshot)
         }
     }
 }
 
-//@Composable
-//fun LogLocationButton(locationFlow: Flow<Location?>?) {
-//    var isClicked by remember { mutableStateOf(false) }
-//
-//    Button( onClick = { isClicked = true }
-//    ) {
-//        Text(text = "Log location")
-//    }
-//
-//}
+@Composable
+fun SetPointButton(locationClient: LocationClient, legs: SnapshotStateList<Pair<Double, Double>>) {
+    val locationFlow = locationClient.getLocationFlow(0.5)
+    val scope = CoroutineScope(Dispatchers.Main)
+
+    Button( // Set a new point and add it to points array
+        onClick = {
+            scope.launch {
+                legs.add(locationClient.getAverageLocation(locationFlow, 5))
+            }
+        }
+    ) {
+        Text(text = "Set point")
+    }
+
+    if (legs.isNotEmpty()) {
+        Button( // Remove last point entry from points array
+            onClick = { legs.removeLast() }
+        ) {
+            Text(text = "Undo")
+        }
+    }
+}
+
 
