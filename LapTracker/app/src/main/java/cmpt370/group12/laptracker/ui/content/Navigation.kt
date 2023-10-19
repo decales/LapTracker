@@ -33,7 +33,7 @@ fun NavigationView(activity: Activity, navController: NavHostController) {
     NavHost(navController = navController, startDestination = "Start") {
 
         composable("Configure") {
-            ConfigureView()
+            ConfigureView(activity)
         }
         composable("Start") {
             StartView(activity)
