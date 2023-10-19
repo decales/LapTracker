@@ -7,7 +7,6 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
 import android.os.Looper
-import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -15,14 +14,19 @@ import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.Priority
-import com.google.android.gms.tasks.CancellationTokenSource
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.take
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 
 class LocationClient (
@@ -53,6 +57,28 @@ class LocationClient (
         }
     }
 
+
+//    // DOES NOT WORK
+//    @SuppressLint("MissingPermission")
+//    suspend fun getCurrentLocation(scope: CoroutineScope): Location? {
+//        return scope.async {
+//            client.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, CancellationTokenSource().token)
+//        }.await().result
+//    }
+
+
+    @SuppressLint("MissingPermission")
+    suspend fun getAverageLocation(flow: Flow<Location?>?, numLocations: Int): Pair<Double, Double> {
+        var tLat = 0.0
+        var tLong = 0.0
+        flow?.take(numLocations)?.collectLatest{ location -> // Collect x locations from flow, then stop flow
+            if (location != null) {
+                tLat += location.latitude
+                tLong += location.longitude
+            }
+        }
+        return Pair(tLat/numLocations, tLong/numLocations)
+    }
 
 
     @SuppressLint("MissingPermission")
