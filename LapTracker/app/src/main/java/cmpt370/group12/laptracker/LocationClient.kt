@@ -30,12 +30,11 @@ import kotlin.math.sin
 import kotlin.math.sqrt
 
 class LocationClient (
-
     private val context: Context,
     private val activity: Activity,
     private val client: FusedLocationProviderClient
-
 ) {
+
     private fun servicesEnabled(): Boolean {
         val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) && locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
@@ -110,18 +109,28 @@ class LocationClient (
     }
 
 
-    suspend fun checkProximity(
-        locationFlow: Flow<Location?>?,
-        target: Pair<Double, Double>,
-        context: Context
-    ) {
-        locationFlow?.collect {location ->
+    suspend fun checkProximity(locationFlow: Flow<Location?>?, target: Pair<Double, Double>, context: Context) {
+        locationFlow?.collectLatest {location ->
             val dLat = Math.toRadians(target.first) - Math.toRadians(location!!.latitude)
             val dLon = Math.toRadians(target.second) - Math.toRadians(location.longitude)
             val x = sin(dLat / 2).pow(2) + cos(Math.toRadians(location.latitude)) * cos(Math.toRadians(target.first)) * sin(dLon / 2).pow(2)
-            val meters =  BigDecimal.valueOf(2 * atan2(sqrt(x), sqrt(1 - x)) * 6378.137).setScale(3, RoundingMode.HALF_UP).toDouble()
-
+            val meters =  BigDecimal.valueOf(2 * atan2(sqrt(x), sqrt(1 - x)) * 6378137).setScale(3, RoundingMode.HALF_UP).toDouble()
             Toast.makeText(context, "Target is $meters meters away", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+
+    suspend fun checkProximityFlow(locationFlow: Flow<Location?>?, target: Pair<Double, Double>): Flow<Double> {
+        return callbackFlow {
+            locationFlow?.collectLatest {location ->
+                val dLat = Math.toRadians(target.first) - Math.toRadians(location!!.latitude)
+                val dLon = Math.toRadians(target.second) - Math.toRadians(location.longitude)
+                val x = sin(dLat / 2).pow(2) + cos(Math.toRadians(location.latitude)) * cos(Math.toRadians(target.first)) * sin(dLon / 2).pow(2)
+                val meters =  BigDecimal.valueOf(2 * atan2(sqrt(x), sqrt(1 - x)) * 6378137).setScale(3, RoundingMode.HALF_UP).toDouble()
+                launch {
+                    send(meters)
+                }
+            }
         }
     }
 }
