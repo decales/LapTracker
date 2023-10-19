@@ -22,6 +22,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.take
@@ -68,15 +69,15 @@ class LocationClient (
 
     @SuppressLint("MissingPermission")
     suspend fun getAverageLocation(flow: Flow<Location?>?, numLocations: Int): Pair<Double, Double> {
-        var tLong = 1.0
-        var tLat = 1.0
-        flow?.take(numLocations)?.collect{ location -> // Collect x locations from flow, then stop flow
+        var tLat = 0.0
+        var tLong = 0.0
+        flow?.take(numLocations)?.collectLatest{ location -> // Collect x locations from flow, then stop flow
             if (location != null) {
-                tLong += location.longitude
                 tLat += location.latitude
+                tLong += location.longitude
             }
         }
-        return Pair(tLong/numLocations, tLat/numLocations)
+        return Pair(tLat/numLocations, tLong/numLocations)
     }
 
 

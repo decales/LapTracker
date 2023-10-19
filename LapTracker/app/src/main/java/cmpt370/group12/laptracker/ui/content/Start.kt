@@ -39,7 +39,12 @@ fun StartView(activity: Activity) {
     ) {
         Column {
             ToggleSetPointsButton(locationClient)
+            
+            Text(text = "backdoor: 52.129813, -106.633604")
+            Text(text = "bench: 52.129874, -106.632387")
+            Text(text = "Path fork: 52.131800, -106.632115")
         }
+        
     }
 }
 
@@ -81,7 +86,6 @@ fun ToggleSetPointsButton(locationClient: LocationClient) {
 
 @Composable
 fun SetPointButton(locationClient: LocationClient, legs: SnapshotStateList<Pair<Double, Double>>) {
-    val locationFlow = locationClient.getLocationFlow(0.5)
     val scope = CoroutineScope(Dispatchers.Main)
     var isLoading by remember { mutableStateOf(false) }
 
@@ -89,7 +93,7 @@ fun SetPointButton(locationClient: LocationClient, legs: SnapshotStateList<Pair<
         onClick = {
             isLoading = true
             scope.launch {
-                legs.add(locationClient.getAverageLocation(locationFlow, 3))
+                legs.add(locationClient.getAverageLocation(locationClient.getLocationFlow(1.0), 5))
                 isLoading = false
             }
         }
