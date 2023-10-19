@@ -9,6 +9,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -25,6 +26,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.forEach
 import kotlinx.coroutines.launch
 
 
@@ -94,7 +96,7 @@ fun SetPointButton(
         onClick = {
             isLoading = true
             scope.launch {
-                points.add(locationClient.getAverageLocation(locationClient.getLocationFlow(1.0), 5))
+                points.add(locationClient.getAverageLocation(locationClient.getLocationFlow(1.0), 6))
                 isLoading = false
             }
         }
@@ -110,9 +112,9 @@ fun SetPointButton(
     }
     if (isLoading) {
         Text (
+            text = "Setting point...",
             modifier = Modifier
-                .padding(top = 20.dp),
-            text = "Setting point...")
+                .padding(top = 20.dp))
     }
 }
 
@@ -127,21 +129,32 @@ fun TrackingButton(
     val text = if (!isToggled) "Start Tracking" else "Stop Tracking"
     var thread by remember { mutableStateOf<Job?>(null) }
     val scope = rememberCoroutineScope()
+    var distance by remember { mutableDoubleStateOf(0.0) }
 
     Button(onClick = {
         isToggled = !isToggled
         if (isToggled) {
             thread = scope.launch {
-                locationClient.checkProximity(locationClient.getLocationFlow(0.5), points[0], activity.applicationContext)
+                val proximityFlow = locationClient.checkProximityFlow(locationClient.getLocationFlow(0.5), points[0])
+                proximityFlow.collect { d ->
+                    distance = d
+                }
+                //locationClient.checkProximity(locationClient.getLocationFlow(0.5), points[0], activity.applicationContext)
             }
         }
         else {
+            distance = 0.0
             thread?.cancel()
         }
-
-
     }) {
         Text(text = text, color = color)
+    }
+
+    if (distance != 0.0) {
+        Text (
+            text = "Target is $distance m away",
+            modifier = Modifier
+                .padding(top = 20.dp))
     }
 }
 
