@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
 import android.os.Looper
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -14,20 +15,19 @@ import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.Priority
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.take
-import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
+import java.math.BigDecimal
+import java.math.RoundingMode
+import kotlin.math.atan2
+import kotlin.math.cos
+import kotlin.math.pow
+import kotlin.math.sin
+import kotlin.math.sqrt
 
 class LocationClient (
 
@@ -42,19 +42,20 @@ class LocationClient (
     }
 
 
-    private fun hasLocationPermissions(): Boolean {
+    fun hasLocationPermissions(): Boolean {
         return ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
                 ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
     }
 
 
-    fun getLocationPermission() {
+    fun getLocationPermission(): Boolean {
         if (!servicesEnabled()) {
             throw Exception("GPS is not available!")
         }
         if (!hasLocationPermissions()) {
             ActivityCompat.requestPermissions(activity, arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), 101)
         }
+        return hasLocationPermissions()
     }
 
 
@@ -109,14 +110,18 @@ class LocationClient (
     }
 
 
-    fun checkProximity(locationFlow: Flow<Location>, targetLocation: Location, scope: CoroutineScope) {
-        scope.launch {
-            locationFlow.collect { location ->
-                if (location == targetLocation) { // TODO replace with proximity calc
-                    // TODO location is in proximity, do something
-                    cancel() // Stop flow in coroutine
-                }
-            }
+    suspend fun checkProximity(
+        locationFlow: Flow<Location?>?,
+        target: Pair<Double, Double>,
+        context: Context
+    ) {
+        locationFlow?.collect {location ->
+            val dLat = Math.toRadians(target.first) - Math.toRadians(location!!.latitude)
+            val dLon = Math.toRadians(target.second) - Math.toRadians(location.longitude)
+            val x = sin(dLat / 2).pow(2) + cos(Math.toRadians(location.latitude)) * cos(Math.toRadians(target.first)) * sin(dLon / 2).pow(2)
+            val meters =  BigDecimal.valueOf(2 * atan2(sqrt(x), sqrt(1 - x)) * 6378.137).setScale(3, RoundingMode.HALF_UP).toDouble()
+
+            Toast.makeText(context, "Target is $meters meters away", Toast.LENGTH_SHORT).show()
         }
     }
 }
