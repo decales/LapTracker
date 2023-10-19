@@ -39,15 +39,10 @@ fun StartView(activity: Activity) {
     ) {
         Column {
             ToggleSetPointsButton(locationClient)
-            
-            Text(text = "backdoor: 52.129813, -106.633604")
-            Text(text = "bench: 52.129874, -106.632387")
-            Text(text = "Path fork: 52.131800, -106.632115")
         }
         
     }
 }
-
 
 @Composable
 fun ToggleSetPointsButton(locationClient: LocationClient) {
