@@ -19,21 +19,26 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import cmpt370.group12.laptracker.LocationClient
 import com.google.android.gms.location.LocationServices
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.flow.forEach
 import kotlinx.coroutines.launch
 
+
+data class Point (
+    val latlon: Pair<Double, Double>,
+    val isPassed: Boolean,
+)
 
 @Composable
 fun StartView(activity: Activity) {
     val locationClient = LocationClient(activity.applicationContext, activity, LocationServices.getFusedLocationProviderClient(activity))
-    val points = remember { mutableStateListOf<Pair<Double,Double>>() } // Remember list of points
+    val points = remember { mutableStateListOf<Point>() } // Remember list of points
     var setToggle by remember { mutableStateOf(false) } // Remember set button toggle
 
     Box (
@@ -49,10 +54,21 @@ fun StartView(activity: Activity) {
                     .padding(bottom = 100.dp)
             ) {
                 Column (
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                        .padding(top = 10.dp)
                 ) {
-                    points.forEach { point ->
-                        Text(text = point.toString())
+                    if (points.isNotEmpty()) {
+                        for (i in 0 until points.size) {
+                            var text = "L$i"
+                            if (i == 0) {
+                                text = "Start"
+                            }
+                            Text(
+                                text = text,
+                                fontSize = TextUnit(10.0F, TextUnitType(0))
+                            )
+                        }
                     }
                 }
             }
@@ -68,12 +84,11 @@ fun StartView(activity: Activity) {
 @Composable
 fun ToggleSetPointsButton(
     locationClient: LocationClient,
-    points: SnapshotStateList<Pair<Double, Double>>,
+    points: SnapshotStateList<Point>,
     setToggle: Boolean,
     onClick: () -> Unit
 ) {
     val text = if (points.isEmpty() && !setToggle) "Set points" else if (!setToggle) "Edit points" else "Done"
-    //val color = if (!setToggle) Color.Blue else Color.Red
 
     Button(onClick = onClick) {
         Text(text = text)
@@ -87,7 +102,7 @@ fun ToggleSetPointsButton(
 @Composable
 fun SetPointButton(
     locationClient: LocationClient,
-    points: SnapshotStateList<Pair<Double, Double>>
+    points: SnapshotStateList<Point>
 ) {
     val scope = CoroutineScope(Dispatchers.Main)
     var isLoading by remember { mutableStateOf(false) }
@@ -96,7 +111,7 @@ fun SetPointButton(
         onClick = {
             isLoading = true
             scope.launch {
-                points.add(locationClient.getAverageLocation(locationClient.getLocationFlow(1.0), 6))
+                points.add(Point(locationClient.getAverageLocation(locationClient.getLocationFlow(0.5), 10), false))
                 isLoading = false
             }
         }
@@ -121,7 +136,7 @@ fun SetPointButton(
 @Composable
 fun TrackingButton(
     locationClient: LocationClient,
-    points: SnapshotStateList<Pair<Double, Double>>,
+    points: SnapshotStateList<Point>,
     activity: Activity
 ) {
     var isToggled by remember { mutableStateOf(false) }
@@ -135,11 +150,10 @@ fun TrackingButton(
         isToggled = !isToggled
         if (isToggled) {
             thread = scope.launch {
-                val proximityFlow = locationClient.checkProximityFlow(locationClient.getLocationFlow(0.5), points[0])
+                val proximityFlow = locationClient.checkProximityFlow(locationClient.getLocationFlow(0.5), points[0].latlon)
                 proximityFlow.collect { d ->
                     distance = d
                 }
-                //locationClient.checkProximity(locationClient.getLocationFlow(0.5), points[0], activity.applicationContext)
             }
         }
         else {
@@ -154,7 +168,8 @@ fun TrackingButton(
         Text (
             text = "Target is $distance m away",
             modifier = Modifier
-                .padding(top = 20.dp))
+                .padding(top = 20.dp)
+        )
     }
 }
 
