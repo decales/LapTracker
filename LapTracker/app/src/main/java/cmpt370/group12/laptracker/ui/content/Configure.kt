@@ -1,7 +1,6 @@
 package cmpt370.group12.laptracker.ui.content
 
 import android.app.Activity
-import android.location.Location
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,8 +11,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import cmpt370.group12.laptracker.LocationClient
 import com.google.android.gms.location.LocationServices
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 
 @Composable
 fun ConfigureView(activity: Activity) {
@@ -23,6 +24,7 @@ fun ConfigureView(activity: Activity) {
             .fillMaxSize()
     ) {
         val locationClient = LocationClient(activity.applicationContext, activity, LocationServices.getFusedLocationProviderClient(activity))
+        val scope = CoroutineScope(Dispatchers.Main)
 
         Box (
             contentAlignment = Alignment.Center,
@@ -31,6 +33,10 @@ fun ConfigureView(activity: Activity) {
         ) {
             Column {
                 Button(onClick = {
+                    scope.async {
+                        locationClient.getCurrentLocation(scope)
+                    }
+
 
                 }) {
                     Text(text = "Start")
