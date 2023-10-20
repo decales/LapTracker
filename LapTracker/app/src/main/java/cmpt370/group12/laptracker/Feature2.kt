@@ -19,8 +19,7 @@ import com.google.android.gms.location.LocationServices
 class Feature2 : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        var fusedClient = LocationServices.getFusedLocationProviderClient(this)
-        var loc = LocationClient(this, this.parent, fusedClient)
+        var loc = LocationClient(this.applicationContext, this, LocationServices.getFusedLocationProviderClient(this))
         var flow = loc.getLocationFlow(0.1)
         setContent {
             LapTrackerTheme {
@@ -34,7 +33,8 @@ class Feature2 : ComponentActivity() {
                 Spacer(modifier = Modifier.padding(1.dp))
                 Button(onClick = {
                 }){
-                    Text(text = "$flow.toString()")
+                    var test = flow.toString()
+                    Text(text = "$test")
                 }
             }
         }
