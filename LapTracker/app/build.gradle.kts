@@ -53,6 +53,7 @@ dependencies {
     //Added
     implementation("com.google.android.gms:play-services-location:21.0.1")
     implementation("androidx.navigation:navigation-compose:2.7.4")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
     // Default
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
