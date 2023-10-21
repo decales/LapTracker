@@ -4,6 +4,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -42,6 +43,26 @@ class Feature2 : ComponentActivity() {
 @Composable
 fun mainScreen(locationClient: LocationClient) {
     val points = remember { mutableStateListOf<Pair<Double,Double>>() } // Remember list of points
+    Box(
+        contentAlignment = Alignment.TopCenter,
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        Row (
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                if (points.isNotEmpty()) {
+                    Text(text = "Would you like to set a segment?")
+                }
+                else {
+                    Text(text = "Set Start Location")
+                }
+            }
+        }
+    }
     Box (
         contentAlignment = Alignment.Center,
         modifier = Modifier
@@ -62,8 +83,31 @@ fun mainScreen(locationClient: LocationClient) {
                     }
                 }
             }
-            getAnotherSegmentButton(locationClient, points)
+            if (points.isNotEmpty()) {
+                getAnotherSegmentButton(locationClient, points)
+            }
+            else {
+                setStartLocationButton(locationClient, points)
+            }
         }
+    }
+}
+
+@Composable
+fun setStartLocationButton(locationClient: LocationClient, points: SnapshotStateList<Pair<Double, Double>>) {
+    val scope = CoroutineScope(Dispatchers.Main)
+    var isLoading by remember { mutableStateOf(false) }
+    isLoading = true
+    Button( // Set a new point and add it to points array
+        onClick = {
+            isLoading = true
+            scope.launch {
+                points.add(locationClient.getAverageLocation(locationClient.getLocationFlow(1.0), 6))
+                isLoading = false
+            }
+        }
+    ) {
+        Text("Set Start Location")
     }
 }
 
@@ -81,7 +125,7 @@ fun getAnotherSegmentButton(locationClient: LocationClient, points: SnapshotStat
             }
         }
     ) {
-        Text("Set a new Segment?")
+        Text("Set a Segment")
     }
 
     Button(
