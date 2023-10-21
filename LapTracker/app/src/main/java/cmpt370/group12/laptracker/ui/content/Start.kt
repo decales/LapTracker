@@ -1,6 +1,7 @@
 package cmpt370.group12.laptracker.ui.content
 
 import android.app.Activity
+import android.location.Location
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableDoubleStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -25,14 +27,20 @@ import androidx.compose.ui.unit.dp
 import cmpt370.group12.laptracker.LocationClient
 import com.google.android.gms.location.LocationServices
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.takeWhile
 import kotlinx.coroutines.launch
 
 
 data class Point (
     val latlon: Pair<Double, Double>,
-    val isPassed: Boolean,
+    val name: String,
+    var isPassed: Boolean
 )
 
 @Composable
@@ -58,28 +66,21 @@ fun StartView(activity: Activity) {
                     modifier = Modifier
                         .padding(top = 10.dp)
                 ) {
-                    if (points.isNotEmpty()) {
-                        for (i in 0 until points.size) {
-                            var text = "L$i"
-                            if (i == 0) {
-                                text = "Start"
-                            }
-                            Text(
-                                text = text,
-                                fontSize = TextUnit(10.0F, TextUnitType(0))
-                            )
-                        }
+
+                    points.forEach { point ->
+                        Text(text = point.name)
                     }
                 }
             }
             ToggleSetPointsButton(locationClient, points, setToggle) { setToggle = !setToggle }
 
             if (points.isNotEmpty() && !setToggle) {
-               TrackingButton(locationClient, points, activity)
+               TrackingButton(locationClient, points)
             }
         }
     }
 }
+
 
 @Composable
 fun ToggleSetPointsButton(
@@ -100,23 +101,25 @@ fun ToggleSetPointsButton(
 
 
 @Composable
-fun SetPointButton(
+fun SetPointButton (
     locationClient: LocationClient,
     points: SnapshotStateList<Point>
 ) {
     val scope = CoroutineScope(Dispatchers.Main)
     var isLoading by remember { mutableStateOf(false) }
+    val text = if (points.isEmpty()) "Set start" else "Set point"
 
     Button( // Set a new point and add it to points array
         onClick = {
             isLoading = true
             scope.launch {
-                points.add(Point(locationClient.getAverageLocation(locationClient.getLocationFlow(0.5), 10), false))
+                val pointID = if (points.isEmpty()) "Start" else "L${points.size - 1}"
+                points.add(Point(locationClient.getAverageLocation(locationClient.getLocationFlow(0.5), 10), pointID,false))
                 isLoading = false
             }
         }
     ) {
-        Text(text = "Set point")
+        Text(text = text)
     }
     if (points.isNotEmpty()) {
         Button( // Remove last point entry from points array
@@ -134,10 +137,9 @@ fun SetPointButton(
 }
 
 @Composable
-fun TrackingButton(
+fun TrackingButton (
     locationClient: LocationClient,
     points: SnapshotStateList<Point>,
-    activity: Activity
 ) {
     var isToggled by remember { mutableStateOf(false) }
     val color = if (!isToggled) Color(0, 153, 0) else Color(179, 0, 89)
@@ -145,14 +147,23 @@ fun TrackingButton(
     var thread by remember { mutableStateOf<Job?>(null) }
     val scope = rememberCoroutineScope()
     var distance by remember { mutableDoubleStateOf(0.0) }
+    var laps by remember { mutableIntStateOf(0) }
+    var next by remember { mutableStateOf("Start")}
 
     Button(onClick = {
         isToggled = !isToggled
+
         if (isToggled) {
             thread = scope.launch {
-                val proximityFlow = locationClient.checkProximityFlow(locationClient.getLocationFlow(0.5), points[0].latlon)
-                proximityFlow.collect { d ->
-                    distance = d
+                val locationFlow = locationClient.getLocationFlow(0.5) // Live location flow
+                while (thread?.isActive == true) {
+                    points.forEach { point ->
+                        locationClient.checkProximityFlow(locationFlow, point.latlon).first { d -> // Flow while loop
+                            distance = d // Update UI
+                            d < 3.0 // Break condition
+                        }
+                    }
+                    laps += 1 // All points have been reached, +1 lap
                 }
             }
         }
@@ -164,12 +175,36 @@ fun TrackingButton(
         Text(text = text, color = color)
     }
 
-    if (distance != 0.0) {
+    if (thread?.isActive == true && distance != 0.0) {
         Text (
             text = "Target is $distance m away",
             modifier = Modifier
                 .padding(top = 20.dp)
         )
+
+    }
+
+    if (thread?.isActive == true || laps != 0) {
+        Text(text = "Laps: $laps")
+    }
+}
+
+
+suspend fun trackLaps(client: LocationClient, points: SnapshotStateList<Point>) {
+    var laps = 0
+    val locationFlow = client.getLocationFlow(0.5) // Live location flow
+
+    while (true) { // TODO replace with condition to stop tracking
+        points.forEach { point ->
+            client.checkProximityFlow(locationFlow, point.latlon).collect { distance ->
+                while (!point.isPassed) {
+                    if (distance <= 5) {
+                        point.isPassed = true
+                    }
+                }
+            }
+        }
+        laps += 1
     }
 }
 
