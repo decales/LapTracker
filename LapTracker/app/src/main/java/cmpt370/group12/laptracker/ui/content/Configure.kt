@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.sourceInformation
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import cmpt370.group12.laptracker.LocationClient
@@ -14,6 +15,8 @@ import com.google.android.gms.location.LocationServices
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
@@ -33,11 +36,9 @@ fun ConfigureView(activity: Activity) {
         ) {
             Column {
                 Button(onClick = {
-                    scope.async {
-                        locationClient.getCurrentLocation(scope)
+                    scope.launch {
+                        println(locationClient.getCurrentLocation())
                     }
-
-
                 }) {
                     Text(text = "Start")
                 }
