@@ -7,9 +7,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import android.annotation.SuppressLint
 import cmpt370.group12.laptracker.ui.theme.LapTrackerTheme
 
 class Feature3 : ComponentActivity() {
@@ -27,6 +28,13 @@ class Feature3 : ComponentActivity() {
             }
         }
     }
+}
+
+@Composable
+fun AchievementsScreen() {
+    //Variables that store whether the achievement has been met
+    var achieveCreatedFirstTrack = remember { mutableIntStateOf(0) }
+
 }
 
 @Composable
