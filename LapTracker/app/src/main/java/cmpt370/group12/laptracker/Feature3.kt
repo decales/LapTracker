@@ -2,53 +2,73 @@ package cmpt370.group12.laptracker
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshots.SnapshotStateMap
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import cmpt370.group12.laptracker.ui.theme.LapTrackerTheme
 
 class Feature3 : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val achievements = Achievements()
+        val achievementStatus = mutableStateMapOf("CreateFirstTrack" to false)
         setContent {
             LapTrackerTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    Greeting4("Feature3")
-                }
+                AchievementsScreen(achievements, achievementStatus)
             }
         }
     }
 }
 
 @Composable
-fun AchievementsScreen() {
-    //Variables that store whether the achievement has been met
-    var achieveCreatedFirstTrack = remember { mutableIntStateOf(0) }
-
+fun AchievementsScreen(achievements: Achievements, achievementStatusInit: SnapshotStateMap<String, Boolean>) {
+    //Variable that store whether the achievements have been met
+    val achievementStatus = remember { achievementStatusInit }
+    //initial values would need to be loaded from database
+    Box (
+        contentAlignment = Alignment.Center,
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Box( // Container to display achievements
+                modifier = Modifier
+                    .padding(bottom = 100.dp)
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    achievementStatus.forEach { achievement ->
+                        Text(text = achievement.key + ": " + achievement.value.toString())
+                    }
+                }
+            }
+            ActivateAchievement(achievements, achievementStatus, "CreateFirstTrack")
+        }
+    }
 }
 
 @Composable
-fun Greeting4(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview4() {
-    LapTrackerTheme {
-        Greeting4("Android")
+fun ActivateAchievement(achievements: Achievements,
+                        achievementStatus: SnapshotStateMap<String, Boolean>,
+                        currentAchievement: String) {
+    Button( // Activate the achievement
+        onClick = {
+            achievements.updateAchievement(achievementStatus, currentAchievement)
+        }
+    ) {
+        Text("Activate Achievement")
     }
 }
