@@ -9,7 +9,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.Alignment
@@ -34,7 +36,21 @@ class Feature3 : ComponentActivity() {
 fun AchievementsScreen(achievements: Achievements, achievementStatusInit: SnapshotStateMap<String, Boolean>) {
     //Variable that store whether the achievements have been met
     val achievementStatus = remember { achievementStatusInit }
+    val update = remember { mutableStateOf(false)}
     //initial values would need to be loaded from database
+    Box (
+        contentAlignment = Alignment.TopCenter,
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            if (update.value) {
+                achievements.updateAchievement(achievementStatus, "CreateFirstTrack")
+            }
+        }
+    }
     Box (
         contentAlignment = Alignment.Center,
         modifier = Modifier
@@ -55,18 +71,16 @@ fun AchievementsScreen(achievements: Achievements, achievementStatusInit: Snapsh
                     }
                 }
             }
-            ActivateAchievement(achievements, achievementStatus, "CreateFirstTrack")
+                ActivateAchievement(update)
         }
     }
 }
 
 @Composable
-fun ActivateAchievement(achievements: Achievements,
-                        achievementStatus: SnapshotStateMap<String, Boolean>,
-                        currentAchievement: String) {
+fun ActivateAchievement(update: MutableState<Boolean>) {
     Button( // Activate the achievement
         onClick = {
-            achievements.updateAchievement(achievementStatus, currentAchievement)
+            update.value = true
         }
     ) {
         Text("Activate Achievement")
