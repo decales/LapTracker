@@ -9,6 +9,7 @@
 
 
     <application
+        android:name = ".LapTrackerApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -99,6 +100,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyAFIy62N9F46UP2qOsA2qAM1yR8EkPPPCw"/>
     </application>
 
 </manifest>
