@@ -32,6 +32,7 @@ class Feature3 : ComponentActivity() {
     }
 }
 
+
 @Composable
 fun AchievementsScreen(achievements: Achievements, achievementStatusInit: SnapshotStateMap<String, Boolean>) {
     //Variable that store whether the achievements have been met
@@ -46,7 +47,8 @@ fun AchievementsScreen(achievements: Achievements, achievementStatusInit: Snapsh
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            if (update.value) {
+            achievements.ShowAchievement("CreateFirstTrack", update)
+            if (update.value){
                 achievements.updateAchievement(achievementStatus, "CreateFirstTrack")
             }
         }
@@ -80,7 +82,7 @@ fun AchievementsScreen(achievements: Achievements, achievementStatusInit: Snapsh
 fun ActivateAchievement(update: MutableState<Boolean>) {
     Button( // Activate the achievement
         onClick = {
-            update.value = true
+            update.value = !update.value
         }
     ) {
         Text("Activate Achievement")
