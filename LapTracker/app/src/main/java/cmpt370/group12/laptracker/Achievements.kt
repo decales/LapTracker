@@ -23,13 +23,16 @@ class Achievements {
 
     @Composable
     fun updateAchievement(achievementStatus: SnapshotStateMap<String, Boolean>, currentAchievement: String) {
-        achievementStatus[currentAchievement] = true
+        LaunchedEffect(Unit) {
+            delay(2000)
+            achievementStatus[currentAchievement] = true
+        }
     }
     @Composable
-    fun ShowAchievement(achievementName: String, update: MutableState<Boolean>) {
+    fun ShowAchievement(achievementName: String, update: MutableState<Boolean>, trackCreated: Boolean) {
         //popup that shows that achievement was gotten
         AnimatedVisibility(
-            visible = update.value, enter = slideInVertically(),
+            visible = (update.value && !trackCreated ), enter = slideInVertically(),
             exit = slideOutVertically()
         ) {
             Box(
