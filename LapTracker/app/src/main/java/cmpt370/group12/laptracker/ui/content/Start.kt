@@ -9,8 +9,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableDoubleStateOf
-import androidx.compose.runtime.mutableIntStateOf
+
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -141,8 +140,8 @@ fun TrackingButton (
     val scope = rememberCoroutineScope()
 
     // Tracking UI variables
-    var distance by remember { mutableDoubleStateOf(0.0) }
-    var laps by remember { mutableIntStateOf(0) }
+    var distance by remember { mutableStateOf(0.0) }
+    var laps by remember { mutableStateOf(0) }
     var next by remember { mutableStateOf("")}
 
     Button(onClick = {
