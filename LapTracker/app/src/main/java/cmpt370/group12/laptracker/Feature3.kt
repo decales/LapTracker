@@ -23,7 +23,13 @@ class Feature3 : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val achievements = Achievements()
-        val achievementStatus = mutableStateMapOf("CreateFirstTrack" to false)
+        val achievementStatus = mutableStateMapOf("Created First Track" to false,
+            "Saved First Track" to false, "Finished First Race" to false, "Need For Speed" to false,
+            "Noteworthy!" to false, "Sharing is caring" to false, "Loading..." to false)
+        //Need for Speed should trigger when a certain speed is reached.
+        // Noteworthy! will trigger when a user creates a note for a track.
+        // Sharing is caring would trigger when a user enters another user's time.
+        // Loading... would be triggered when a use loads a saved track.
         setContent {
             LapTrackerTheme {
                 AchievementsScreen(achievements, achievementStatus)
