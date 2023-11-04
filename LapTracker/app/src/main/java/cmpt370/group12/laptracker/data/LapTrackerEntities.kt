@@ -20,6 +20,8 @@ data class MapPointEntity(
     // on the track
     val sequenceNumber: Int
 )
+
+@Entity
 data class CommentEntity(
     //id : This is the Primary Key For Database Entry into Table CommentEntity
     @PrimaryKey
@@ -31,6 +33,7 @@ data class CommentEntity(
     //Todo: TimeStamp Might Not be The Correct Type, Must Verify This Later
     val timestamp: Timestamp
 )
+@Entity
 data class AchievementEntity(
     //id : This is the Primary Key For Database Entry into Table AchievementEntity
     @PrimaryKey
@@ -44,6 +47,7 @@ data class AchievementEntity(
     //Todo: TimeStamp Might Not be The Correct Type, Must Verify This Later
     val timestamp: Timestamp
 )
+@Entity
 data class TrackEntity(
     //id : This is the Primary Key For Database Entry into Table AchievementEntity
     @PrimaryKey
@@ -52,6 +56,8 @@ data class TrackEntity(
     val name: String
 
 )
+
+@Entity
 data class RunEntity(
     //id : This is the Primary Key For Database Entry into Table RunEntity
     @PrimaryKey
@@ -65,6 +71,7 @@ data class RunEntity(
     val startTime: Timestamp,
     val endTime: Timestamp
 )
+@Entity
 data class RunTimeEntity(
     //id : This is the Primary Key For Database Entry into Table RunTimeEntity
     @PrimaryKey
