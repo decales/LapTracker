@@ -3,10 +3,11 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 
 @Database(
-    entities = [MapPointEntity::class],
+    entities = [MapPointEntity::class,CommentEntity::class,AchievementEntity::class,
+               TrackEntity::class,RunEntity::class,RunTimeEntity::class],
     version = 1
 )
-abstract class MapPointDatabase: RoomDatabase() {
+abstract class LapTrackerDatabase: RoomDatabase() {
 
-    abstract val dao: MapPointDao
+    abstract val dao: LapTrackerDao
 }
