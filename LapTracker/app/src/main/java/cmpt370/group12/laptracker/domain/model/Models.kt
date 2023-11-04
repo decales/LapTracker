@@ -67,7 +67,7 @@ data class Run(
     val endTime: Timestamp
 )
 
-data class RunTimeEntity(
+data class RunsTime(
     //id : This is the Primary Key For Database Entry into Table RunTimeEntity
     val id: Int? = null,
     // fromRunId: This is a reference to the primary Key "id" for the RunEntity Table
