@@ -42,11 +42,20 @@ interface LapTrackerDao {
 
     //Run Table
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertRun(spot: RunEntity)
+    suspend fun insertRunTime(spot: RunEntity)
     @Delete
-    suspend fun deleteRun(spot: RunEntity)
+    suspend fun deleteRunTime(spot: RunEntity)
 
     @Query("SELECT * FROM runentity WHERE fromTrackId =:currentTrackId")
     fun getRuns(currentTrackId: Int): Flow<List<RunEntity>>
+
+    //RunTimes Table
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertRunTime(spot: RunTimeEntity)
+    @Delete
+    suspend fun deleteRunTime(spot: RunTimeEntity)
+
+    @Query("SELECT * FROM runentity WHERE id =:currentRunId")
+    fun getRunTimes(currentRunId: Int): Flow<List<RunTimeEntity>>
 
 }
