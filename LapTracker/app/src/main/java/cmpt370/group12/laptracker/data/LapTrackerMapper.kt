@@ -1,21 +1,115 @@
 package cmpt370.group12.laptracker.data
 
+import cmpt370.group12.laptracker.domain.model.Achievement
+import cmpt370.group12.laptracker.domain.model.Comment
 import cmpt370.group12.laptracker.domain.model.MapPoint
+import cmpt370.group12.laptracker.domain.model.Run
+import cmpt370.group12.laptracker.domain.model.RunsTime
+import cmpt370.group12.laptracker.domain.model.Track
+
 fun MapPointEntity.toMapPoint(): MapPoint {
     return MapPoint(
-        lat = lat,
-        lng = lng,
         id = id,
-        mapid = mapid
+        fromTrackId = fromTrackId,
+        latitude = latitude,
+        longitude = longitude,
+        name = name,
+        sequenceNumber = sequenceNumber
 
     )
 }
 
 fun MapPoint.toMapPointEntity(): MapPointEntity {
     return MapPointEntity(
-        lat = lat,
-        lng = lng,
         id = id,
-        mapid = mapid
+        fromTrackId = fromTrackId,
+        latitude = latitude,
+        longitude = longitude,
+        name = name,
+        sequenceNumber = sequenceNumber
+    )
+}
+
+fun CommentEntity.toComment(): Comment {
+    return Comment(
+        id = id,
+        fromTrackId = fromTrackId,
+        comment = comment,
+        timestamp = timestamp
+    )
+}
+
+fun Comment.toCommentEntity(): CommentEntity {
+    return CommentEntity(
+        id = id,
+        fromTrackId = fromTrackId,
+        comment = comment,
+        timestamp = timestamp
+    )
+}
+fun AchievementEntity.toAchievement(): Achievement {
+    return Achievement(
+        id = id,
+        name = name,
+        description = description,
+        achieved = achieved,
+        timestamp = timestamp
+    )
+}
+fun Achievement.toAchievementEntity(): AchievementEntity {
+    return AchievementEntity(
+        id = id,
+        name = name,
+        description = description,
+        achieved = achieved,
+        timestamp = timestamp
+    )
+}
+
+fun Track.toTrackEntity() : TrackEntity {
+    return TrackEntity(
+        id = id,
+        name = name
+    )
+}
+
+fun TrackEntity.toTrack(): Track {
+    return Track(
+        id = id,
+        name = name
+    )
+}
+
+fun Run.toRunEntity(): RunEntity {
+    return RunEntity(
+        id = id,
+        fromTrackId = fromTrackId,
+        startTime = startTime,
+        endTime = endTime
+    )
+}
+fun RunEntity.toRun(): Run {
+    return Run(
+        id = id,
+        fromTrackId = fromTrackId,
+        startTime = startTime,
+        endTime = endTime
+    )
+}
+
+fun RunsTime.toRunTimeEntity(): RunTimeEntity {
+    return RunTimeEntity(
+        id = id,
+        fromRunId = fromRunId,
+        fromMapPointId = fromMapPointId,
+        timestamp = timestamp
+    )
+}
+fun RunTimeEntity.toRunsTime(): RunsTime{
+    return RunsTime(
+        id = id,
+        fromRunId = fromRunId,
+        fromMapPointId = fromMapPointId,
+        timestamp = timestamp
     )
 }
