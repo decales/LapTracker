@@ -8,7 +8,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.MapStyleOptions
 import cmpt370.group12.laptracker.domain.model.MapPoint
-import cmpt370.group12.laptracker.domain.repository.MapPointRepository
+import cmpt370.group12.laptracker.domain.repository.LapTrackerRepository
+
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -16,7 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MapsViewModel @Inject constructor(
-    private val repository: MapPointRepository
+    private val repository: LapTrackerRepository
 ): ViewModel() {
 //class MapsViewModel: ViewModel(){
     var state by mutableStateOf(MapState())
@@ -51,8 +52,13 @@ fun refreshMapPoints(){
                 viewModelScope.launch {
                     repository.insertMapPoint(
                         MapPoint(
-                        event.latLng.latitude,
-                        event.latLng.longitude
+                            null,
+                            0,
+                            event.latLng.latitude,
+                            event.latLng.longitude,
+                            "",
+                            0
+
                     )
                     )
                 }
