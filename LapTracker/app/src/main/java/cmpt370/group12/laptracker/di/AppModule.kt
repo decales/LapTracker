@@ -4,7 +4,7 @@ import android.app.Application
 import android.util.Log
 import androidx.room.Room
 import cmpt370.group12.laptracker.data.MapPointDatabase
-import cmpt370.group12.laptracker.data.MapPointRepositoryImpl
+import cmpt370.group12.laptracker.data.LapTrackerRepositoryImpl
 import cmpt370.group12.laptracker.domain.repository.MapPointRepository
 import dagger.Module
 import dagger.Provides
@@ -22,7 +22,7 @@ object AppModule {
         return Room.databaseBuilder(
             app,
             MapPointDatabase::class.java,
-            "mapmpoints.db"
+            "LapTracker.db"
         ).build()
     }
 
@@ -30,6 +30,6 @@ object AppModule {
     @Provides
     fun provideMapPointRepository(db: MapPointDatabase): MapPointRepository {
         Log.d("KRIS","GOT HERE")
-        return MapPointRepositoryImpl(db.dao)
+        return LapTrackerRepositoryImpl(db.dao)
     }
 }

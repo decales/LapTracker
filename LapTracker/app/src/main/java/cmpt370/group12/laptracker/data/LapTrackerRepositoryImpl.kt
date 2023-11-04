@@ -4,7 +4,7 @@ import cmpt370.group12.laptracker.domain.model.MapPoint
 import cmpt370.group12.laptracker.domain.repository.MapPointRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-class MapPointRepositoryImpl(
+class LapTrackerRepositoryImpl(
 
     private val dao: MapPointDao
 ): MapPointRepository {
