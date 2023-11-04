@@ -33,9 +33,9 @@ interface LapTrackerDao {
     suspend fun deleteAchievement(spot: AchievementEntity)
     @Update
     suspend fun setAchievement(spot: AchievementEntity)
-    @Query("SELECT * FROM achievemententity WHERE achieved =true")
+    @Query("SELECT * FROM achievemententity WHERE achieved =1")
     fun getfinishedAchievements(): Flow<List<AchievementEntity>>
-    @Query("SELECT * FROM achievemententity WHERE achieved =false")
+    @Query("SELECT * FROM achievemententity WHERE achieved =0")
     fun getunfinishedAchievements(): Flow<List<AchievementEntity>>
     @Query("SELECT * FROM achievemententity")
     fun getallAchievements(): Flow<List<AchievementEntity>>
