@@ -40,4 +40,13 @@ interface LapTrackerDao {
     @Query("SELECT * FROM achievemententity")
     fun getallAchievements(): Flow<List<AchievementEntity>>
 
+    //Run Table
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertRun(spot: RunEntity)
+    @Delete
+    suspend fun deleteRun(spot: RunEntity)
+
+    @Query("SELECT * FROM runentity WHERE fromTrackId =:currentTrackId")
+    fun getRuns(currentTrackId: Int): Flow<List<RunEntity>>
+
 }
