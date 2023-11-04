@@ -1,13 +1,14 @@
 package cmpt370.group12.laptracker.data
 
 import cmpt370.group12.laptracker.domain.model.MapPoint
-import cmpt370.group12.laptracker.domain.repository.MapPointRepository
+import cmpt370.group12.laptracker.domain.repository.LapTrackerRepository
 import kotlinx.coroutines.flow.Flow
+
 import kotlinx.coroutines.flow.map
 class LapTrackerRepositoryImpl(
 
-    private val dao: MapPointDao
-): MapPointRepository {
+    private val dao: LapTrackerDao
+): LapTrackerRepository {
 
     override suspend fun insertMapPoint(mappoint: MapPoint) {
         dao.insertMapPoint(mappoint.toMapPointEntity())
@@ -17,8 +18,8 @@ class LapTrackerRepositoryImpl(
         dao.deleteMapPoint(mappoint.toMapPointEntity())
     }
 
-    override fun getMapPoints(idofmap: Int): Flow<List<MapPoint>> {
-        return dao.getMapPoints(idofmap).map { mappoint ->
+    override fun getMapPoints(fromTrackId: Int): Flow<List<MapPoint>> {
+        return dao.getMapPoints(fromTrackId).map { mappoint ->
             mappoint.map { it.toMapPoint() }
         }
     }
