@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 @Entity
 data class MapPointEntity(
     //id : This is the Primary Key For Database Entry into Table MapPointEntity
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     val id: Int? = null,
     // fromTrackId: This is a reference to the primary Key "id" for the TrackEntity Table
     val fromTrackId: Int,
