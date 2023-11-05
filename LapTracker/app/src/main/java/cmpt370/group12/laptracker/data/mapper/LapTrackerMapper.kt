@@ -1,10 +1,16 @@
-package cmpt370.group12.laptracker.data
+package cmpt370.group12.laptracker.data.mapper
 
+import cmpt370.group12.laptracker.data.entities.AchievementEntity
+import cmpt370.group12.laptracker.data.entities.CommentEntity
+import cmpt370.group12.laptracker.data.entities.MapPointEntity
+import cmpt370.group12.laptracker.data.entities.RunTimesEntity
+import cmpt370.group12.laptracker.data.entities.RunsEntity
+import cmpt370.group12.laptracker.data.entities.TrackEntity
 import cmpt370.group12.laptracker.domain.model.Achievement
 import cmpt370.group12.laptracker.domain.model.Comment
 import cmpt370.group12.laptracker.domain.model.MapPoint
-import cmpt370.group12.laptracker.domain.model.Run
-import cmpt370.group12.laptracker.domain.model.RunsTime
+import cmpt370.group12.laptracker.domain.model.Runs
+import cmpt370.group12.laptracker.domain.model.Runtimes
 import cmpt370.group12.laptracker.domain.model.Track
 
 fun MapPointEntity.toMapPoint(): MapPoint {
@@ -80,16 +86,16 @@ fun TrackEntity.toTrack(): Track {
     )
 }
 
-fun Run.toRunEntity(): RunEntity {
-    return RunEntity(
+fun Runs.toRunsEntity(): RunsEntity {
+    return RunsEntity(
         id = id,
         fromTrackId = fromTrackId,
         startTime = startTime,
         endTime = endTime
     )
 }
-fun RunEntity.toRun(): Run {
-    return Run(
+fun RunsEntity.toRuns(): Runs {
+    return Runs(
         id = id,
         fromTrackId = fromTrackId,
         startTime = startTime,
@@ -97,16 +103,16 @@ fun RunEntity.toRun(): Run {
     )
 }
 
-fun RunsTime.toRunTimeEntity(): RunTimeEntity {
-    return RunTimeEntity(
+fun Runtimes.toRunTimesEntity(): RunTimesEntity {
+    return RunTimesEntity(
         id = id,
         fromRunId = fromRunId,
         fromMapPointId = fromMapPointId,
         timestamp = timestamp
     )
 }
-fun RunTimeEntity.toRunsTime(): RunsTime{
-    return RunsTime(
+fun RunTimesEntity.toRunTimes(): Runtimes{
+    return Runtimes(
         id = id,
         fromRunId = fromRunId,
         fromMapPointId = fromMapPointId,
