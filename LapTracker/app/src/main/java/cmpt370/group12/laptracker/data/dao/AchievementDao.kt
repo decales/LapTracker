@@ -1,5 +1,6 @@
 package cmpt370.group12.laptracker.data.dao
 
+import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Query
 import androidx.room.Upsert
@@ -12,17 +13,13 @@ import kotlinx.coroutines.flow.Flow
 // tightly coupled.
 // object_functionname
 
-
+@Dao
 interface AchievementDao {
     @Upsert
     suspend fun Achievement_insert(spot: AchievementEntity)
 
     @Delete
     suspend fun Achievement_delete(spot: AchievementEntity)
-
-//todo Upsert Should Take Care of this for us, so once it's been verified we can delete this
-// @Update
-//suspend fun Achievement_set(spot: AchievementEntity)
 
     @Query("SELECT * FROM achievemententity WHERE achieved =1")
     fun Achievement_getFinished(): Flow<List<AchievementEntity>>
