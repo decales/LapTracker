@@ -15,6 +15,6 @@ data class AchievementEntity(
     val description: String,
     //achieved is a boolean that is asserted when the goal is met
     val achieved: Boolean,
-    //Todo: TimeStamp Might Not be The Correct Type, Must Verify This Later
-    val timestamp: Timestamp
+
+    val timestamp: Long
 )
