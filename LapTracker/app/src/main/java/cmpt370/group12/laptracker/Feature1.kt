@@ -9,7 +9,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import android.annotation.SuppressLint
 import cmpt370.group12.laptracker.ui.theme.LapTrackerTheme
 
 
@@ -17,6 +16,8 @@ import cmpt370.group12.laptracker.ui.theme.LapTrackerTheme
 class Feature1 : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
         setContent {
             LapTrackerTheme {
                 // A surface container using the 'background' color from the theme
@@ -46,3 +47,4 @@ fun GreetingPreview2() {
         Greeting2("Android")
     }
 }
+
