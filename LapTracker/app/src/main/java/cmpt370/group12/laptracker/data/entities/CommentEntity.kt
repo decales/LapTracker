@@ -13,6 +13,6 @@ data class CommentEntity(
     val fromTrackId: Int,
     // Comment is the String of the Comment itself
     val comment: String,
-    //Todo: TimeStamp Might Not be The Correct Type, Must Verify This Later
-    val timestamp: Timestamp
+
+    val timestamp: Long
 )

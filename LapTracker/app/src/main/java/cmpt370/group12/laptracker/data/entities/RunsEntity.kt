@@ -14,7 +14,7 @@ data class RunsEntity(
     // starTime,endTime   these are the timestamps for the start and end of a race
     // all times can be calculated by taking these times and comparing them to
     // RunTimeEntities
-    //Todo: TimeStamp Might Not be The Correct Type, Must Verify This Later
-    val startTime: Timestamp,
-    val endTime: Timestamp
+
+    val startTime: Long,
+    val endTime: Long
 )
