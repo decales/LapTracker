@@ -3,9 +3,10 @@ package cmpt370.group12.laptracker.di
 import android.app.Application
 import android.util.Log
 import androidx.room.Room
-import cmpt370.group12.laptracker.data.MapPointDatabase
-import cmpt370.group12.laptracker.data.LapTrackerRepositoryImpl
-import cmpt370.group12.laptracker.domain.repository.MapPointRepository
+
+import cmpt370.group12.laptracker.data.database.LapTrackerDatabase
+import cmpt370.group12.laptracker.data.repository.LapTrackerRepositoryImpl
+import cmpt370.group12.laptracker.domain.repository.LapTrackerRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,18 +19,18 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideMapPointDatabase(app: Application): MapPointDatabase {
+    fun provideLapTrackerDatabase(app: Application): LapTrackerDatabase {
         return Room.databaseBuilder(
             app,
-            MapPointDatabase::class.java,
+            LapTrackerDatabase::class.java,
             "LapTracker.db"
         ).build()
     }
 
     @Singleton
     @Provides
-    fun provideMapPointRepository(db: MapPointDatabase): MapPointRepository {
+    fun provideLapTrackerRepository(db: LapTrackerDatabase): LapTrackerRepository {
         Log.d("KRIS","GOT HERE")
-        return LapTrackerRepositoryImpl(db.dao)
+        return LapTrackerRepositoryImpl(db.achievementDao,db.commentDao,db.mapPointDao,db.runsDao,db.runtimesDao,db.trackDao)
     }
 }
