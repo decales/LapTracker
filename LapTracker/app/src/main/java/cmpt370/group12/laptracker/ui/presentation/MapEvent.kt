@@ -10,6 +10,9 @@ sealed class AppEvent {
     //everything should be of Type AppEvent()
 
     object ToggleMap: AppEvent()
+
+    data class AddPointByMapPoint(val mappoint: MapPoint)
+    data class AddPointByLatLng(val latLng: LatLng): AppEvent()
     data class OnMapLongClick(val latLng: LatLng): AppEvent()
     data class OnInfoWindowLongClick(val mappoint: MapPoint): AppEvent()
 }
