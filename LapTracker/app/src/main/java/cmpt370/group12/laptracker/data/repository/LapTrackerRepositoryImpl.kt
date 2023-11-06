@@ -49,34 +49,32 @@ class LapTrackerRepositoryImpl(
         mapPointDao.MapPoint_delete(mappoint.toMapPointEntity())
     }
 
-    override fun MapPoint_getByTrackId(fromTrackId: Int): Flow<List<MapPoint>> {
+    override fun MapPoints_getByTrackId(fromTrackId: Int): Flow<List<MapPoint>> {
        return mapPointDao.MapPoints_getPointsByTrackId(fromTrackId).map { mappoint ->
       mappoint.map { it.toMapPoint() }
         }
 
     }
-    override fun MapPoint_getAll(): Flow<List<MapPoint>> {
-        return mapPointDao.MapPoints_getAll().map { mappoint ->
+    override suspend fun MapPoints_getAll(): List<MapPoint>
+    {
+        return mapPointDao.MapPoints_getAll().map { it.toMapPoint()}
+
+    }
+    override fun MapPoints_getAllFlow(): Flow<List<MapPoint>> {
+        return mapPointDao.MapPoints_getAllFlow().map { mappoint ->
             mappoint.map { it.toMapPoint() }
         }
 
     }
+
     override suspend fun Achievement_insert(achievement: Achievement){
         achievementDao.Achievement_insert(achievement.toAchievementEntity())
     }
     override suspend fun Achievement_delete(achievement: Achievement){
         achievementDao.Achievement_delete(achievement.toAchievementEntity())
     }
-    override fun Achievement_getFinished(): Flow<List<Achievement>> {
-        return achievementDao.Achievement_getFinished().map { it ->
-            it.map { it.toAchievement() }}
-    }
 
-    override fun Achievement_getUnFinished(): Flow<List<Achievement>> {
-        return achievementDao.Achievement_getUnFinished().map { it ->
-            it.map { it.toAchievement() }}
-    }
-    override fun Achievement_getAll(): Flow<List<Achievement>>{
+    override fun Achievement_getAllFlow(): Flow<List<Achievement>>{
         return achievementDao.Achievement_getAll().map { it ->
             it.map { it.toAchievement() }}
     }
@@ -87,15 +85,19 @@ class LapTrackerRepositoryImpl(
     override suspend fun Comment_delete(comment: Comment){
         commentDao.Comment_delete(comment.toCommentEntity())
     }
-    override fun Comment_getCommentsFromTrackId(trackId: Int): Flow<List<Comment>> {
-        return commentDao.Comment_getCommentsFromTrackId(trackId).map { it ->
+    override fun Comments_getCommentsFromTrackId(trackId: Int): Flow<List<Comment>> {
+        return commentDao.Comments_getCommentsFromTrackId(trackId).map { it ->
             it.map { it.toComment() }
         }
     }
-    override fun Comment_getAllComments(): Flow<List<Comment>>{
-        return commentDao.Comment_getAllComments().map { it ->
+    override fun Comments_getAllFlow(): Flow<List<Comment>>{
+        return commentDao.Comments_getAllFlow().map { it ->
             it.map { it.toComment() }
         }
+    }
+    override suspend fun Comments_getAll(): List<Comment>{
+        return commentDao.Comments_getAll().map { it.toComment() }
+
     }
 
     override suspend fun Runs_insert(runs: Runs){
@@ -109,10 +111,13 @@ class LapTrackerRepositoryImpl(
             it.map { it.toRuns() }
         }
     }
-    override fun Runs_getAll(): Flow<List<Runs>>{
-        return runsDao.Runs_getAll().map { it ->
+    override fun Runs_getAllFlow(): Flow<List<Runs>>{
+        return runsDao.Runs_getAllFlow().map { it ->
             it.map { it.toRuns() }
         }
+    }
+    override suspend fun Runs_getAll(): List<Runs>{
+        return runsDao.Runs_getAll().map {  it.toRuns() }
     }
 
 
@@ -127,6 +132,15 @@ class LapTrackerRepositoryImpl(
             it.map { it.toRunTimes() }
         }
     }
+    override fun RunTimes_getAllFlow(): Flow<List<Runtimes>>{
+        return runtimesDao.RunTimes_getAllFlow().map { it ->
+            it.map { it.toRunTimes() }
+        }
+    }
+    override suspend fun RunTimes_getAll(): List<Runtimes>{
+        return runtimesDao.RunTimes_getAll().map { it.toRunTimes() }
+
+    }
 
     override suspend fun Track_insert(track: Track){
         trackDao.Track_insert(track.toTrackEntity())
@@ -139,15 +153,15 @@ class LapTrackerRepositoryImpl(
             it.map { it.toTrack() }
         }
     }
-    override fun Track_getAll(): Flow<List<Track>>{
-        return trackDao.Track_getAll().map { it ->
+    override fun Track_getAllFlow(): Flow<List<Track>>{
+        return trackDao.Track_getAllFlow().map { it ->
             it.map { it.toTrack() }
         }
     }
+    override suspend fun Track_getAll(): List<Track>{
+        return trackDao.Track_getAll().map { it.toTrack() }
 
-
-
-
+    }
 
 
 }
