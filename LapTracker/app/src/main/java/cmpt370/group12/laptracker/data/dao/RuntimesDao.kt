@@ -22,6 +22,12 @@ interface RuntimesDao {
 
     @Query("SELECT * FROM runtimesentity WHERE id =:runId")
     fun RunTimes_getByRunId(runId: Int): Flow<List<RunTimesEntity>>
+    @Query("SELECT * FROM runtimesentity")
+    fun RunTimes_getAll(): List<RunTimesEntity>
+
+    @Query("SELECT * FROM runtimesentity")
+    fun RunTimes_getAllFlow(): Flow<List<RunTimesEntity>>
+
 }
 
 

@@ -24,6 +24,9 @@ interface RunsDao {
     fun Runs_getByTrackId(trackId: Int): Flow<List<RunsEntity>>
 
     @Query("SELECT * FROM runsentity")
-    fun Runs_getAll(): Flow<List<RunsEntity>>
+    fun Runs_getAllFlow(): Flow<List<RunsEntity>>
+
+    @Query("SELECT * FROM runsentity")
+    fun Runs_getAll(): List<RunsEntity>
 }
 

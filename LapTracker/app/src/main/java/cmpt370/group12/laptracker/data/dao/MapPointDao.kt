@@ -28,5 +28,8 @@ interface MapPointDao {
     //this will just pull all the mappoints from the entire database
     //most like to be used for testing
     @Query("SELECT * FROM mappointentity")
-    fun MapPoints_getAll(): Flow<List<MapPointEntity>>
+    suspend fun MapPoints_getAll(): List<MapPointEntity>
+
+    @Query("SELECT * FROM mappointentity")
+    fun MapPoints_getAllFlow(): Flow<List<MapPointEntity>>
 }

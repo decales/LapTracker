@@ -22,14 +22,17 @@ interface CommentDao
     //exists, it will update the mappoint
     @Upsert
         suspend fun Comment_insert(comment: CommentEntity)
-    @Delete
+    @Delete()
         suspend fun Comment_delete(comment: CommentEntity)
 
     //todo: I probably want to return the Comments sorted by timeStamp
     @Query("SELECT * FROM commententity WHERE fromTrackId =:trackId")
-        fun Comment_getCommentsFromTrackId(trackId: Int): Flow<List<CommentEntity>>
+        fun Comments_getCommentsFromTrackId(trackId: Int): Flow<List<CommentEntity>>
     @Query("SELECT * FROM commententity")
-        fun Comment_getAllComments(): Flow<List<CommentEntity>>
+    suspend fun Comments_getAll(): List<CommentEntity>
+
+    @Query("SELECT * FROM commententity")
+    fun Comments_getAllFlow(): Flow<List<CommentEntity>>
 }
 
 
