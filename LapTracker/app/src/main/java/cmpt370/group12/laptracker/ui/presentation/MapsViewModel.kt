@@ -5,11 +5,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cmpt370.group12.laptracker.domain.model.MapPoint
-import cmpt370.group12.laptracker.domain.model.Track
+
 import cmpt370.group12.laptracker.domain.repository.LapTrackerRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -44,7 +43,7 @@ class MapsViewModel @Inject constructor(
         mapPointsRefreshByTrackIdJob = viewModelScope.launch {
 
 
-            repository.MapPoint_getByTrackId(trackstate.value.currentTrackId)
+            repository.MapPoints_getByTrackId(trackstate.value.currentTrackId)
 
                 .collectLatest { mappoints ->
                     _trackstate.value = trackstate.value.copy(
@@ -97,10 +96,6 @@ class MapsViewModel @Inject constructor(
 
             else -> {}
         }
-    }
-
-    fun ListTracks(): Flow<List<Track>> {
-        return repository.Track_getAll()
     }
 
 }
