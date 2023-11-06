@@ -24,7 +24,10 @@ interface TrackDao {
     fun Track_getById(id: Int): Flow<List<TrackEntity>>
 
     @Query("SELECT * FROM trackentity")
-    fun Track_getAll(): Flow<List<TrackEntity>>
+    fun Track_getAllFlow(): Flow<List<TrackEntity>>
+
+    @Query("SELECT * FROM trackentity")
+    fun Track_getAll(): List<TrackEntity>
 }
 
 
