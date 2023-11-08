@@ -1,4 +1,4 @@
-package cmpt370.group12.laptracker.ui.presentation
+package cmpt370.group12.laptracker.viewModel.Events
 
 import com.google.android.gms.maps.model.LatLng
 import cmpt370.group12.laptracker.domain.model.MapPoint

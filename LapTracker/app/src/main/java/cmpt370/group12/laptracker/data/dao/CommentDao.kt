@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 
 
 // I am going to use a convention for function calls, that when programming in an IDE, I personally
-// Think is supperior.  It will group functions by their object. So Helpers will show the functions
+// Think is superior.  It will group functions by their object. So Helpers will show the functions
 // tightly coupled.
 // object_functionname
 
@@ -22,7 +22,7 @@ interface CommentDao
     //exists, it will update the mappoint
     @Upsert
         suspend fun Comment_insert(comment: CommentEntity)
-    @Delete()
+    @Delete
         suspend fun Comment_delete(comment: CommentEntity)
 
     //todo: I probably want to return the Comments sorted by timeStamp

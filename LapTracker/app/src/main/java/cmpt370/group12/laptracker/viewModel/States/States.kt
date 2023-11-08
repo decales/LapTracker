@@ -1,4 +1,4 @@
-package cmpt370.group12.laptracker.ui.presentation
+package cmpt370.group12.laptracker.viewModel.States
 
 import android.location.Location
 import cmpt370.group12.laptracker.domain.model.Achievement
@@ -30,9 +30,10 @@ runtimes list of all runtimes ( maybe for debugging)
 
 data class MapState(
     val properties: MapProperties = MapProperties(),
-    val uiSettings: MapUiSettings = MapUiSettings(),
+    val uiSettings: MapUiSettings = MapUiSettings(zoomControlsEnabled = true),
     val currentLocation: Location? = Location(null),
-
+    val currentLocationFollow: Boolean = true,
+    val isVisible: Boolean = true,
 
 
 )
@@ -66,6 +67,7 @@ data class AppState(
     val flowRunListByTrackIdJob: Job? = null,
     val flowCurrentTrackRunsListJob : Job? = null,
     val flowCurrentTrackRunsListActive :Boolean = false,
+    val mode: Int = 0
 
     )
 

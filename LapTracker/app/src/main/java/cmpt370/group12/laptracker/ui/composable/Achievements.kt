@@ -1,4 +1,4 @@
-package cmpt370.group12.laptracker
+package cmpt370.group12.laptracker.ui.composable
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
@@ -32,7 +32,7 @@ class Achievements {
     fun ShowAchievement(achievementName: String, update: MutableState<Boolean>, trackCreated: Boolean) {
         //popup that shows that achievement was gotten
         AnimatedVisibility(
-            visible = (update.value && !trackCreated ), enter = slideInVertically(),
+            visible = (update.value && !trackCreated), enter = slideInVertically(),
             exit = slideOutVertically()
         ) {
             Box(

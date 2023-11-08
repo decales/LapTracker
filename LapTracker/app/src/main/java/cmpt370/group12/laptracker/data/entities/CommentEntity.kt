@@ -2,7 +2,7 @@ package cmpt370.group12.laptracker.data.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.sql.Timestamp
+
 
 @Entity
 data class CommentEntity(

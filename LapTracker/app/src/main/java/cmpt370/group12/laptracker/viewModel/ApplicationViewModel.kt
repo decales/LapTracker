@@ -1,7 +1,4 @@
-@file:Suppress("SpellCheckingInspection", "unused")
-
-package cmpt370.group12.laptracker.ui.presentation
-
+package cmpt370.group12.laptracker.viewModel
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -10,18 +7,19 @@ import androidx.lifecycle.viewModelScope
 import cmpt370.group12.laptracker.domain.location.LocationTracker
 import cmpt370.group12.laptracker.domain.model.MapPoint
 import cmpt370.group12.laptracker.domain.repository.LapTrackerRepository
-
+import cmpt370.group12.laptracker.viewModel.Events.AppEvent
+import cmpt370.group12.laptracker.viewModel.States.AppState
+import cmpt370.group12.laptracker.viewModel.States.MapState
+import cmpt370.group12.laptracker.viewModel.States.TrackState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-
-
 @Suppress("FunctionName")
 @HiltViewModel
-class MapsViewModel @Inject constructor(
+class ApplicationViewModel @Inject constructor(
     private val repository: LapTrackerRepository,
     private val locationTracker: LocationTracker
 
@@ -55,7 +53,7 @@ class MapsViewModel @Inject constructor(
     }
 fun check_something(){
     //TODO: Does Nothing Yet.  This Will Run Functions At Each Update.
-    // Check Distances, Acheivments, Etc.
+    // Check Distances, Achievements, Etc.
     //println("KRIS - MapState: CurrentLocation ${mapstate.value.currentLocation.toString()}")
     println("KRIS - FLOWS Current Location:        ${appstate.value.flowCurrentLocationActive}")
     println("KRIS - FLOWS TrackList:               ${appstate.value.flowTrackListActive}")
@@ -106,9 +104,9 @@ fun check_something(){
             val lifejob: Job = viewModelScope.launch {
                 repository.MapPoints_getByTrackId(_trackstate.value.currentTrackId)
 
-                    .collectLatest { mappoints ->
+                    .collectLatest { mapPoints ->
                         _trackstate.value = trackstate.value.copy(
-                            mapPoints = mappoints
+                            mapPoints = mapPoints
                         )
                     }
 
@@ -286,4 +284,3 @@ fun check_something(){
     }
 
 }
-

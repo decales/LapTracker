@@ -1,7 +1,5 @@
 package cmpt370.group12.laptracker.domain.model
 
-import java.sql.Timestamp
-
 data class Runtimes(
     //id : This is the Primary Key For Database Entry into Table RunTimeEntity
     val id: Int? = null,

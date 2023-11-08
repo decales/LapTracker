@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 
 
 // I am going to use a convention for function calls, that when programming in an IDE, I personally
-// Think is supperior.  It will group functions by their object. So Helpers will show the functions
+// Think is superior.  It will group functions by their object. So Helpers will show the functions
 // tightly coupled.
 // object_functionname
 
