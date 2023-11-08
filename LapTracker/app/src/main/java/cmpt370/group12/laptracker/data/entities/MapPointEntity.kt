@@ -1,7 +1,12 @@
-package cmpt370.group12.laptracker.domain.model
+package cmpt370.group12.laptracker.data.entities
 
-data class MapPoint(
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity
+data class MapPointEntity(
     //id : This is the Primary Key For Database Entry into Table MapPointEntity
+    @PrimaryKey(autoGenerate = true)
     val id: Int? = null,
     // fromTrackId: This is a reference to the primary Key "id" for the TrackEntity Table
     val fromTrackId: Int,
