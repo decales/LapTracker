@@ -3,39 +3,39 @@ package cmpt370.group12.laptracker.ui.composable
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Scaffold
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Pause
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.Marker
-import androidx.lifecycle.viewmodel.compose.viewModel
 import cmpt370.group12.laptracker.viewModel.Events.AppEvent
 import cmpt370.group12.laptracker.viewModel.ApplicationViewModel
-import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.model.CameraPosition
-import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.MapEffect
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
-import kotlinx.coroutines.launch
+
 
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "UnusedMaterialScaffoldPaddingParameter")
 
 @Composable
-fun MapScreen(
-    viewModel: ApplicationViewModel = viewModel()
+fun MapScreen(viewModel: ApplicationViewModel
+
 ) {
 
 
@@ -65,13 +65,17 @@ fun MapScreen(
 
                 )
                 {
-                    val context = LocalContext.current
-                    val scope = rememberCoroutineScope()
+
                     MapEffect(viewModel.mapstate.value.currentLocation){map ->
                         map.setOnMapLoadedCallback {
                             if (viewModel.mapstate.value.currentLocationFollow) {
                                 map.animateCamera(CameraUpdateFactory.newLatLng(LatLng(viewModel.mapstate.value.currentLocation?.latitude?:52.0,viewModel.mapstate.value.currentLocation?.longitude?:-106.0)))
+                                 }
+                                else
+                            {
+
                             }
+
                         }
                     }
 
@@ -83,7 +87,7 @@ fun MapScreen(
                             )
                         ),
                         title = "ME",
-                        icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)
+                        icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)
                     )
 
                     viewModel.trackstate.value.mapPoints.forEach { mappoint ->
@@ -102,6 +106,7 @@ fun MapScreen(
                                 it.showInfoWindow()
                                 true
                             },
+
                             icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)
                         )
                     }
@@ -110,10 +115,33 @@ fun MapScreen(
             }
         }
         Column(
-            Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Bottom
+            Modifier.fillMaxSize().padding(10.dp),
+            verticalArrangement = Arrangement.Bottom,
+            horizontalAlignment = Alignment.CenterHorizontally
         ){
-            me()
+
+            if (viewModel.trackstate.value.isRunPaused){
+                FloatingActionButton(
+                    modifier = Modifier
+                        .size(125.dp),
+                    onClick = {viewModel.UnpauseRun()},
+                ) {
+                    Icon(Icons.Filled.PlayArrow, contentDescription = "", modifier = Modifier.fillMaxSize(0.5f))
+                }
+            }
+            else {
+                FloatingActionButton(
+                    modifier = Modifier
+                        .size(125.dp),
+                    onClick = {viewModel.pauseRun()},
+                ) {
+                    Icon(Icons.Filled.Pause, contentDescription = "", modifier = Modifier.fillMaxSize(0.75f))
+
+                }
+
+            }
+
+            RealTimeStatisticsContainer(viewModel)
         }
     }
 }
