@@ -63,14 +63,36 @@ fun check_something(){
     println("KRIS - --------------------------------------------------------------------------------------")
 
 }
+    fun setMode(value: Int){
+        _appstate.value = appstate.value.copy(
+            appMode = value,
+        )
+    }
+    fun setStatsScreen(value: Boolean){
+        _appstate.value = appstate.value.copy(
+            isRealTimeStatVisible = value,
+        )
+    }
+    fun pauseRun(){
+        _trackstate.value = trackstate.value.copy(
+            isRunPaused = true
+        )
+    }
+    fun UnpauseRun(){
+        _trackstate.value = trackstate.value.copy(
+            isRunPaused = false
+        )
+    }
+
     private fun FlowCurrentLocation_Start() {
         if (!_appstate.value.flowCurrentLocationActive && (_appstate.value.flowCurrentLocationJob == null)) {
 
             val lifejob: Job = viewModelScope.launch {
-                locationTracker.currentLocationFlow(1)
+                locationTracker.currentLocationFlow(50)
                     .collectLatest {
 
                             _mapstate.value = mapstate.value.copy(
+                                lastLocation = mapstate.value.currentLocation,
                                 currentLocation = it
                             )
                             check_something()
@@ -86,7 +108,7 @@ fun check_something(){
             )
         }
     }
-    private fun FlowCurrentLocation_Stop(){
+    fun FlowCurrentLocation_Stop(){
         _appstate.value.flowCurrentLocationJob?.cancel()
         _appstate.value = appstate.value.copy(
             flowCurrentLocationJob = null,
@@ -150,7 +172,7 @@ fun check_something(){
         }
 
     }
-    private fun FlowTrackList_Stop(){
+    fun FlowTrackList_Stop(){
         _appstate.value.flowTrackListJob?.cancel()
         _appstate.value = appstate.value.copy(
             flowTrackListJob = null,
@@ -239,7 +261,16 @@ fun check_something(){
         FlowRunTimesbyCurrentRunId_Start()
     }
 
-
+    fun SetLocationFollow(value: Boolean){
+        _mapstate.value = mapstate.value.copy(
+        currentLocationFollow = value
+        )
+    }
+    fun SetRealTimeStatisticsIsVisible(value: Boolean){
+        _appstate.value = appstate.value.copy(
+            isRealTimeStatVisible = value
+        )
+    }
 
 
 
@@ -247,7 +278,7 @@ fun check_something(){
 // The Event Tree
     fun onEvent(event: AppEvent) {
         when (event) {
-            is AppEvent.ToggleMap -> {
+            is AppEvent.StartFreeStyle -> {
                 if (trackstate.value.currentTrackId == 0) {
                     Change_Map(1)
                 } else {
