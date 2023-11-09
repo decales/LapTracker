@@ -12,17 +12,25 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import cmpt370.group12.laptracker.viewModel.ApplicationViewModel
 
 
 @Composable
 
-fun me() {
+fun me(viewModel: ApplicationViewModel) {
     var showDialog by remember { mutableStateOf(false) }
 
     Button(
         //elevation = ButtonDefaults.buttonElevation(
         //    defaultElevation = 10.dp ),
-        onClick = { showDialog = showDialog.not() }) {
+        onClick = {
+            //showDialog = showDialog.not()
+            viewModel.SetLocationFollow(viewModel.mapstate.value.currentLocationFollow.not())
+
+
+        }) {
         Text("Delete")
     }
 
