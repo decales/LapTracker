@@ -9,6 +9,8 @@ data class TrackEntity(
     @PrimaryKey
     val id: Int? = null,
     //name is the Title of the achievement
-    val name: String
+    val name: String,
+    val description: String,
+    val freestyle: Boolean = false
 
 )
