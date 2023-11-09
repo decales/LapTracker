@@ -32,12 +32,14 @@ data class MapState(
     val properties: MapProperties = MapProperties(),
     val uiSettings: MapUiSettings = MapUiSettings(zoomControlsEnabled = true),
     val currentLocation: Location? = Location(null),
+    val lastLocation: Location? = Location(null),
     val currentLocationFollow: Boolean = true,
     val isVisible: Boolean = true,
 
 
 )
 data class TrackState(
+    val isLoaded: Boolean = false,
     val currentTrackId: Int = 0,
     val currentRunId: Int = 0,
     val currentTargetId: Int = 0,
@@ -46,6 +48,9 @@ data class TrackState(
     val mapPoints: List<MapPoint> = emptyList(),
     val runtimes: List<Runtimes> = emptyList(),
     val runs: List<Runs> = emptyList(),
+    val isRunPaused : Boolean = false
+//When a Run is Stopped or Finished whem damon will have a window that pops up that gives us the
+    // states for the run
 
 )
 
@@ -67,7 +72,11 @@ data class AppState(
     val flowRunListByTrackIdJob: Job? = null,
     val flowCurrentTrackRunsListJob : Job? = null,
     val flowCurrentTrackRunsListActive :Boolean = false,
-    val mode: Int = 0
+    val isFreeStyle: Boolean = false,
+    val isRealTimeStatVisible: Boolean = false,
+    val appMode: Int = 0,  //0: not in a mode (main menu) //1:FreeStyle //2: Track Run  //3: TrackEditMode
+
+
 
     )
 

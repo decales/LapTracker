@@ -9,9 +9,9 @@ sealed class AppEvent {
     //If it does need values passed, then make it a data class
     //everything should be of Type AppEvent()
 
-    object ToggleMap: AppEvent()
+    object StartFreeStyle: AppEvent()
 
-    data class AddPointByMapPoint(val mappoint: MapPoint)
+    data class AddPointByMapPoint(val mappoint: MapPoint) :AppEvent()
     data class AddPointByLatLng(val latLng: LatLng): AppEvent()
     data class OnMapLongClick(val latLng: LatLng): AppEvent()
     data class OnInfoWindowLongClick(val mappoint: MapPoint): AppEvent()
