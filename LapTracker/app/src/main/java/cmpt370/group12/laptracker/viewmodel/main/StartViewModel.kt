@@ -7,11 +7,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 
 class StartViewModel : ViewModel() {
+    // TODO add all data and states values required for SettingsView composable functions
+    // TODO (if applicable) retrieve data from database (model)
 
-    var color by mutableStateOf(Color.Red)
+    // Ex.
+    var color by mutableStateOf(Color.Gray)
         private set
 
     fun setColor() {
-        if (color == Color.Red) color = Color.Blue else color = Color.Red
+        if (color == Color.Gray) color = Color.Black else color = Color.Gray
     }
 }

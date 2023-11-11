@@ -20,7 +20,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -28,10 +27,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import cmpt370.group12.laptracker.R
-import cmpt370.group12.laptracker.view.main.profile.ProfileView
-import cmpt370.group12.laptracker.view.main.settings.SettingsView
-import cmpt370.group12.laptracker.view.main.start.StartView
-import cmpt370.group12.laptracker.view.main.tracks.TracksView
 import cmpt370.group12.laptracker.view.theme.LapTrackerTheme
 import cmpt370.group12.laptracker.viewmodel.main.ProfileViewModel
 import cmpt370.group12.laptracker.viewmodel.main.SettingsViewModel
@@ -81,16 +76,16 @@ override fun onCreate(savedInstanceState: Bundle?) {
 
             // Handle routes
             composable("Start") {
-                StartView(startViewModel)
+                StartView(startViewModel).View()
             }
             composable("Tracks") {
-                TracksView(tracksViewModel)
+                TracksView(tracksViewModel).View()
             }
             composable("Profile") {
-                ProfileView(profileViewModel)
+                ProfileView(profileViewModel).View()
             }
             composable("Settings") {
-                SettingsView(settingsViewModel)
+                SettingsView(settingsViewModel).View()
             }
         }
     }
