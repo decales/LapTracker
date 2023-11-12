@@ -69,7 +69,7 @@ class TracksView(
             viewModel.trackCards.forEach { card ->
                 item {
                     Card(
-                        elevation = CardDefaults.cardElevation(defaultElevation = 20.dp),
+                        elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
                         modifier = Modifier
                             .padding(top = 10.dp, bottom = 10.dp)
                             .fillMaxWidth()
