@@ -1,5 +1,7 @@
 package cmpt370.group12.laptracker.viewmodel.main
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.setValue
@@ -17,7 +19,15 @@ class ProfileViewModel: ViewModel() {
         val icon: Int,
     )
 
-    // Variable and object
+    data class Achievement(
+        val id: Int,
+        val name: String,
+        val icon: Int,
+        val isAchieved: Boolean,
+        val achievedDate: String
+    )
+
+    // Variables and objects
 
     var currentPage by mutableIntStateOf(0)
 
@@ -25,6 +35,23 @@ class ProfileViewModel: ViewModel() {
         ProfileTab("Statistics", R.drawable.ic_launcher_foreground),
         ProfileTab("Achievements", R.drawable.ic_launcher_foreground)
     )
+
+    val achievements = listOf( // TODO Dummy values, replace with array of database query result
+        Achievement(0, "Name", R.drawable.ic_launcher_foreground, true, "date"),
+        Achievement(0, "Name", R.drawable.ic_launcher_foreground, true, "date"),
+        Achievement(0, "Name", R.drawable.ic_launcher_foreground, true, "date"),
+        Achievement(0, "Name", R.drawable.ic_launcher_foreground, false, "date"),
+        Achievement(0, "Name", R.drawable.ic_launcher_foreground, false, "date"),
+        Achievement(0, "Name", R.drawable.ic_launcher_foreground, true, "date"),
+        Achievement(0, "Name", R.drawable.ic_launcher_foreground, false, "date"),
+        Achievement(0, "Name", R.drawable.ic_launcher_foreground, true, "date"),
+        Achievement(0, "Name", R.drawable.ic_launcher_foreground, false, "date"),
+        Achievement(0, "Name", R.drawable.ic_launcher_foreground, false, "date"),
+        Achievement(0, "Name", R.drawable.ic_launcher_foreground, false, "date"),
+        Achievement(0, "Name", R.drawable.ic_launcher_foreground, false, "date"),
+    )
+
+    val unlockedCount = achievements.count { it.isAchieved }
 
     // Methods
 

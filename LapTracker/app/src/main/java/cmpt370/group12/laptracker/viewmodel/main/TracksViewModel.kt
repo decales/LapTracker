@@ -7,7 +7,7 @@ class TracksViewModel :ViewModel() {
     // TODO add all data and states values required for TracksView composable functions
     // TODO (if applicable) retrieve data from database (model)
 
-    val trackCards = listOf( // TODO Dummy values, replace with array of database query
+    val trackCards = listOf( // TODO Dummy values, replace with array of database query result
         TrackCard(0, "Name", "Location", R.drawable.ic_launcher_foreground),
         TrackCard(0, "Name", "Location", R.drawable.ic_launcher_foreground),
         TrackCard(0, "Name", "Location", R.drawable.ic_launcher_foreground),
