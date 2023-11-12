@@ -1,12 +1,13 @@
 package cmpt370.group12.laptracker.view.main
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Button
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import cmpt370.group12.laptracker.viewmodel.main.StartViewModel
 
 class StartView(
@@ -20,15 +21,20 @@ class StartView(
     fun View() {
         // TODO build view from class defined composable functions.
         // TODO initialize necessary view data in viewmodel/main/StartViewModel.kt. Data is accessed through constructor var 'viewModel'
-        // Ex.
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .fillMaxSize()
-                .background(color = viewModel.color)
-        ) {
-            Button(onClick = { viewModel.setColor()}) {
-            }
+        Header()
+    }
+
+    @Composable
+    fun Header() {
+        Box(modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 20.dp, top = 20.dp)
+        )
+        {
+            Text(
+                text = "Start Tracking",
+                fontSize = 30.sp
+            )
         }
     }
 }
