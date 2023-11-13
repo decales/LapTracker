@@ -1,20 +1,27 @@
 package cmpt370.group12.laptracker.view.main
 
+import android.graphics.drawable.shapes.Shape
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -65,28 +72,49 @@ class TracksView(
 
     @Composable 
     fun TrackCardColumn() {
-        LazyColumn(contentPadding = PaddingValues(top = 10.dp, start = 20.dp, end = 20.dp)) {
-            viewModel.trackCards.forEach { card ->
-                item {
-                    Card(
-                        elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
-                        modifier = Modifier
-                            .padding(top = 10.dp, bottom = 10.dp)
-                            .fillMaxWidth()
-                    ) {
-                        Row {
-                            Column {
-                                Text(text = card.name)
-                                Text(text = card.location)
+        Card(
+            colors = CardDefaults.cardColors(Color(0xff1c212d)),
+            modifier = Modifier.padding(20.dp)
+        ) {
+            LazyColumn(
+                contentPadding = PaddingValues(top = 20.dp, start = 20.dp, end = 20.dp),
+            ) {
+                viewModel.trackCards.forEach { card ->
+                    item {
+                        Card(
+                            elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
+                            modifier = Modifier
+                                .padding(bottom = 25.dp)
+                                .fillMaxWidth()
+                        ) {
+                            Row (modifier = Modifier.padding(20.dp)) {
+                                Column (
+                                    modifier = Modifier
+                                        .weight(0.4f)
+                                ){
+                                    Text(
+                                        text = card.name,
+                                        fontSize = 20.sp
+                                    )
+                                    Text(text = card.location)
+                                }
+                                Icon(
+                                    painter = painterResource(id = card.mapSnippet),
+                                    contentDescription = card.name,
+                                    modifier = Modifier
+                                        .weight(0.6f)
+                                        .border(
+                                            width = 1.dp,
+                                            color = Color.White,
+                                            shape = RoundedCornerShape(10.dp)
+                                        )
+                                )
                             }
-                            Icon(
-                                painter = painterResource(id = card.mapSnippet),
-                                contentDescription = card.name
-                            )
                         }
                     }
                 }
             }
+
         }
     }
 }

@@ -36,20 +36,8 @@ class ProfileViewModel: ViewModel() {
         ProfileTab("Achievements", R.drawable.ic_launcher_foreground)
     )
 
-    val achievements = listOf( // TODO Dummy values, replace with array of database query result
-        Achievement(0, "Name", R.drawable.ic_launcher_foreground, true, "date"),
-        Achievement(0, "Name", R.drawable.ic_launcher_foreground, true, "date"),
-        Achievement(0, "Name", R.drawable.ic_launcher_foreground, true, "date"),
-        Achievement(0, "Name", R.drawable.ic_launcher_foreground, false, "date"),
-        Achievement(0, "Name", R.drawable.ic_launcher_foreground, false, "date"),
-        Achievement(0, "Name", R.drawable.ic_launcher_foreground, true, "date"),
-        Achievement(0, "Name", R.drawable.ic_launcher_foreground, false, "date"),
-        Achievement(0, "Name", R.drawable.ic_launcher_foreground, true, "date"),
-        Achievement(0, "Name", R.drawable.ic_launcher_foreground, false, "date"),
-        Achievement(0, "Name", R.drawable.ic_launcher_foreground, false, "date"),
-        Achievement(0, "Name", R.drawable.ic_launcher_foreground, false, "date"),
-        Achievement(0, "Name", R.drawable.ic_launcher_foreground, false, "date"),
-    )
+    // TODO Dummy values, replace with array of database query result
+    val achievements = List(18) { Achievement(0, "Name", R.drawable.ic_launcher_foreground, (it % 3 == 0), "date") }
 
     val unlockedCount = achievements.count { it.isAchieved }
 
