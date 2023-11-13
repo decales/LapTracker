@@ -4,6 +4,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -117,8 +118,8 @@ class ProfileView(
     }
 
 
-    /* StatisticsView:
-        - Represent the view of the statistics section
+    /* AchievementsView:
+        - Represent the view of the achievements section
         - Sub-view of main profile view
         - All data is stored retrieved from class view model */
     @Composable
@@ -127,62 +128,68 @@ class ProfileView(
             modifier = Modifier.fillMaxSize()
         ) {
             Column {
-                UnlockedProgressText()
+                CompletionText()
                 AchievementsGrid()
             }
         }
     }
 
     @Composable
-    fun UnlockedProgressText() {
+    fun CompletionText() {
         Box(modifier = Modifier
             .fillMaxWidth()
-            .padding(20.dp)
+            .padding(top = 20.dp)
         ) {
             Row(
                 horizontalArrangement = Arrangement.SpaceAround,
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(text = "${viewModel.unlockedCount}/${viewModel.achievements.size} Unlocked",
-                    fontSize = 15.sp
+                    fontSize = 14.sp
                 )
                 Text(text = "${(viewModel.unlockedCount.toDouble() / viewModel.achievements.size.toDouble() * 100).toInt()}% Completion",
-                    fontSize = 15.sp
+                    fontSize = 14.sp
                 )
             }
         }
     }
 
-    
+
     @Composable
     fun AchievementsGrid() {
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(3),
-            content = {
-                viewModel.achievements.forEach { achievement ->  
-                    item {
-                        Column (
-                            horizontalAlignment = CenterHorizontally,
-                            modifier = Modifier.padding(start = 20.dp, end = 20.dp, bottom = 20.dp)
-                        ) {
-                            Card (
-                                modifier = Modifier.padding(bottom = 5.dp),
-                                elevation = CardDefaults.cardElevation(defaultElevation = 10.dp)
+        Card (
+            colors = CardDefaults.cardColors(Color(0xff1c212d)),
+            modifier = Modifier.padding(20.dp)
+        ) {
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(3),
+                contentPadding = PaddingValues(top = 20.dp),
+                content = {
+                    viewModel.achievements.forEach { achievement ->
+                        item {
+                            Column (
+                                horizontalAlignment = CenterHorizontally,
+                                modifier = Modifier.padding(bottom = 20.dp, start = 20.dp, end = 20.dp)
                             ) {
-                                Icon(
-                                    painter = painterResource(id = achievement.icon),
-                                    contentDescription = achievement.name,
-                                    tint = if (!achievement.isAchieved) Color.Gray else Color.Unspecified // Grey-out locked achievements
+                                Card (
+                                    modifier = Modifier.padding(bottom = 5.dp),
+                                    elevation = CardDefaults.cardElevation(defaultElevation = 10.dp)
+                                ) {
+                                    Icon(
+                                        painter = painterResource(id = achievement.icon),
+                                        contentDescription = achievement.name,
+                                        tint = if (!achievement.isAchieved) Color.Gray else Color.Unspecified // Grey-out locked achievements
+                                    )
+                                }
+                                Text(
+                                    text = achievement.name,
+                                    fontSize = 12.sp
                                 )
                             }
-                            Text(
-                                text = achievement.name,
-                                fontSize = 12.sp
-                            )
                         }
                     }
                 }
-            }
-        )
+            )
+        }
     }
 }

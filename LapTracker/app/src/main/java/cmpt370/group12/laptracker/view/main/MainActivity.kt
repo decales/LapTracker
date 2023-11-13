@@ -1,11 +1,15 @@
 package cmpt370.group12.laptracker.view.main
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -18,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -35,22 +40,21 @@ import cmpt370.group12.laptracker.viewmodel.main.TracksViewModel
 
 class MainActivity : ComponentActivity() {
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContent {
         LapTrackerTheme {
             Surface (
-                modifier = Modifier.fillMaxSize(),
-                color = MaterialTheme.colorScheme.background
+                color = MaterialTheme.colorScheme.background,
+                modifier = Modifier.fillMaxSize()
             ) {
                 val controller = rememberNavController() // Navigation controller
                 Scaffold (
                     bottomBar = {
                         BottomNavigationBar(controller)
                     }
-                ) {
-                    NavigationView(controller)
+                ) { navBarPadding ->
+                    NavigationView(controller, navBarPadding)
                 }
             }
             }
@@ -63,9 +67,12 @@ override fun onCreate(savedInstanceState: Bundle?) {
         - Current view is set by the navigation controller
         - Navigation controller sets view based on the 'route' passed from the navigation bar */
     @Composable
-    fun NavigationView(navController: NavHostController) {
-
-        NavHost(navController = navController, startDestination = "Start") {
+    fun NavigationView(navController: NavHostController, navBarPadding: PaddingValues) {
+        NavHost(
+            navController = navController,
+            startDestination = "Start",
+            modifier = Modifier.padding(navBarPadding)
+        ) {
 
             // Initialize view models to pass to associated views
             // TODO fix view models to preserve states on MainActivity re-compose (i.e. on screen rotation)
