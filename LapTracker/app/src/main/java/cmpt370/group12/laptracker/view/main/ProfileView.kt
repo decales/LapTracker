@@ -1,6 +1,8 @@
 package cmpt370.group12.laptracker.view.main
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,8 +16,10 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
@@ -131,8 +135,12 @@ class ProfileView(
                 CompletionText()
                 AchievementsGrid()
             }
+            if (viewModel.achievementDetailsVisible) {
+                AchievementDetails(viewModel.currentAchievement)
+            }
         }
     }
+
 
     @Composable
     fun CompletionText() {
@@ -172,8 +180,10 @@ class ProfileView(
                                 modifier = Modifier.padding(bottom = 20.dp, start = 20.dp, end = 20.dp)
                             ) {
                                 Card (
-                                    modifier = Modifier.padding(bottom = 5.dp),
-                                    elevation = CardDefaults.cardElevation(defaultElevation = 10.dp)
+                                    elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
+                                    modifier = Modifier
+                                        .padding(bottom = 5.dp)
+                                        .clickable { viewModel.toggleAchievementDetails(achievement) }
                                 ) {
                                     Icon(
                                         painter = painterResource(id = achievement.icon),
@@ -190,6 +200,24 @@ class ProfileView(
                     }
                 }
             )
+        }
+    }
+
+
+    @OptIn(ExperimentalMaterial3Api::class)
+    @Composable
+    fun AchievementDetails(achievement: ProfileViewModel.Achievement) { // TODO Make this look pretty
+        AlertDialog(
+            onDismissRequest = { viewModel.toggleAchievementDetails(achievement) }
+        ) {
+            Column {
+                Text(text = achievement.name)
+                Icon(
+                    painter = painterResource(id = achievement.icon),
+                    contentDescription = achievement.name)
+                Text(text = "Description")
+                Text(text = achievement.achievedDate)
+            }
         }
     }
 }
