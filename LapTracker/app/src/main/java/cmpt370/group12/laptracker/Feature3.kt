@@ -54,13 +54,13 @@ fun AchievementsScreen(achievements: Achievements, achievementStatusInit: Snapsh
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             //Run these lines of code everytime you want to update an achievement
-            achievementStatus["CreateFirstTrack"]?.let {
-                achievements.ShowAchievement("CreateFirstTrack", update, it
+            achievementStatus["Created First Track"]?.let {
+                achievements.ShowAchievement("Created First Track", update, it
                 )
             }
             //This if is for demonstration purposes only
             if (update.value) {
-                achievements.updateAchievement(achievementStatus, "CreateFirstTrack")
+                achievements.updateAchievement(achievementStatus, "Created First Track")
             }
             //Use this code during actual implementation
             //LaunchedEffect(Unit) {
