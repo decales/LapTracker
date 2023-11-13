@@ -1,9 +1,8 @@
 package cmpt370.group12.laptracker.viewmodel.main
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import cmpt370.group12.laptracker.R
@@ -41,9 +40,18 @@ class ProfileViewModel: ViewModel() {
 
     val unlockedCount = achievements.count { it.isAchieved }
 
+    var achievementDetailsVisible by mutableStateOf(false)
+
+    var currentAchievement: Achievement by mutableStateOf(Achievement(0, "", 0, false, ""))
+
     // Methods
 
     fun setPage(index: Int) {
         currentPage = index
+    }
+
+    fun toggleAchievementDetails(achievement: Achievement) {
+        achievementDetailsVisible = !achievementDetailsVisible
+        currentAchievement = achievement
     }
 }

@@ -3,6 +3,7 @@ package cmpt370.group12.laptracker.view.main
 import android.graphics.drawable.shapes.Shape
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -12,9 +13,11 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -70,7 +73,7 @@ class TracksView(
     }
 
 
-    @Composable 
+    @Composable
     fun TrackCardColumn() {
         Card(
             colors = CardDefaults.cardColors(Color(0xff1c212d)),
@@ -86,6 +89,7 @@ class TracksView(
                             modifier = Modifier
                                 .padding(bottom = 25.dp)
                                 .fillMaxWidth()
+                                .clickable { /* TODO launch track details view */ }
                         ) {
                             Row (modifier = Modifier.padding(20.dp)) {
                                 Column (
@@ -114,7 +118,12 @@ class TracksView(
                     }
                 }
             }
-
         }
+    }
+
+
+    @Composable
+    fun TrackDetails() {
+
     }
 }
