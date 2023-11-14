@@ -20,79 +20,79 @@
         android:theme="@style/Theme.LapTracker"
         tools:targetApi="31">
         <activity
-            android:name=".Feature14"
+            android:name=".old.Feature14"
             android:exported="false"
             android:label="Feature14"
             android:theme="@style/Theme.LapTracker" />
         <activity
-            android:name=".Feature13"
+            android:name=".old.Feature13"
             android:exported="false"
             android:label="Feature13"
             android:theme="@style/Theme.LapTracker" />
         <activity
-            android:name=".Feature12"
+            android:name=".old.Feature12"
             android:exported="false"
             android:label="Feature12"
             android:theme="@style/Theme.LapTracker" />
         <activity
-            android:name=".Feature11"
+            android:name=".old.Feature11"
             android:exported="false"
             android:label="Feature11"
             android:theme="@style/Theme.LapTracker" />
         <activity
-            android:name=".Feature10"
+            android:name=".old.Feature10"
             android:exported="false"
             android:label="Feature10"
             android:theme="@style/Theme.LapTracker" />
         <activity
-            android:name=".Feature9"
+            android:name=".old.Feature9"
             android:exported="false"
             android:label="Feature9"
             android:theme="@style/Theme.LapTracker" />
         <activity
-            android:name=".Feature8"
+            android:name=".old.Feature8"
             android:exported="false"
             android:label="Feature8"
             android:theme="@style/Theme.LapTracker" />
         <activity
-            android:name=".Feature7"
+            android:name=".old.Feature7"
             android:exported="false"
             android:label="Feature7"
             android:theme="@style/Theme.LapTracker" />
         <activity
-            android:name=".Feature6"
+            android:name=".old.Feature6"
             android:exported="false"
             android:label="Feature6"
             android:theme="@style/Theme.LapTracker" />
         <activity
-            android:name=".Feature5"
+            android:name=".old.Feature5"
             android:exported="false"
             android:label="Feature5"
             android:theme="@style/Theme.LapTracker" />
         <activity
-            android:name=".Feature4"
+            android:name=".old.Feature4"
             android:exported="false"
             android:label="Featur4"
             android:theme="@style/Theme.LapTracker" />
         <activity
-            android:name=".Feature3"
+            android:name=".old.Feature3"
             android:exported="false"
             android:label="Feature3"
             android:theme="@style/Theme.LapTracker" />
         <activity
-            android:name=".Feature2"
+            android:name=".old.Feature2"
             android:exported="false"
             android:label="Feature2"
             android:theme="@style/Theme.LapTracker" />
         <activity
-            android:name=".Feature1"
+            android:name=".old.Feature1"
             android:exported="false"
             android:label="Feature1"
             android:theme="@style/Theme.LapTracker" />
         <activity
-            android:name=".MainActivity"
+            android:name=".view.main.MainActivity"
+            android:screenOrientation="portrait"
             android:exported="true"
-            android:label="@string/app_name"
             android:theme="@style/Theme.LapTracker">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
