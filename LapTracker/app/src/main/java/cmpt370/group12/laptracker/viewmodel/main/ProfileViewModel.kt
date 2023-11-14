@@ -21,10 +21,12 @@ class ProfileViewModel: ViewModel() {
     data class Achievement(
         val id: Int,
         val name: String,
+        val description: String,
         val icon: Int,
         val isAchieved: Boolean,
         val achievedDate: String
     )
+
 
     // Variables and objects
 
@@ -36,13 +38,14 @@ class ProfileViewModel: ViewModel() {
     )
 
     // TODO Dummy values, replace with array of database query result
-    val achievements = List(18) { Achievement(0, "Name", R.drawable.ic_launcher_foreground, (it % 3 == 0), "date") }
+    val achievements = List(18) { Achievement(0, "Name", "Description", R.drawable.ic_launcher_foreground, (it % 3 == 0), "Date unlocked") }
 
     val unlockedCount = achievements.count { it.isAchieved }
 
     var achievementDetailsVisible by mutableStateOf(false)
 
-    var currentAchievement: Achievement by mutableStateOf(Achievement(0, "", 0, false, ""))
+    var currentAchievement: Achievement by mutableStateOf(Achievement(0, "", "", 0, false, ""))
+
 
     // Methods
 
