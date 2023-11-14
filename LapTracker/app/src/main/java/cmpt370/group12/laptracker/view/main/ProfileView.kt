@@ -1,7 +1,7 @@
 package cmpt370.group12.laptracker.view.main
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,6 +16,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -128,16 +129,12 @@ class ProfileView(
         - All data is stored retrieved from class view model */
     @Composable
     fun AchievementsView() {
-        Box(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            Column {
-                CompletionText()
-                AchievementsGrid()
-            }
-            if (viewModel.achievementDetailsVisible) {
-                AchievementDetails(viewModel.currentAchievement)
-            }
+        Column {
+            CompletionText()
+            AchievementsGrid()
+        }
+        if (viewModel.achievementDetailsVisible) {
+            AchievementDetails(viewModel.currentAchievement)
         }
     }
 
@@ -210,13 +207,34 @@ class ProfileView(
         AlertDialog(
             onDismissRequest = { viewModel.toggleAchievementDetails(achievement) }
         ) {
-            Column {
-                Text(text = achievement.name)
-                Icon(
-                    painter = painterResource(id = achievement.icon),
-                    contentDescription = achievement.name)
-                Text(text = "Description")
-                Text(text = achievement.achievedDate)
+            Card (modifier = Modifier
+                .padding(0.dp)
+            ) {
+                Column(
+                    horizontalAlignment = CenterHorizontally,
+                    modifier = Modifier
+                        .padding(top = 20.dp, bottom = 20.dp)
+
+                        .align(CenterHorizontally)
+                ) {
+                    Text(
+                        text = achievement.name,
+                        fontSize = 22.sp
+                    )
+                    Icon(
+                        painter = painterResource(id = achievement.icon),
+                        contentDescription = achievement.name,
+                        modifier = Modifier
+                            .padding(top = 5.dp, bottom = 5.dp)
+                            .border(1.dp, Color.White, RoundedCornerShape(15.dp))
+                    )
+                    Text(text = achievement.description)
+                    Text(
+                        text = achievement.achievedDate,
+                        fontSize = 12.sp,
+                        modifier = Modifier.padding(top = 5.dp)
+                    )
+                }
             }
         }
     }
