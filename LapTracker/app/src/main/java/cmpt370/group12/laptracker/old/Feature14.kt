@@ -13,7 +13,7 @@ class Feature14 : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             LapTrackerTheme {
-
+                trackingView(activity = this)
             }
         }
     }
