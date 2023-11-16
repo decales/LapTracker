@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -39,8 +40,25 @@ class StartView(
     fun View() {
         // TODO build view from class defined composable functions.
         // TODO initialize necessary view data in viewmodel/main/StartViewModel.kt. Data is accessed through constructor var 'viewModel'
+        val createRace = remember { mutableStateOf(false)}
         Header()
-        trackingView()
+        if (createRace.value) {
+            trackingView()
+        }
+        else {
+            Box (
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .fillMaxSize()
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    CreateARaceButton(createRace)
+                    ChooseATrackButton()
+                }
+            }
+        }
     }
 
     @Composable
@@ -54,6 +72,27 @@ class StartView(
                 text = "Start Tracking",
                 fontSize = 30.sp
             )
+        }
+    }
+
+    @Composable
+    fun CreateARaceButton(createRace: MutableState<Boolean>) {
+        Button(
+            onClick = {
+                createRace.value = true
+            }
+        ) {
+            Text(text = "Create a Race")
+        }
+    }
+
+    @Composable
+    fun ChooseATrackButton() {
+        Button( // Set a new point and add it to points array
+            onClick = {
+            }
+        ) {
+            Text(text = "Choose a Track")
         }
     }
 
