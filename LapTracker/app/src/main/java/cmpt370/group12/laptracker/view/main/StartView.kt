@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -42,20 +43,24 @@ class StartView(
         // TODO initialize necessary view data in viewmodel/main/StartViewModel.kt. Data is accessed through constructor var 'viewModel'
         val createRace = remember { mutableStateOf(false)}
         Header()
-        if (createRace.value) {
-            trackingView()
-        }
-        else {
-            Box (
-                contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .fillMaxSize()
-            ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally
+        Box (
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .fillMaxSize()
+        ) {
+            if (createRace.value) {
+                trackingView()
+            } else {
+                Card(
+                    modifier = Modifier
+                        .padding(5.dp)
                 ) {
-                    CreateARaceButton(createRace)
-                    ChooseATrackButton()
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        CreateATrackButton(createRace)
+                        ChooseATrackButton()
+                    }
                 }
             }
         }
@@ -76,13 +81,13 @@ class StartView(
     }
 
     @Composable
-    fun CreateARaceButton(createRace: MutableState<Boolean>) {
+    fun CreateATrackButton(createRace: MutableState<Boolean>) {
         Button(
             onClick = {
                 createRace.value = true
             }
         ) {
-            Text(text = "Create a Race")
+            Text(text = "Create a Track")
         }
     }
 
@@ -106,28 +111,32 @@ class StartView(
             modifier = Modifier
                 .fillMaxSize()
         ) {
-            Column (
-                horizontalAlignment = Alignment.CenterHorizontally
+            Card(
+                modifier = Modifier
+                    .align(Alignment.Center)
             ) {
-                Box ( // Container to display location points
-                    modifier = Modifier
-                        .padding(bottom = 100.dp)
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Column (
-                        horizontalAlignment = Alignment.CenterHorizontally,
+                    Box( // Container to display location points
                         modifier = Modifier
-                            .padding(top = 10.dp)
+                            .padding(bottom = 100.dp),
                     ) {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier
+                                .padding(top = 10.dp)
+                        ) {
 
-                        points.forEach { point ->
-                            Text(text = point.name)
+                            points.forEach { point ->
+                                Text(text = point.name)
+                            }
                         }
                     }
-                }
-                ToggleSetPointsButton(points, setToggle) { setToggle = !setToggle }
-
-                if (points.isNotEmpty() && !setToggle) {
-                    TrackingButton(points)
+                    ToggleSetPointsButton(points, setToggle) { setToggle = !setToggle }
+                    if (points.isNotEmpty() && !setToggle) {
+                            TrackingButton(points)
+                    }
                 }
             }
         }
