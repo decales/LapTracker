@@ -3,12 +3,9 @@ package cmpt370.group12.laptracker.view.main
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
@@ -22,7 +19,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -32,16 +28,21 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import cmpt370.group12.laptracker.R
+import cmpt370.group12.laptracker.model.LocationClient
 import cmpt370.group12.laptracker.view.theme.LapTrackerTheme
 import cmpt370.group12.laptracker.viewmodel.main.ProfileViewModel
 import cmpt370.group12.laptracker.viewmodel.main.SettingsViewModel
 import cmpt370.group12.laptracker.viewmodel.main.StartViewModel
 import cmpt370.group12.laptracker.viewmodel.main.TracksViewModel
+import com.google.android.gms.location.LocationServices
 
 class MainActivity : ComponentActivity() {
 
 override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+    var locationClient = LocationClient(this.applicationContext, this, LocationServices.getFusedLocationProviderClient(
+        this
+    ))
     setContent {
         LapTrackerTheme {
             Surface (
@@ -54,7 +55,7 @@ override fun onCreate(savedInstanceState: Bundle?) {
                         BottomNavigationBar(controller)
                     }
                 ) { navBarPadding ->
-                    NavigationView(controller, navBarPadding)
+                    NavigationView(controller, navBarPadding, locationClient)
                 }
             }
             }
@@ -67,7 +68,7 @@ override fun onCreate(savedInstanceState: Bundle?) {
         - Current view is set by the navigation controller
         - Navigation controller sets view based on the 'route' passed from the navigation bar */
     @Composable
-    fun NavigationView(navController: NavHostController, navBarPadding: PaddingValues) {
+    fun NavigationView(navController: NavHostController, navBarPadding: PaddingValues, locationClient: LocationClient) {
         NavHost(
             navController = navController,
             startDestination = "Start",
@@ -76,7 +77,7 @@ override fun onCreate(savedInstanceState: Bundle?) {
 
             // Initialize view models to pass to associated views
             // TODO fix view models to preserve states on MainActivity re-compose (i.e. on screen rotation)
-            val startViewModel = StartViewModel()
+            val startViewModel = StartViewModel(locationClient)
             val tracksViewModel = TracksViewModel()
             val profileViewModel = ProfileViewModel()
             val settingsViewModel = SettingsViewModel()
