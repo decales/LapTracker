@@ -1,10 +1,15 @@
 package cmpt370.group12.laptracker.view.main
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
@@ -47,10 +52,13 @@ class StartView(
             } else {
                 Card(
                     modifier = Modifier
-                        .padding(5.dp)
+                        .align(Alignment.Center)
+                        .size(width=250.dp, height=350.dp)
                 ) {
                     Column(
-                        horizontalAlignment = Alignment.CenterHorizontally
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.Center
                     ) {
                         CreateATrackButton(createRace)
                         ChooseATrackButton()
@@ -106,18 +114,24 @@ class StartView(
             Card(
                 modifier = Modifier
                     .align(Alignment.Center)
+                    .size(width=250.dp, height=350.dp)
             ) {
                 Column(
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.fillMaxSize()
                 ) {
                     Box( // Container to display location points
                         modifier = Modifier
-                            .padding(bottom = 100.dp),
+                            .padding(bottom = 10.dp)
+                            .height(100.dp)
+                            .verticalScroll(rememberScrollState())
+                            .fillMaxWidth()
                     ) {
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
                             modifier = Modifier
                                 .padding(top = 10.dp)
+                                .fillMaxSize()
                         ) {
 
                             viewModel.points.forEach { point ->
