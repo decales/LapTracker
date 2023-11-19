@@ -16,10 +16,10 @@ class StartViewModel(locationClient: LocationClient) : ViewModel() {
     // TODO (if applicable) retrieve data from database (model)
     var createRace = mutableStateOf(false)
     var pickTrack = mutableStateOf(false)
+    var trackPicked = mutableStateOf(false)
     var location = locationClient
-    val points = mutableStateListOf<Point>()
+    var points = mutableStateListOf<Point>()
     var setToggle = mutableStateOf(false)
-    var textToggleSetPoints = "Set points"
     val scope = CoroutineScope(Dispatchers.Main)
     var textSetPoints = "Set start"
     var isLoading = mutableStateOf(false)
@@ -33,8 +33,23 @@ class StartViewModel(locationClient: LocationClient) : ViewModel() {
     var laps = mutableStateOf(0)
     var next = mutableStateOf("")
 
+    data class TrackCard(
+        val id: Int, // track reference in database
+        val name: String,
+        val location: String,
+        val points: MutableList<Point>,
+        val mapSnippet: Int
+    )
+
     // TODO Dummy values, replace with array of database query result
-    val trackCards = List(12) { TracksViewModel.TrackCard(0, "Name", "Location", R.drawable.ic_launcher_foreground) }
+    val trackCards = List(12) { TrackCard(0, "Name", "Location",
+        mutableListOf(Point(Pair(52.132681649999995, -106.63488491666665), "Start", false),
+            Point(Pair(52.132681649999995, -106.63488491666665), "L1", false),
+            Point(Pair(52.132681649999995, -106.63488491666665), "L2", false),
+            Point(Pair(52.132681649999995, -106.63488491666665), "L3", false),
+            Point(Pair(52.132681649999995, -106.63488491666665), "L4", false),
+            Point(Pair(52.132681649999995, -106.63488491666665), "L5", false)),
+        R.drawable.ic_launcher_foreground) }
 
     data class Point (
         val latlon: Pair<Double, Double>,

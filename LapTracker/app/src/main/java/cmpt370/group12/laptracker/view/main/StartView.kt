@@ -48,16 +48,19 @@ class StartView(
                 .fillMaxSize()
         ) {
             if (viewModel.createRace.value) {
-                trackingView()
+                TrackingView()
+            }
+            else if (viewModel.trackPicked.value) {
+                TrackingView()
             }
             else if (viewModel.pickTrack.value) {
-                trackListView()
+                TrackListView(viewModel.trackPicked)
             }
             else {
                 Card(
                     modifier = Modifier
                         .align(Alignment.Center)
-                        .size(width=250.dp, height=350.dp)
+                        .size(width = 250.dp, height = 350.dp)
                 ) {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
@@ -109,7 +112,7 @@ class StartView(
     }
 
     @Composable
-    fun trackingView() {
+    fun TrackingView() {
 
         Box (
             contentAlignment = Alignment.Center,
@@ -119,7 +122,7 @@ class StartView(
             Card(
                 modifier = Modifier
                     .align(Alignment.Center)
-                    .size(width=250.dp, height=350.dp)
+                    .size(width = 250.dp, height = 350.dp)
             ) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -144,28 +147,14 @@ class StartView(
                             }
                         }
                     }
-                    ToggleSetPointsButton(viewModel.points, viewModel.setToggle.value) { viewModel.setToggle.value = !viewModel.setToggle.value }
-                    if (viewModel.points.isNotEmpty() && !viewModel.setToggle.value) {
+                    if (!viewModel.setToggle.value && !viewModel.trackPicked.value) {
+                        SetPointButton(viewModel.points)
+                    }
+                    if (viewModel.points.isNotEmpty() && viewModel.setToggle.value) {
                             TrackingButton(viewModel.points)
                     }
                 }
             }
-        }
-    }
-
-
-    @Composable
-    fun ToggleSetPointsButton(
-        points: SnapshotStateList<Point>,
-        setToggle: Boolean,
-        onClick: () -> Unit
-    ) {
-        viewModel.textToggleSetPoints = if (points.isEmpty() && !setToggle) "Set points" else if (!setToggle) "Edit points" else "Done"
-        Button(onClick = onClick) {
-            Text(text = viewModel.textToggleSetPoints)
-        }
-        if (setToggle) { // When button is toggled on, display another button to set (and undo) a point
-            SetPointButton(points)
         }
     }
 
@@ -193,6 +182,11 @@ class StartView(
             ) {
                 Text(text = "Undo")
             }
+            Button( // Remove last point entry from points array
+                onClick = { viewModel.setToggle.value = !viewModel.setToggle.value }
+            ) {
+                Text(text = "Done")
+            }
         }
         if (viewModel.isLoading.value) {
             Text (
@@ -203,7 +197,7 @@ class StartView(
     }
 
     @Composable
-    fun trackListView() {
+    fun TrackListView(trackPicked: MutableState<Boolean>) {
         Box (
             contentAlignment = Alignment.Center,
             modifier = Modifier
@@ -221,7 +215,13 @@ class StartView(
                         modifier = Modifier
                             .padding(bottom = 10.dp)
                             .fillMaxSize()
-                            .clickable { /* TODO populate points list with points from DB */ }
+                            .clickable {
+                                for (i in track.points.indices) {
+                                    viewModel.points.add(track.points[i])
+                                }
+                                trackPicked.value = true
+                                viewModel.setToggle.value = true
+                            }
                             .height(50.dp)
                     ) {
                         Text(text = track.name, textAlign = TextAlign.Center,
