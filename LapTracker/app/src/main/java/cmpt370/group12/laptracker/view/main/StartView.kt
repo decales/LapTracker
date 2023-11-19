@@ -1,5 +1,6 @@
 package cmpt370.group12.laptracker.view.main
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,16 +13,16 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cmpt370.group12.laptracker.viewmodel.main.StartViewModel
@@ -40,16 +41,19 @@ class StartView(
     fun View() {
         // TODO build view from class defined composable functions.
         // TODO initialize necessary view data in viewmodel/main/StartViewModel.kt. Data is accessed through constructor var 'viewModel'
-        val createRace = remember { mutableStateOf(false)}
         Header()
         Box (
             contentAlignment = Alignment.Center,
             modifier = Modifier
                 .fillMaxSize()
         ) {
-            if (createRace.value) {
+            if (viewModel.createRace.value) {
                 trackingView()
-            } else {
+            }
+            else if (viewModel.pickTrack.value) {
+                trackListView()
+            }
+            else {
                 Card(
                     modifier = Modifier
                         .align(Alignment.Center)
@@ -60,8 +64,8 @@ class StartView(
                         modifier = Modifier.fillMaxSize(),
                         verticalArrangement = Arrangement.Center
                     ) {
-                        CreateATrackButton(createRace)
-                        ChooseATrackButton()
+                        CreateATrackButton(viewModel.createRace)
+                        ChooseATrackButton(viewModel.pickTrack)
                     }
                 }
             }
@@ -94,9 +98,10 @@ class StartView(
     }
 
     @Composable
-    fun ChooseATrackButton() {
+    fun ChooseATrackButton(pickTrack: MutableState<Boolean>) {
         Button( // Set a new point and add it to points array
             onClick = {
+                pickTrack.value = true
             }
         ) {
             Text(text = "Choose a Track")
@@ -194,6 +199,36 @@ class StartView(
                 text = "Setting point...",
                 modifier = Modifier
                     .padding(top = 20.dp))
+        }
+    }
+
+    @Composable
+    fun trackListView() {
+        Box (
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .fillMaxSize()
+        ) {
+            Card(
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .size(width = 250.dp, height = 350.dp)
+                    .verticalScroll(rememberScrollState())
+            ) {
+                viewModel.trackCards.forEach { track ->
+                    Card(
+                        elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
+                        modifier = Modifier
+                            .padding(bottom = 10.dp)
+                            .fillMaxSize()
+                            .clickable { /* TODO populate points list with points from DB */ }
+                            .height(50.dp)
+                    ) {
+                        Text(text = track.name, textAlign = TextAlign.Center,
+                            modifier=Modifier.fillMaxSize(), fontSize = 30.sp)
+                    }
+                }
+            }
         }
     }
 
