@@ -1,6 +1,4 @@
-package cmpt370.group12.laptracker.domain.model
-
-import java.sql.Timestamp
+package cmpt370.group12.laptracker.model.domain.model
 
 data class Runs(
     //id : This is the Primary Key For Database Entry into Table RunEntity

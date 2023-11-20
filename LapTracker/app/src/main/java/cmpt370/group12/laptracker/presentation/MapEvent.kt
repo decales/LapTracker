@@ -1,7 +1,7 @@
 package cmpt370.group12.laptracker.presentation
 
 import com.google.android.gms.maps.model.LatLng
-import cmpt370.group12.laptracker.domain.model.MapPoint
+import cmpt370.group12.laptracker.model.domain.model.MapPoint
 
 sealed class AppEvent {
 

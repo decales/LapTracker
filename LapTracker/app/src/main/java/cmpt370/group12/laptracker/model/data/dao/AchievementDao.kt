@@ -1,10 +1,10 @@
-package cmpt370.group12.laptracker.data.dao
+package cmpt370.group12.laptracker.model.data.dao
 
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Query
 import androidx.room.Upsert
-import cmpt370.group12.laptracker.data.entities.AchievementEntity
+import cmpt370.group12.laptracker.model.data.entities.AchievementEntity
 import kotlinx.coroutines.flow.Flow
 
 

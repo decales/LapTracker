@@ -1,4 +1,4 @@
-package cmpt370.group12.laptracker.viewmodel.main
+package cmpt370.group12.laptracker.viewmodel
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -6,13 +6,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import cmpt370.group12.laptracker.R
 import cmpt370.group12.laptracker.model.LocationClient
-import cmpt370.group12.laptracker.view.main.MapsViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 
-class StartViewModel(locationClient: LocationClient, backend: MapsViewModel) : ViewModel() {
+class StartViewModel(locationClient: LocationClient, backend: GlobalViewModel) : ViewModel() {
     // TODO add all data and states values required for SettingsView composable functions
     // TODO (if applicable) retrieve data from database (model)
     var createRace = mutableStateOf(false)
@@ -44,12 +43,14 @@ class StartViewModel(locationClient: LocationClient, backend: MapsViewModel) : V
 
     // TODO Dummy values, replace with array of database query result
     val trackCards = List(12) { TrackCard(0, "Name", "Location",
-        mutableListOf(Point(Pair(52.132681649999995, -106.63488491666665), "Start", false),
+        mutableListOf(
+            Point(Pair(52.132681649999995, -106.63488491666665), "Start", false),
             Point(Pair(52.132681649999995, -106.63488491666665), "L1", false),
             Point(Pair(52.132681649999995, -106.63488491666665), "L2", false),
             Point(Pair(52.132681649999995, -106.63488491666665), "L3", false),
             Point(Pair(52.132681649999995, -106.63488491666665), "L4", false),
-            Point(Pair(52.132681649999995, -106.63488491666665), "L5", false)),
+            Point(Pair(52.132681649999995, -106.63488491666665), "L5", false)
+        ),
         R.drawable.ic_launcher_foreground) }
 
     data class Point (

@@ -1,4 +1,4 @@
-package cmpt370.group12.laptracker.viewmodel.main
+package cmpt370.group12.laptracker.viewmodel
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -6,10 +6,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import cmpt370.group12.laptracker.R
-import cmpt370.group12.laptracker.domain.model.Achievement
-import cmpt370.group12.laptracker.view.main.MapsViewModel
+import cmpt370.group12.laptracker.model.domain.model.Achievement
 
-class ProfileViewModel(val backend: MapsViewModel): ViewModel() {
+class ProfileViewModel(val backend: GlobalViewModel): ViewModel() {
     // TODO add all data and states values required for ProfileView composable functions
     // TODO (if applicable) retrieve data from database (model)
 

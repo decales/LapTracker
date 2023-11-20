@@ -25,8 +25,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import cmpt370.group12.laptracker.viewmodel.main.StartViewModel
-import cmpt370.group12.laptracker.viewmodel.main.StartViewModel.Point
+import cmpt370.group12.laptracker.viewmodel.StartViewModel
+import cmpt370.group12.laptracker.viewmodel.StartViewModel.Point
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 

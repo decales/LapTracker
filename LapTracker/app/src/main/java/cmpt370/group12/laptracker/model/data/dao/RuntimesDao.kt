@@ -1,10 +1,10 @@
-package cmpt370.group12.laptracker.data.dao
+package cmpt370.group12.laptracker.model.data.dao
 
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Query
 import androidx.room.Upsert
-import cmpt370.group12.laptracker.data.entities.RunTimesEntity
+import cmpt370.group12.laptracker.model.data.entities.RunTimesEntity
 import kotlinx.coroutines.flow.Flow
 
 // I am going to use a convention for function calls, that when programming in an IDE, I personally

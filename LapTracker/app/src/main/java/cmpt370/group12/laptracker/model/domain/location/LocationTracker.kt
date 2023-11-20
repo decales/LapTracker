@@ -1,4 +1,4 @@
-package cmpt370.group12.laptracker.domain.location
+package cmpt370.group12.laptracker.model.domain.location
 
 import android.location.Location
 import kotlinx.coroutines.flow.Flow

@@ -28,7 +28,7 @@ import cmpt370.group12.laptracker.old.Feature6
 import cmpt370.group12.laptracker.old.Feature7
 import cmpt370.group12.laptracker.old.Feature8
 import cmpt370.group12.laptracker.old.Feature9
-import cmpt370.group12.laptracker.viewmodel.main.SettingsViewModel
+import cmpt370.group12.laptracker.viewmodel.SettingsViewModel
 
 class SettingsView(viewModel: SettingsViewModel) {
 
