@@ -6,18 +6,25 @@ import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import cmpt370.group12.laptracker.R
 import cmpt370.group12.laptracker.model.LocationClient
+import cmpt370.group12.laptracker.model.domain.repository.LapTrackerRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class StartViewModel(locationClient: LocationClient, backend: GlobalViewModel) : ViewModel() {
+@HiltViewModel
+class StartViewModel @Inject constructor(
+    private val db: LapTrackerRepository,
+    private val locationClient: LocationClient
+) : ViewModel() {
+
     // TODO add all data and states values required for SettingsView composable functions
     // TODO (if applicable) retrieve data from database (model)
     var createRace = mutableStateOf(false)
     var pickTrack = mutableStateOf(false)
     var trackPicked = mutableStateOf(false)
-    var location = locationClient
     var points = mutableStateListOf<Point>()
     var setToggle = mutableStateOf(false)
     val scope = CoroutineScope(Dispatchers.Main)
@@ -60,10 +67,10 @@ class StartViewModel(locationClient: LocationClient, backend: GlobalViewModel) :
     )
 
     suspend fun getProximityFlow(latlon: Pair<Double, Double>): Flow<Double> {
-        return location.getProximityFlow(latlon)
+        return this.locationClient.getProximityFlow(latlon)
     }
 
     suspend fun getAverageLocation(): Pair<Double, Double>{
-        return location.getAverageLocation(6)
+        return this.locationClient.getAverageLocation(6)
     }
 }

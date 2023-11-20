@@ -150,10 +150,10 @@ class ProfileView(
                 horizontalArrangement = Arrangement.SpaceAround,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(text = "${viewModel.backend.appstate.value.achievements.count { it.achieved }}/${viewModel.backend.appstate.value.achievements.size} Unlocked",
+                Text(text = "${viewModel.achievements.value.count { it.achieved }}/${viewModel.achievements.value.size} Unlocked",
                     fontSize = 14.sp
                 )
-                Text(text = "${(viewModel.backend.appstate.value.achievements.count { it.achieved }.toDouble() / viewModel.backend.appstate.value.achievements.size.toDouble() * 100).toInt()}% Completion",
+                Text(text = "${(viewModel.achievements.value.count { it.achieved }.toDouble() / viewModel.achievements.value.size.toDouble() * 100).toInt()}% Completion",
                     fontSize = 14.sp
                 )
             }
@@ -171,7 +171,7 @@ class ProfileView(
                 columns = GridCells.Fixed(3),
                 contentPadding = PaddingValues(top = 20.dp),
                 content = {
-                    viewModel.backend.appstate.value.achievements.forEach { achievement ->
+                    viewModel.achievements.value.forEach { achievement ->
                         item {
                             Column (
                                 horizontalAlignment = CenterHorizontally,

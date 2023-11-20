@@ -2,8 +2,15 @@ package cmpt370.group12.laptracker.viewmodel
 
 import androidx.lifecycle.ViewModel
 import cmpt370.group12.laptracker.R
+import cmpt370.group12.laptracker.model.domain.repository.LapTrackerRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class TracksViewModel(backend: GlobalViewModel) :ViewModel() {
+@HiltViewModel
+class TracksViewModel @Inject constructor(
+    private val db: LapTrackerRepository
+):ViewModel() {
+
     // TODO add all data and states values required for TracksView composable functions
     // TODO (if applicable) retrieve data from database (model)
 
@@ -16,6 +23,4 @@ class TracksViewModel(backend: GlobalViewModel) :ViewModel() {
 
     // TODO Dummy values, replace with array of database query result
     val trackCards = List(12) { TrackCard(0, "Name", "Location", R.drawable.ic_launcher_foreground) }
-
-
 }

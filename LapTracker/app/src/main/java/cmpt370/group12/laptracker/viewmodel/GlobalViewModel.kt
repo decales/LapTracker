@@ -2,14 +2,11 @@
 
 package cmpt370.group12.laptracker.viewmodel
 
-
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import cmpt370.group12.laptracker.R
 import cmpt370.group12.laptracker.model.domain.location.LocationTracker
-import cmpt370.group12.laptracker.model.domain.model.Achievement
 import cmpt370.group12.laptracker.model.domain.model.MapPoint
 import cmpt370.group12.laptracker.model.domain.repository.LapTrackerRepository
 import cmpt370.group12.laptracker.presentation.AppEvent
@@ -31,7 +28,6 @@ class GlobalViewModel @Inject constructor(
 
 ): ViewModel() {
 
-
     private val _trackstate = mutableStateOf(TrackState())
     private val _mapstate = mutableStateOf(MapState())
     private val _appstate = mutableStateOf(AppState())
@@ -48,7 +44,6 @@ class GlobalViewModel @Inject constructor(
         FlowTrackList_Start()
         FlowRunsListbyTrackId_Start()
         FlowAchievementList_Start()
-        AchievementSetDefaults()
     }
 // When it Ends
     override fun onCleared() {
@@ -59,35 +54,6 @@ class GlobalViewModel @Inject constructor(
         FlowRunsListbyTrackId_Stop()
         FlowAchievementList_Stop()
     }
-
-    fun addAchievement(ac: Achievement){
-        viewModelScope.launch {
-            repository.Achievement_insert(ac)
-
-        }
-    }
-
-
-    fun AchievementSetDefaults() {
-        //TODO insert real achievements (dont change null id)
-        val achievements = listOf(
-            Achievement(null, "name", "desc", false, R.drawable.ic_launcher_foreground, 0),
-            Achievement(null, "name", "desc", false, R.drawable.ic_launcher_foreground, 0),
-            Achievement(null, "name", "desc", false, R.drawable.ic_launcher_foreground, 0),
-            Achievement(null, "name", "desc", false, R.drawable.ic_launcher_foreground, 0),
-            Achievement(null, "name", "desc", false, R.drawable.ic_launcher_foreground, 0),
-            Achievement(null, "name", "desc", false, R.drawable.ic_launcher_foreground, 0)
-        )
-
-        viewModelScope.launch {
-            if (repository.Achievement_getAll().isEmpty()) {
-                achievements.forEach { achievement ->
-                    repository.Achievement_insert(achievement)
-                }
-            }
-        }
-    }
-
 
 
 fun check_something(){
@@ -104,21 +70,15 @@ fun check_something(){
 }
     private fun FlowCurrentLocation_Start() {
         if (!_appstate.value.flowCurrentLocationActive && (_appstate.value.flowCurrentLocationJob == null)) {
-
             val lifejob: Job = viewModelScope.launch {
                 locationTracker.currentLocationFlow(1)
                     .collectLatest {
-
                             _mapstate.value = mapstate.value.copy(
                                 currentLocation = it
                             )
                             check_something()
-
                         }
-
                     }
-
-
             _appstate.value = appstate.value.copy(
                 flowCurrentLocationJob = lifejob,
                 flowCurrentLocationActive = true,
