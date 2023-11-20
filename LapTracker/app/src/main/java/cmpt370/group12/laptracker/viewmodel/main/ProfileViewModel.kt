@@ -6,26 +6,23 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import cmpt370.group12.laptracker.R
+import cmpt370.group12.laptracker.domain.model.Achievement
+import cmpt370.group12.laptracker.view.main.MapsViewModel
 
-class ProfileViewModel: ViewModel() {
+class ProfileViewModel(val backend: MapsViewModel): ViewModel() {
     // TODO add all data and states values required for ProfileView composable functions
     // TODO (if applicable) retrieve data from database (model)
 
-    // Data classes
 
+    // Data classes
     data class ProfileTab(
         val text: String,
         val icon: Int,
     )
-
-    data class Achievement(
-        val id: Int,
-        val name: String,
-        val description: String,
-        val icon: Int,
-        val isAchieved: Boolean,
-        val achievedDate: String
-    )
+    
+    //val backend.appstate.value.achievements: List<Achievement> = backend.appstate.value.achievements
+    //var x = backend.appstate.value.achievements
+    //val backend.appstate.value.achievements = mutableStateOf(backend.appstate.value.achievements)
 
 
     // Variables and objects
@@ -37,15 +34,13 @@ class ProfileViewModel: ViewModel() {
         ProfileTab("Achievements", R.drawable.ic_launcher_foreground)
     )
 
-    // TODO Dummy values, replace with array of database query result
-    val achievements = List(18) { Achievement(0, "Name", "Description", R.drawable.ic_launcher_foreground, (it % 3 == 0), "Date unlocked") }
-
-    val unlockedCount = achievements.count { it.isAchieved }
+    //val achievements = List(18) { Achievement(0, "Name", "Description", R.drawable.ic_launcher_foreground, (it % 3 == 0), "Date unlocked") }
+    //val achievements = backend.
+    //val unlockedCount = backend.appstate.value.achievements.count { it.achieved }
 
     var achievementDetailsVisible by mutableStateOf(false)
 
-    var currentAchievement: Achievement by mutableStateOf(Achievement(0, "", "", 0, false, ""))
-
+    var currentAchievement: Achievement by mutableStateOf(Achievement(null, "", "", false, R.drawable.ic_launcher_foreground, 0))
 
     // Methods
 

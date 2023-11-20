@@ -7,12 +7,12 @@ import java.sql.Timestamp
 @Entity
 data class CommentEntity(
     //id : This is the Primary Key For Database Entry into Table CommentEntity
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     val id: Int? = null,
     // fromTrackId: This is a reference to the primary Key "id" for the TrackEntity Table
-    val fromTrackId: Int,
+    val fromTrackId: Int = 0,
     // Comment is the String of the Comment itself
-    val comment: String,
+    val comment: String = "",
 
-    val timestamp: Long
+    val timestamp: Long = 0
 )
