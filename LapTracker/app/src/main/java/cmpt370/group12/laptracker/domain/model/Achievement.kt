@@ -11,6 +11,6 @@ data class Achievement(
     val description: String,
     //achieved is a boolean that is asserted when the goal is met
     val achieved: Boolean,
-
+    val iconID: Int,
     val timestamp: Long
 )

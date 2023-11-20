@@ -6,6 +6,7 @@ import cmpt370.group12.laptracker.data.dao.MapPointDao
 import cmpt370.group12.laptracker.data.dao.RunsDao
 import cmpt370.group12.laptracker.data.dao.RuntimesDao
 import cmpt370.group12.laptracker.data.dao.TrackDao
+import cmpt370.group12.laptracker.data.entities.AchievementEntity
 import cmpt370.group12.laptracker.data.mapper.toAchievement
 import cmpt370.group12.laptracker.data.mapper.toAchievementEntity
 import cmpt370.group12.laptracker.data.mapper.toComment
@@ -66,6 +67,13 @@ class LapTrackerRepositoryImpl(
         }
 
     }
+
+    override suspend fun Achievement_getAll(): List<Achievement>
+    {
+        return achievementDao.Achievement_getAll2().map{ it.toAchievement()}
+
+    }
+
 
     override suspend fun Achievement_insert(achievement: Achievement){
         achievementDao.Achievement_insert(achievement.toAchievementEntity())

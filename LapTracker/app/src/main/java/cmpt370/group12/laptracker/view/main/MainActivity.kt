@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -35,7 +36,9 @@ import cmpt370.group12.laptracker.viewmodel.main.SettingsViewModel
 import cmpt370.group12.laptracker.viewmodel.main.StartViewModel
 import cmpt370.group12.laptracker.viewmodel.main.TracksViewModel
 import com.google.android.gms.location.LocationServices
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
 override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,7 +71,10 @@ override fun onCreate(savedInstanceState: Bundle?) {
         - Current view is set by the navigation controller
         - Navigation controller sets view based on the 'route' passed from the navigation bar */
     @Composable
-    fun NavigationView(navController: NavHostController, navBarPadding: PaddingValues, locationClient: LocationClient) {
+    fun NavigationView(
+        navController: NavHostController, navBarPadding: PaddingValues, locationClient: LocationClient, backend: MapsViewModel = viewModel()
+    ) {
+
         NavHost(
             navController = navController,
             startDestination = "Start",
@@ -77,10 +83,11 @@ override fun onCreate(savedInstanceState: Bundle?) {
 
             // Initialize view models to pass to associated views
             // TODO fix view models to preserve states on MainActivity re-compose (i.e. on screen rotation)
-            val startViewModel = StartViewModel(locationClient)
-            val tracksViewModel = TracksViewModel()
-            val profileViewModel = ProfileViewModel()
-            val settingsViewModel = SettingsViewModel()
+
+            val startViewModel = StartViewModel(locationClient,backend)
+            val tracksViewModel = TracksViewModel(backend)
+            val profileViewModel = ProfileViewModel(backend)
+            val settingsViewModel = SettingsViewModel(backend)
 
             // Handle routes
             composable("Start") {

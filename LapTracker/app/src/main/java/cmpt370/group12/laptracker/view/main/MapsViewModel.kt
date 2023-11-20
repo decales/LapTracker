@@ -1,15 +1,21 @@
 @file:Suppress("SpellCheckingInspection", "unused")
 
-package cmpt370.group12.laptracker.view.tracking.presentation
+package cmpt370.group12.laptracker.view.main
 
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import cmpt370.group12.laptracker.R
 import cmpt370.group12.laptracker.domain.location.LocationTracker
+import cmpt370.group12.laptracker.domain.model.Achievement
 import cmpt370.group12.laptracker.domain.model.MapPoint
 import cmpt370.group12.laptracker.domain.repository.LapTrackerRepository
+import cmpt370.group12.laptracker.presentation.AppEvent
+import cmpt370.group12.laptracker.presentation.AppState
+import cmpt370.group12.laptracker.presentation.MapState
+import cmpt370.group12.laptracker.presentation.TrackState
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -43,7 +49,8 @@ class MapsViewModel @Inject constructor(
         FlowRunTimesbyCurrentRunId_Start()
         FlowTrackList_Start()
         FlowRunsListbyTrackId_Start()
-
+        FlowAchievementList_Start()
+        AchievementSetDefaults()
     }
 // When it Ends
     override fun onCleared() {
@@ -52,7 +59,39 @@ class MapsViewModel @Inject constructor(
         FlowRunTimesbyCurrentRunId_Stop()
         FlowTrackList_Stop()
         FlowRunsListbyTrackId_Stop()
+        FlowAchievementList_Stop()
     }
+
+    fun addAchievement(ac:Achievement){
+        viewModelScope.launch {
+            repository.Achievement_insert(ac)
+
+        }
+    }
+
+
+    fun AchievementSetDefaults() {
+        //TODO insert real achievements (dont change null id)
+        val achievements = listOf(
+            Achievement(null, "name", "desc", false, R.drawable.ic_launcher_foreground, 0),
+            Achievement(null, "name", "desc", false, R.drawable.ic_launcher_foreground, 0),
+            Achievement(null, "name", "desc", false, R.drawable.ic_launcher_foreground, 0),
+            Achievement(null, "name", "desc", false, R.drawable.ic_launcher_foreground, 0),
+            Achievement(null, "name", "desc", false, R.drawable.ic_launcher_foreground, 0),
+            Achievement(null, "name", "desc", false, R.drawable.ic_launcher_foreground, 0)
+        )
+
+        viewModelScope.launch {
+            if (repository.Achievement_getAll().isEmpty()) {
+                achievements.forEach { achievement ->
+                    repository.Achievement_insert(achievement)
+                }
+            }
+        }
+    }
+
+
+
 fun check_something(){
     //TODO: Does Nothing Yet.  This Will Run Functions At Each Update.
     // Check Distances, Acheivments, Etc.
@@ -99,7 +138,36 @@ fun check_something(){
         FlowCurrentLocation_Stop()
         FlowCurrentLocation_Start()
     }
+    private fun FlowAchievementList_Start(){
+        if (!_appstate.value.flowAchievementListActive && (_appstate.value.flowAchievementListJob == null)) {
+            val lifejob: Job = viewModelScope.launch {
+                repository.Achievement_getAllFlow()
 
+                    .collectLatest { achievements  ->
+                        _appstate.value = appstate.value.copy(
+                            achievements = achievements
+                        )
+                    }
+
+            }
+            _appstate.value = appstate.value.copy(
+                flowAchievementListJob =  lifejob,
+                flowAchievementListActive = true,
+            )
+        }
+
+    }
+    private fun FlowAchievementList_Stop(){
+        _appstate.value.flowAchievementListJob?.cancel()
+        _appstate.value = appstate.value.copy(
+            flowAchievementListJob = null,
+            flowAchievementListActive = false,
+        )
+    }
+    private fun FlowAchievementList_Restart(){
+        FlowAchievementList_Stop()
+        FlowAchievementList_Start()
+    }
 
     private fun FlowMapPointsbyCurrentTrackId_Start() {
         if (!_appstate.value.flowCurrentTrackMapPointActive && (_appstate.value.flowCurrentTrackMapPointJob == null)) {

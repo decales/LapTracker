@@ -1,4 +1,4 @@
-package cmpt370.group12.laptracker.view.tracking.presentation
+package cmpt370.group12.laptracker.presentation
 
 import android.location.Location
 import cmpt370.group12.laptracker.domain.model.Achievement
@@ -66,6 +66,8 @@ data class AppState(
     val flowRunListByTrackIdJob: Job? = null,
     val flowCurrentTrackRunsListJob : Job? = null,
     val flowCurrentTrackRunsListActive :Boolean = false,
+    val flowAchievementListActive: Boolean = false,
+    val flowAchievementListJob: Job? = null,
 
     )
 
