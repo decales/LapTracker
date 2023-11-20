@@ -29,4 +29,7 @@ interface AchievementDao {
 
     @Query("SELECT * FROM achievemententity")
     fun Achievement_getAll(): Flow<List<AchievementEntity>>
+
+    @Query("SELECT * FROM achievemententity")
+    suspend fun Achievement_getAll2(): List<AchievementEntity>
 }

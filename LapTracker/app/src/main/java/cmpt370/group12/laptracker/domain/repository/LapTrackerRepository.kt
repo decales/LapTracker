@@ -1,5 +1,6 @@
 package cmpt370.group12.laptracker.domain.repository
 
+import cmpt370.group12.laptracker.data.mapper.toAchievement
 import cmpt370.group12.laptracker.domain.model.Achievement
 import cmpt370.group12.laptracker.domain.model.Comment
 import cmpt370.group12.laptracker.domain.model.MapPoint
@@ -20,6 +21,8 @@ interface LapTrackerRepository {
     suspend fun Achievement_delete(achievement: Achievement)
 
     fun Achievement_getAllFlow(): Flow<List<Achievement>>
+    suspend fun Achievement_getAll(): List<Achievement>
+
 
     suspend fun Comment_insert(comment: Comment)
     suspend fun Comment_delete(comment: Comment)
