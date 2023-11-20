@@ -18,6 +18,7 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -34,6 +35,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import cmpt370.group12.laptracker.R
+import cmpt370.group12.laptracker.domain.model.Achievement
 import cmpt370.group12.laptracker.viewmodel.main.ProfileViewModel
 
 class ProfileView(
@@ -149,10 +152,10 @@ class ProfileView(
                 horizontalArrangement = Arrangement.SpaceAround,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(text = "${viewModel.unlockedCount}/${viewModel.achievements.size} Unlocked",
+                Text(text = "${viewModel.backend.appstate.value.achievements.count { it.achieved }}/${viewModel.backend.appstate.value.achievements.size} Unlocked",
                     fontSize = 14.sp
                 )
-                Text(text = "${(viewModel.unlockedCount.toDouble() / viewModel.achievements.size.toDouble() * 100).toInt()}% Completion",
+                Text(text = "${(viewModel.backend.appstate.value.achievements.count { it.achieved }.toDouble() / viewModel.backend.appstate.value.achievements.size.toDouble() * 100).toInt()}% Completion",
                     fontSize = 14.sp
                 )
             }
@@ -170,7 +173,7 @@ class ProfileView(
                 columns = GridCells.Fixed(3),
                 contentPadding = PaddingValues(top = 20.dp),
                 content = {
-                    viewModel.achievements.forEach { achievement ->
+                    viewModel.backend.appstate.value.achievements.forEach { achievement ->
                         item {
                             Column (
                                 horizontalAlignment = CenterHorizontally,
@@ -183,9 +186,9 @@ class ProfileView(
                                         .clickable { viewModel.toggleAchievementDetails(achievement) }
                                 ) {
                                     Icon(
-                                        painter = painterResource(id = achievement.icon),
+                                        painter = painterResource(id = achievement.iconID),
                                         contentDescription = achievement.name,
-                                        tint = if (!achievement.isAchieved) Color.Gray else Color.Unspecified // Grey-out locked achievements
+                                        tint = if (!achievement.achieved) Color.Gray else Color.Unspecified // Grey-out locked achievements
                                     )
                                 }
                                 Text(
@@ -203,7 +206,7 @@ class ProfileView(
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    fun AchievementDetails(achievement: ProfileViewModel.Achievement) { // TODO Make this look pretty
+    fun AchievementDetails(achievement: Achievement) {
         AlertDialog(
             onDismissRequest = { viewModel.toggleAchievementDetails(achievement) }
         ) {
@@ -222,7 +225,7 @@ class ProfileView(
                         fontSize = 22.sp
                     )
                     Icon(
-                        painter = painterResource(id = achievement.icon),
+                        painter = painterResource(id = achievement.iconID),
                         contentDescription = achievement.name,
                         modifier = Modifier
                             .padding(top = 5.dp, bottom = 5.dp)
@@ -230,7 +233,7 @@ class ProfileView(
                     )
                     Text(text = achievement.description)
                     Text(
-                        text = achievement.achievedDate,
+                        text = achievement.timestamp.toString(),
                         fontSize = 12.sp,
                         modifier = Modifier.padding(top = 5.dp)
                     )

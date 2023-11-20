@@ -59,6 +59,7 @@ fun AchievementEntity.toAchievement(): Achievement {
         name = name,
         description = description,
         achieved = achieved,
+        iconID = iconID,
         timestamp = timestamp
     )
 }
@@ -68,6 +69,7 @@ fun Achievement.toAchievementEntity(): AchievementEntity {
         name = name,
         description = description,
         achieved = achieved,
+        iconID = iconID,
         timestamp = timestamp
     )
 }

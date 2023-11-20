@@ -1,4 +1,4 @@
-package cmpt370.group12.laptracker.view.tracking.presentation
+package cmpt370.group12.laptracker.presentation
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Column
@@ -13,6 +13,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.Marker
 import androidx.lifecycle.viewmodel.compose.viewModel
+import cmpt370.group12.laptracker.view.main.MapsViewModel
 import com.google.maps.android.compose.MarkerState
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "UnusedMaterialScaffoldPaddingParameter")
