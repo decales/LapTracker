@@ -17,5 +17,10 @@ class TracksViewModel :ViewModel() {
     // TODO Dummy values, replace with array of database query result
     val trackCards = List(12) { TrackCard(0, "Name", "Location", R.drawable.ic_launcher_foreground) }
 
+    data class RunCard(
+        val id: Int,
+        val stats: String,
+    )
 
+    val runCards = List(12) { RunCard(0, "Stats") }
 }

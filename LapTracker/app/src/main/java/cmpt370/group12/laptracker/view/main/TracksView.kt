@@ -141,20 +141,45 @@ class TracksView(
             modifier = Modifier.padding(40.dp)
                 .fillMaxWidth()
         ) {
-            Text(text = "Track Name...", color = Color(255,255,255))
+            Text(text = "Track Name...", color = Color(255, 255, 255))
 
-            var comment by remember { mutableStateOf("Type here...")}
+            var comment by remember { mutableStateOf("Type here...") }
             TextField(
                 value = comment,
                 onValueChange = { newComment -> comment = newComment },
-                label = {Text(text = "Type Comments Here")},
+                label = { Text(text = "Type Comments Here") },
                 maxLines = 3,
-                keyboardOptions = KeyboardOptions(imeAction = androidx.compose.ui.text.input.ImeAction.Done ),
-                keyboardActions = KeyboardActions(onGo = {Log.d("ImeAction", "Comment Saved" /* TODO save comment to database */)})
+                keyboardOptions = KeyboardOptions(imeAction = androidx.compose.ui.text.input.ImeAction.Done),
+                keyboardActions = KeyboardActions(onGo = {
+                    Log.d(
+                        "ImeAction",
+                        "Comment Saved" /* TODO save comment to database */
+                    )
+                })
             )
 
             Button(onClick = {}) {
                 Text(text = "Save Comment") /* TODO button click = save comment to database */
+            }
+
+            LazyColumn(
+                contentPadding = PaddingValues(top = 20.dp, start = 20.dp, end = 20.dp),
+            ) {
+                viewModel.trackCards.forEach { card ->
+                    item {
+                        Card(
+                            elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
+                            modifier = Modifier
+                                .padding(bottom = 25.dp)
+                                .fillMaxWidth()
+                                .clickable {
+                                    /* TODO launch /student/jpm715/StudioProjects/cmpt-370track details view */
+                                }
+                        ) {
+
+                        }
+                    }
+                }
             }
         }
     }
