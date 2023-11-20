@@ -32,7 +32,7 @@ import kotlin.math.pow
 import kotlin.math.sin
 import kotlin.math.sqrt
 
-class LocationClient (
+class LocationClient(
     private val context: Context,
     private val activity: Activity,
     private val client: FusedLocationProviderClient
