@@ -18,7 +18,6 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -35,9 +34,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import cmpt370.group12.laptracker.R
-import cmpt370.group12.laptracker.domain.model.Achievement
-import cmpt370.group12.laptracker.viewmodel.main.ProfileViewModel
+import cmpt370.group12.laptracker.model.domain.model.Achievement
+import cmpt370.group12.laptracker.viewmodel.ProfileViewModel
 
 class ProfileView(
     private val viewModel: ProfileViewModel

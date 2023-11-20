@@ -16,7 +16,6 @@ import cmpt370.group12.laptracker.presentation.AppEvent
 import cmpt370.group12.laptracker.presentation.AppState
 import cmpt370.group12.laptracker.presentation.MapState
 import cmpt370.group12.laptracker.presentation.TrackState
-
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
@@ -24,10 +23,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
-
 @Suppress("FunctionName")
 @HiltViewModel
-class MapsViewModel @Inject constructor(
+class GlobalViewModel @Inject constructor(
     private val repository: LapTrackerRepository,
     private val locationTracker: LocationTracker
 

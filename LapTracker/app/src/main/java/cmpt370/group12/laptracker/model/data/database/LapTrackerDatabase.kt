@@ -1,19 +1,19 @@
-package cmpt370.group12.laptracker.data.database
+package cmpt370.group12.laptracker.model.data.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import cmpt370.group12.laptracker.data.entities.AchievementEntity
-import cmpt370.group12.laptracker.data.entities.CommentEntity
-import cmpt370.group12.laptracker.data.entities.MapPointEntity
-import cmpt370.group12.laptracker.data.entities.RunTimesEntity
-import cmpt370.group12.laptracker.data.entities.RunsEntity
-import cmpt370.group12.laptracker.data.entities.TrackEntity
-import cmpt370.group12.laptracker.data.dao.AchievementDao
-import cmpt370.group12.laptracker.data.dao.CommentDao
-import cmpt370.group12.laptracker.data.dao.MapPointDao
-import cmpt370.group12.laptracker.data.dao.RunsDao
-import cmpt370.group12.laptracker.data.dao.RuntimesDao
-import cmpt370.group12.laptracker.data.dao.TrackDao
+import cmpt370.group12.laptracker.model.data.entities.AchievementEntity
+import cmpt370.group12.laptracker.model.data.entities.CommentEntity
+import cmpt370.group12.laptracker.model.data.entities.MapPointEntity
+import cmpt370.group12.laptracker.model.data.entities.RunTimesEntity
+import cmpt370.group12.laptracker.model.data.entities.RunsEntity
+import cmpt370.group12.laptracker.model.data.entities.TrackEntity
+import cmpt370.group12.laptracker.model.data.dao.AchievementDao
+import cmpt370.group12.laptracker.model.data.dao.CommentDao
+import cmpt370.group12.laptracker.model.data.dao.MapPointDao
+import cmpt370.group12.laptracker.model.data.dao.RunsDao
+import cmpt370.group12.laptracker.model.data.dao.RuntimesDao
+import cmpt370.group12.laptracker.model.data.dao.TrackDao
 
 @Database(
     entities = [MapPointEntity::class, CommentEntity::class, AchievementEntity::class,

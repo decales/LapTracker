@@ -1,4 +1,4 @@
-package cmpt370.group12.laptracker.domain.model
+package cmpt370.group12.laptracker.model.domain.model
 
 data class MapPoint(
     //id : This is the Primary Key For Database Entry into Table MapPointEntity

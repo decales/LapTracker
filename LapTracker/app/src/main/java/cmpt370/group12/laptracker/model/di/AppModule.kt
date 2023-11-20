@@ -1,13 +1,13 @@
-package cmpt370.group12.laptracker.di
+package cmpt370.group12.laptracker.model.di
 
 import android.app.Application
 import androidx.room.Room
 
-import cmpt370.group12.laptracker.data.database.LapTrackerDatabase
-import cmpt370.group12.laptracker.data.location.DefaultLocationTracker
-import cmpt370.group12.laptracker.data.repository.LapTrackerRepositoryImpl
-import cmpt370.group12.laptracker.domain.location.LocationTracker
-import cmpt370.group12.laptracker.domain.repository.LapTrackerRepository
+import cmpt370.group12.laptracker.model.data.database.LapTrackerDatabase
+import cmpt370.group12.laptracker.model.data.location.DefaultLocationTracker
+import cmpt370.group12.laptracker.model.data.repository.LapTrackerRepositoryImpl
+import cmpt370.group12.laptracker.model.domain.location.LocationTracker
+import cmpt370.group12.laptracker.model.domain.repository.LapTrackerRepository
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import dagger.Module

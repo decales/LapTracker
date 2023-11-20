@@ -1,17 +1,17 @@
-package cmpt370.group12.laptracker.data.mapper
+package cmpt370.group12.laptracker.model.data.mapper
 
-import cmpt370.group12.laptracker.data.entities.AchievementEntity
-import cmpt370.group12.laptracker.data.entities.CommentEntity
-import cmpt370.group12.laptracker.data.entities.MapPointEntity
-import cmpt370.group12.laptracker.data.entities.RunTimesEntity
-import cmpt370.group12.laptracker.data.entities.RunsEntity
-import cmpt370.group12.laptracker.data.entities.TrackEntity
-import cmpt370.group12.laptracker.domain.model.Achievement
-import cmpt370.group12.laptracker.domain.model.Comment
-import cmpt370.group12.laptracker.domain.model.MapPoint
-import cmpt370.group12.laptracker.domain.model.Runs
-import cmpt370.group12.laptracker.domain.model.Runtimes
-import cmpt370.group12.laptracker.domain.model.Track
+import cmpt370.group12.laptracker.model.data.entities.AchievementEntity
+import cmpt370.group12.laptracker.model.data.entities.CommentEntity
+import cmpt370.group12.laptracker.model.data.entities.MapPointEntity
+import cmpt370.group12.laptracker.model.data.entities.RunTimesEntity
+import cmpt370.group12.laptracker.model.data.entities.RunsEntity
+import cmpt370.group12.laptracker.model.data.entities.TrackEntity
+import cmpt370.group12.laptracker.model.domain.model.Achievement
+import cmpt370.group12.laptracker.model.domain.model.Comment
+import cmpt370.group12.laptracker.model.domain.model.MapPoint
+import cmpt370.group12.laptracker.model.domain.model.Runs
+import cmpt370.group12.laptracker.model.domain.model.Runtimes
+import cmpt370.group12.laptracker.model.domain.model.Track
 
 fun MapPointEntity.toMapPoint(): MapPoint {
     return MapPoint(
@@ -113,7 +113,7 @@ fun Runtimes.toRunTimesEntity(): RunTimesEntity {
         timestamp = timestamp
     )
 }
-fun RunTimesEntity.toRunTimes(): Runtimes{
+fun RunTimesEntity.toRunTimes(): Runtimes {
     return Runtimes(
         id = id,
         fromRunId = fromRunId,

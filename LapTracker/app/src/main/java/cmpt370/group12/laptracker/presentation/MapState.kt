@@ -1,13 +1,13 @@
 package cmpt370.group12.laptracker.presentation
 
 import android.location.Location
-import cmpt370.group12.laptracker.domain.model.Achievement
-import cmpt370.group12.laptracker.domain.model.Comment
+import cmpt370.group12.laptracker.model.domain.model.Achievement
+import cmpt370.group12.laptracker.model.domain.model.Comment
 import com.google.maps.android.compose.MapProperties
-import cmpt370.group12.laptracker.domain.model.MapPoint
-import cmpt370.group12.laptracker.domain.model.Runs
-import cmpt370.group12.laptracker.domain.model.Runtimes
-import cmpt370.group12.laptracker.domain.model.Track
+import cmpt370.group12.laptracker.model.domain.model.MapPoint
+import cmpt370.group12.laptracker.model.domain.model.Runs
+import cmpt370.group12.laptracker.model.domain.model.Runtimes
+import cmpt370.group12.laptracker.model.domain.model.Track
 import com.google.maps.android.compose.MapUiSettings
 import kotlinx.coroutines.Job
 
@@ -46,7 +46,7 @@ data class TrackState(
     val runtimes: List<Runtimes> = emptyList(),
     val runs: List<Runs> = emptyList(),
 
-)
+    )
 
 data class AppState(
     val achievements: List<Achievement> = emptyList(),

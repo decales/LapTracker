@@ -1,4 +1,4 @@
-package cmpt370.group12.laptracker.data.location
+package cmpt370.group12.laptracker.model.data.location
 
 import android.annotation.SuppressLint
 import android.app.Application
@@ -8,7 +8,7 @@ import android.location.Location
 import android.location.LocationManager
 import android.os.Looper
 import androidx.core.content.ContextCompat
-import cmpt370.group12.laptracker.domain.location.LocationTracker
+import cmpt370.group12.laptracker.model.domain.location.LocationTracker
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest

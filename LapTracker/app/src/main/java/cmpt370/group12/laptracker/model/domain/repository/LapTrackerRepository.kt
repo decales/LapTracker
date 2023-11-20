@@ -1,13 +1,13 @@
-package cmpt370.group12.laptracker.domain.repository
+package cmpt370.group12.laptracker.model.domain.repository
 
-import cmpt370.group12.laptracker.model.data.mapper.toAchievement
-import cmpt370.group12.laptracker.domain.model.Achievement
-import cmpt370.group12.laptracker.domain.model.Comment
-import cmpt370.group12.laptracker.domain.model.MapPoint
-import cmpt370.group12.laptracker.domain.model.Runs
-import cmpt370.group12.laptracker.domain.model.Runtimes
-import cmpt370.group12.laptracker.domain.model.Track
+import cmpt370.group12.laptracker.model.domain.model.Achievement
+import cmpt370.group12.laptracker.model.domain.model.Comment
+import cmpt370.group12.laptracker.model.domain.model.MapPoint
+import cmpt370.group12.laptracker.model.domain.model.Runs
+import cmpt370.group12.laptracker.model.domain.model.Runtimes
+import cmpt370.group12.laptracker.model.domain.model.Track
 import kotlinx.coroutines.flow.Flow
+
 interface LapTrackerRepository {
 
     suspend fun MapPoint_insert(mappoint: MapPoint)

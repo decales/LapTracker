@@ -1,4 +1,4 @@
-package cmpt370.group12.laptracker.domain.model
+package cmpt370.group12.laptracker.model.domain.model
 
 import java.sql.Timestamp
 

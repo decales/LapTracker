@@ -31,10 +31,11 @@ import androidx.navigation.compose.rememberNavController
 import cmpt370.group12.laptracker.R
 import cmpt370.group12.laptracker.model.LocationClient
 import cmpt370.group12.laptracker.view.theme.LapTrackerTheme
-import cmpt370.group12.laptracker.viewmodel.main.ProfileViewModel
-import cmpt370.group12.laptracker.viewmodel.main.SettingsViewModel
-import cmpt370.group12.laptracker.viewmodel.main.StartViewModel
-import cmpt370.group12.laptracker.viewmodel.main.TracksViewModel
+import cmpt370.group12.laptracker.viewmodel.GlobalViewModel
+import cmpt370.group12.laptracker.viewmodel.TracksViewModel
+import cmpt370.group12.laptracker.viewmodel.ProfileViewModel
+import cmpt370.group12.laptracker.viewmodel.SettingsViewModel
+import cmpt370.group12.laptracker.viewmodel.StartViewModel
 import com.google.android.gms.location.LocationServices
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -72,7 +73,7 @@ override fun onCreate(savedInstanceState: Bundle?) {
         - Navigation controller sets view based on the 'route' passed from the navigation bar */
     @Composable
     fun NavigationView(
-        navController: NavHostController, navBarPadding: PaddingValues, locationClient: LocationClient, backend: MapsViewModel = viewModel()
+        navController: NavHostController, navBarPadding: PaddingValues, locationClient: LocationClient, backend: GlobalViewModel = viewModel()
     ) {
 
         NavHost(

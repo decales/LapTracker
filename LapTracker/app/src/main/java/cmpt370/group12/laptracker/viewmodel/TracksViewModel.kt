@@ -3,7 +3,7 @@ package cmpt370.group12.laptracker.viewmodel
 import androidx.lifecycle.ViewModel
 import cmpt370.group12.laptracker.R
 
-class GlobalViewModel(backend: MapsViewModel) :ViewModel() {
+class TracksViewModel(backend: GlobalViewModel) :ViewModel() {
     // TODO add all data and states values required for TracksView composable functions
     // TODO (if applicable) retrieve data from database (model)
 
