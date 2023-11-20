@@ -22,5 +22,5 @@ class TracksViewModel :ViewModel() {
         val stats: String,
     )
 
-    val runCards = List(12) { RunCard(0, "Stats") }
+    val runCards = List(5) { RunCard(0, "Stats") }
 }

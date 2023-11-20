@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -38,6 +39,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.semantics.SemanticsProperties.ImeAction
 
 class TracksView(
@@ -140,6 +142,7 @@ class TracksView(
             colors = CardDefaults.cardColors(Color(0xff1c212d)),
             modifier = Modifier.padding(40.dp)
                 .fillMaxWidth()
+                .height((LocalConfiguration.current.screenHeightDp * 0.5).dp)
         ) {
             Text(text = "Track Name...", color = Color(255, 255, 255))
 
@@ -158,25 +161,33 @@ class TracksView(
                 })
             )
 
-            Button(onClick = {}) {
-                Text(text = "Save Comment") /* TODO button click = save comment to database */
+            Button(onClick = {/* TODO button click = save comment to database */}) {
+                Text(text = "Save Comment")
             }
 
             LazyColumn(
                 contentPadding = PaddingValues(top = 20.dp, start = 20.dp, end = 20.dp),
             ) {
-                viewModel.trackCards.forEach { card ->
+                viewModel.runCards.forEach { card ->
                     item {
                         Card(
                             elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
                             modifier = Modifier
                                 .padding(bottom = 25.dp)
                                 .fillMaxWidth()
-                                .clickable {
-                                    /* TODO launch /student/jpm715/StudioProjects/cmpt-370track details view */
-                                }
                         ) {
-
+                            Row (modifier = Modifier.padding(20.dp)) {
+                                Column(
+                                    modifier = Modifier
+                                        .weight(0.4f)
+                                ) {
+                                    Text(
+                                        text = "run " + card.id.toString(),
+                                        fontSize = 20.sp
+                                    )
+                                    Text(text = card.stats)
+                                }
+                            }
                         }
                     }
                 }
