@@ -25,7 +25,7 @@ class ProfileViewModel @Inject constructor(
     )
 
     val achievements: MutableState<List<Achievement>> = mutableStateOf(emptyList())
-    var currentAchievement: Achievement by mutableStateOf(Achievement(null, "", "", false, R.drawable.ic_launcher_foreground, 0))
+    var selectedAchievement: Achievement by mutableStateOf(Achievement(null, "", "", false, R.drawable.ic_launcher_foreground, 0))
     var achievementDetailsVisible by mutableStateOf(false)
     var currentPage by mutableIntStateOf(0)
     val profileTabs = listOf(ProfileTab("Statistics", R.drawable.ic_launcher_foreground), ProfileTab("Achievements", R.drawable.ic_launcher_foreground))
@@ -34,9 +34,9 @@ class ProfileViewModel @Inject constructor(
         currentPage = index
     }
 
-    fun toggleAchievementDetails(achievement: Achievement) {
+    fun toggleAchievementDetails(selectedAchievement: Achievement) {
         achievementDetailsVisible = !achievementDetailsVisible
-        currentAchievement = achievement
+        this.selectedAchievement = selectedAchievement
     }
 
     private fun fetchAchievements() {

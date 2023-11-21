@@ -84,7 +84,9 @@ fun Track.toTrackEntity() : TrackEntity {
 fun TrackEntity.toTrack(): Track {
     return Track(
         id = id,
-        name = name
+        name = name,
+        location = location,
+        mapImage = mapImage
     )
 }
 

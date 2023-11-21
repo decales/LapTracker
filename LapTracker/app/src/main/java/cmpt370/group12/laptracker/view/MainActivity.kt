@@ -33,14 +33,11 @@ import cmpt370.group12.laptracker.model.LocationClient
 import cmpt370.group12.laptracker.view.main.ProfileView
 import cmpt370.group12.laptracker.view.main.SettingsView
 import cmpt370.group12.laptracker.view.main.StartView
-import cmpt370.group12.laptracker.view.main.TracksView
 import cmpt370.group12.laptracker.view.theme.LapTrackerTheme
 import cmpt370.group12.laptracker.viewmodel.ProfileViewModel
 import cmpt370.group12.laptracker.viewmodel.SettingsViewModel
 import cmpt370.group12.laptracker.viewmodel.StartViewModel
 import cmpt370.group12.laptracker.viewmodel.TracksViewModel
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -84,9 +81,8 @@ override fun onCreate(savedInstanceState: Bundle?) {
             modifier = Modifier.padding(navBarPadding)
         ) {
 
-
+            // Late init locationClient in startViewmodel
             startViewModel.locationClient = LocationClient(this@MainActivity)
-
 
             // Handle routes
             composable("Start") {
