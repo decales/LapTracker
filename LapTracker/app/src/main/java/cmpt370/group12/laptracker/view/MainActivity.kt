@@ -1,4 +1,4 @@
-package cmpt370.group12.laptracker.view.main
+package cmpt370.group12.laptracker.view
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -29,11 +29,18 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import cmpt370.group12.laptracker.R
+import cmpt370.group12.laptracker.model.LocationClient
+import cmpt370.group12.laptracker.view.main.ProfileView
+import cmpt370.group12.laptracker.view.main.SettingsView
+import cmpt370.group12.laptracker.view.main.StartView
+import cmpt370.group12.laptracker.view.main.TracksView
 import cmpt370.group12.laptracker.view.theme.LapTrackerTheme
 import cmpt370.group12.laptracker.viewmodel.ProfileViewModel
 import cmpt370.group12.laptracker.viewmodel.SettingsViewModel
 import cmpt370.group12.laptracker.viewmodel.StartViewModel
 import cmpt370.group12.laptracker.viewmodel.TracksViewModel
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -48,9 +55,7 @@ override fun onCreate(savedInstanceState: Bundle?) {
             ) {
                 val controller = rememberNavController() // Navigation controller
                 Scaffold (
-                    bottomBar = {
-                        BottomNavigationBar(controller)
-                    }
+                    bottomBar = { BottomNavigationBar(controller) }
                 ) { navBarPadding ->
                     NavigationView(controller, navBarPadding)
                 }
@@ -78,6 +83,11 @@ override fun onCreate(savedInstanceState: Bundle?) {
             startDestination = "Start",
             modifier = Modifier.padding(navBarPadding)
         ) {
+
+
+            startViewModel.locationClient = LocationClient(this@MainActivity)
+
+
             // Handle routes
             composable("Start") {
                 StartView(startViewModel).View()
