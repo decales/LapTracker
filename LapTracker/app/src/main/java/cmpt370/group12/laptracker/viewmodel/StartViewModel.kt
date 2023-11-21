@@ -1,5 +1,7 @@
 package cmpt370.group12.laptracker.viewmodel
 
+import androidx.compose.runtime.mutableDoubleStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
@@ -7,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import cmpt370.group12.laptracker.R
 import cmpt370.group12.laptracker.model.LocationClient
 import cmpt370.group12.laptracker.model.domain.repository.LapTrackerRepository
+import cmpt370.group12.laptracker.view.MainActivity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -16,9 +19,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class StartViewModel @Inject constructor(
-    private val db: LapTrackerRepository,
-    private val locationClient: LocationClient
+    private val db: LapTrackerRepository
 ) : ViewModel() {
+
+    lateinit var locationClient: LocationClient // Passed in nav controller in MainActivity
 
     // TODO add all data and states values required for SettingsView composable functions
     // TODO (if applicable) retrieve data from database (model)
@@ -36,8 +40,8 @@ class StartViewModel @Inject constructor(
     var thread = mutableStateOf<Job?>(null)
 
     // Tracking UI variables
-    var distance = mutableStateOf(0.0)
-    var laps = mutableStateOf(0)
+    var distance = mutableDoubleStateOf(0.0)
+    var laps = mutableIntStateOf(0)
     var next = mutableStateOf("")
 
     data class TrackCard(

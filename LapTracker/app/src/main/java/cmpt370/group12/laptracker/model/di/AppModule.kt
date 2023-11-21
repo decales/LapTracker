@@ -1,30 +1,20 @@
 package cmpt370.group12.laptracker.model.di
 
-import android.app.Activity
 import android.app.Application
-import android.content.Context
 import androidx.room.Room
-import cmpt370.group12.laptracker.LapTrackerApplication
-import cmpt370.group12.laptracker.LapTrackerApplication_GeneratedInjector
-import cmpt370.group12.laptracker.model.LocationClient
-
 import cmpt370.group12.laptracker.model.data.database.LapTrackerDatabase
 import cmpt370.group12.laptracker.model.data.location.DefaultLocationTracker
 import cmpt370.group12.laptracker.model.data.repository.LapTrackerRepositoryImpl
 import cmpt370.group12.laptracker.model.domain.location.LocationTracker
 import cmpt370.group12.laptracker.model.domain.repository.LapTrackerRepository
-import cmpt370.group12.laptracker.view.main.MainActivity
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ActivityContext
-import dagger.hilt.android.qualifiers.ApplicationContext
-
 import dagger.hilt.components.SingletonComponent
-import java.lang.IllegalStateException
 import javax.inject.Singleton
+
 const val DEBUGDB: Boolean = false
 @Module
 @InstallIn(SingletonComponent::class)
@@ -34,19 +24,18 @@ private var DBNAME:String = "LapTrackerDB.db"
     @Singleton
     fun providesFusedLocationProviderClient(
         application: Application
-    ): FusedLocationProviderClient =
-        LocationServices.getFusedLocationProviderClient(application)
+    ): FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(application)
 
 
-    @Provides
-    @Singleton
-    fun provideLocationClient(
-        fusedLocationProviderClient: FusedLocationProviderClient,
-        application: Application,
-        activity: Activity
-    ): LocationClient {
-        return LocationClient(application.applicationContext, activity, fusedLocationProviderClient )
-    }
+//    @Provides
+//    @Singleton
+//    fun provideLocationClient(
+//        fusedLocationProviderClient: FusedLocationProviderClient,
+//        application: Application,
+//        activity: Activity
+//    ): LocationClient {
+//        return LocationClient(application.applicationContext, activity, fusedLocationProviderClient )
+//    }
 
 
     @Provides
