@@ -40,7 +40,7 @@ class LapTrackerRepositoryImpl(
 
 ): LapTrackerRepository {
 
-
+    // ###################### MAP FUNCTIONS ######################
     override suspend fun MapPoint_insert(mappoint: MapPoint) {
         mapPointDao.MapPoint_insert(mappoint.toMapPointEntity())
     }
@@ -51,124 +51,141 @@ class LapTrackerRepositoryImpl(
 
     override fun MapPoints_getByTrackId(fromTrackId: Int): Flow<List<MapPoint>> {
        return mapPointDao.MapPoints_getPointsByTrackId(fromTrackId).map { mappoint ->
-      mappoint.map { it.toMapPoint() }
-        }
-
+           mappoint.map { it.toMapPoint() }
+       }
     }
-    override suspend fun MapPoints_getAll(): List<MapPoint>
-    {
+
+    override suspend fun MapPoints_getAll(): List<MapPoint> {
         return mapPointDao.MapPoints_getAll().map { it.toMapPoint()}
-
     }
+
     override fun MapPoints_getAllFlow(): Flow<List<MapPoint>> {
         return mapPointDao.MapPoints_getAllFlow().map { mappoint ->
             mappoint.map { it.toMapPoint() }
         }
-
     }
 
-    override suspend fun Achievement_getAll(): List<Achievement>
-    {
+
+    // ###################### ACHIEVEMENT FUNCTIONS ######################
+    override suspend fun Achievement_getAll(): List<Achievement> {
         return achievementDao.Achievement_getAll2().map{ it.toAchievement()}
-
     }
-
 
     override suspend fun Achievement_insert(achievement: Achievement){
         achievementDao.Achievement_insert(achievement.toAchievementEntity())
     }
+
     override suspend fun Achievement_delete(achievement: Achievement){
         achievementDao.Achievement_delete(achievement.toAchievementEntity())
     }
 
     override fun Achievement_getAllFlow(): Flow<List<Achievement>>{
         return achievementDao.Achievement_getAll().map { it ->
-            it.map { it.toAchievement() }}
+            it.map { it.toAchievement() }
+        }
     }
 
+
+    // ###################### COMMENT FUNCTIONS ######################
     override suspend fun Comment_insert(comment: Comment){
         commentDao.Comment_insert(comment.toCommentEntity())
     }
+
     override suspend fun Comment_delete(comment: Comment){
         commentDao.Comment_delete(comment.toCommentEntity())
     }
+
     override fun Comments_getCommentsFromTrackId(trackId: Int): Flow<List<Comment>> {
         return commentDao.Comments_getCommentsFromTrackId(trackId).map { it ->
             it.map { it.toComment() }
         }
     }
+
     override fun Comments_getAllFlow(): Flow<List<Comment>>{
         return commentDao.Comments_getAllFlow().map { it ->
             it.map { it.toComment() }
         }
     }
+
     override suspend fun Comments_getAll(): List<Comment>{
         return commentDao.Comments_getAll().map { it.toComment() }
-
     }
 
+
+    // ###################### RUN FUNCTIONS ######################
     override suspend fun Runs_insert(runs: Runs){
         runsDao.Runs_insert(runs.toRunsEntity())
     }
+
     override suspend fun Runs_delete(runs: Runs){
         runsDao.Runs_delete(runs.toRunsEntity())
     }
+
     override fun Runs_getByTrackId(trackId: Int): Flow<List<Runs>>{
         return runsDao.Runs_getByTrackId(trackId).map { it ->
             it.map { it.toRuns() }
         }
     }
+
     override fun Runs_getAllFlow(): Flow<List<Runs>>{
         return runsDao.Runs_getAllFlow().map { it ->
             it.map { it.toRuns() }
         }
     }
+
     override suspend fun Runs_getAll(): List<Runs>{
         return runsDao.Runs_getAll().map {  it.toRuns() }
     }
 
 
+    // ###################### RUNTIME FUNCTIONS ######################
     override suspend fun RunTimes_insert(runtimes: Runtimes){
         runtimesDao.RunTimes_insert(runtimes.toRunTimesEntity())
     }
+
     override suspend fun RunTimes_delete(runtimes: Runtimes){
-            runtimesDao.RunTimes_delete(runtimes.toRunTimesEntity())
+        runtimesDao.RunTimes_delete(runtimes.toRunTimesEntity())
     }
+
     override fun RunTimes_getByRunId(runId: Int): Flow<List<Runtimes>>{
         return runtimesDao.RunTimes_getByRunId(runId).map { it ->
             it.map { it.toRunTimes() }
         }
     }
+
     override fun RunTimes_getAllFlow(): Flow<List<Runtimes>>{
         return runtimesDao.RunTimes_getAllFlow().map { it ->
             it.map { it.toRunTimes() }
         }
     }
+
     override suspend fun RunTimes_getAll(): List<Runtimes>{
         return runtimesDao.RunTimes_getAll().map { it.toRunTimes() }
-
     }
 
+
+    // ###################### TRACK FUNCTIONS ######################
     override suspend fun Track_insert(track: Track){
         trackDao.Track_insert(track.toTrackEntity())
     }
+
     override suspend fun Track_delete(track: Track){
         trackDao.Track_delete(track.toTrackEntity())
     }
+
     override fun Track_getById(id: Int): Flow<List<Track>>{
         return trackDao.Track_getById(id).map { it ->
             it.map { it.toTrack() }
         }
     }
+
     override fun Track_getAllFlow(): Flow<List<Track>>{
         return trackDao.Track_getAllFlow().map { it ->
             it.map { it.toTrack() }
         }
     }
+
     override suspend fun Track_getAll(): List<Track>{
         return trackDao.Track_getAll().map { it.toTrack() }
-
     }
-
-
 }

@@ -134,9 +134,7 @@ class ProfileView(
             CompletionText()
             AchievementsGrid()
         }
-        if (viewModel.achievementDetailsVisible) {
-            AchievementDetails(viewModel.currentAchievement)
-        }
+        if (viewModel.achievementDetailsVisible) AchievementDetails()
     }
 
 
@@ -204,9 +202,9 @@ class ProfileView(
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    fun AchievementDetails(achievement: Achievement) {
+    fun AchievementDetails() {
         AlertDialog(
-            onDismissRequest = { viewModel.toggleAchievementDetails(achievement) }
+            onDismissRequest = { viewModel.toggleAchievementDetails(viewModel.selectedAchievement) }
         ) {
             Card (modifier = Modifier
                 .padding(0.dp)
@@ -219,19 +217,19 @@ class ProfileView(
                         .align(CenterHorizontally)
                 ) {
                     Text(
-                        text = achievement.name,
+                        text = viewModel.selectedAchievement.name,
                         fontSize = 22.sp
                     )
                     Icon(
-                        painter = painterResource(id = achievement.iconID),
-                        contentDescription = achievement.name,
+                        painter = painterResource(id = viewModel.selectedAchievement.iconID),
+                        contentDescription = viewModel.selectedAchievement.name,
                         modifier = Modifier
                             .padding(top = 5.dp, bottom = 5.dp)
                             .border(1.dp, Color.White, RoundedCornerShape(15.dp))
                     )
-                    Text(text = achievement.description)
+                    Text(text = viewModel.selectedAchievement.description)
                     Text(
-                        text = achievement.timestamp.toString(),
+                        text = if (viewModel.selectedAchievement.achieved) "Unlocked ${viewModel.selectedAchievement.timestamp}" else "You have not unlocked this achievement!",
                         fontSize = 12.sp,
                         modifier = Modifier.padding(top = 5.dp)
                     )
