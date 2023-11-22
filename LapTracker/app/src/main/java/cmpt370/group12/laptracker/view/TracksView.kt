@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -39,6 +40,9 @@ class TracksView(
         // TODO initialize necessary view data in viewmodel/main/TracksViewModel.kt. Data is accessed through constructor var 'viewModel'
         Column {
             Header()
+            Button(onClick = {viewModel.addTrack()}) {
+                Text(text = "test")
+            }
             TrackCardColumn()
         }
         if (viewModel.trackDetailsVisible) TrackDetails()

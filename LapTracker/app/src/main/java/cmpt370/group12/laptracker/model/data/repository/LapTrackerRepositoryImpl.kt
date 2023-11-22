@@ -121,10 +121,8 @@ class LapTrackerRepositoryImpl(
         runsDao.Runs_delete(runs.toRunsEntity())
     }
 
-    override fun Runs_getByTrackId(trackId: Int): Flow<List<Runs>>{
-        return runsDao.Runs_getByTrackId(trackId).map { it ->
-            it.map { it.toRuns() }
-        }
+    override suspend fun Runs_getByTrackId(trackId: Int): List<Runs>{
+        return runsDao.Runs_getByTrackId(trackId).map { it.toRuns() }
     }
 
     override fun Runs_getAllFlow(): Flow<List<Runs>>{
