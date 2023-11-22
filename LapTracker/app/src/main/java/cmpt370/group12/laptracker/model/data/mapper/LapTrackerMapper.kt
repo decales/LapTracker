@@ -77,7 +77,9 @@ fun Achievement.toAchievementEntity(): AchievementEntity {
 fun Track.toTrackEntity() : TrackEntity {
     return TrackEntity(
         id = id,
-        name = name
+        name = name,
+        location = location,
+        mapImage = mapImage
     )
 }
 

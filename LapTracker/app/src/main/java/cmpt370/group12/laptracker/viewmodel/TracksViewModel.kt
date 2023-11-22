@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import cmpt370.group12.laptracker.R
 import cmpt370.group12.laptracker.model.domain.model.Achievement
 import cmpt370.group12.laptracker.model.domain.model.Runs
@@ -29,6 +30,13 @@ class TracksViewModel @Inject constructor(
     var selectedTrackRuns: List<Runs> by mutableStateOf(emptyList())
     var trackDetailsVisible by mutableStateOf(false)
 
+
+    fun toggleTrackDetails(selectedTrack: Track) {
+        trackDetailsVisible = !trackDetailsVisible
+        this.selectedTrack = selectedTrack
+        fetchTrackRuns()
+    }
+
     private fun fetchTracks() {
         viewModelScope.launch {
             tracks.value = db.Track_getAll()
@@ -37,13 +45,15 @@ class TracksViewModel @Inject constructor(
 
     private fun fetchTrackRuns() {
         viewModelScope.launch {
-            selectedTrackRuns = db.Runs_getByTrackId(selectedTrack.id)
+            selectedTrackRuns = db.Runs_getByTrackId(selectedTrack.id!!)
         }
     }
 
-    fun toggleTrackDetails(selectedTrack: Track) {
-        trackDetailsVisible = !trackDetailsVisible
-        this.selectedTrack = selectedTrack
+    fun addTrack() {
+        viewModelScope.launch{
+            db.Track_insert(Track(null, "test", "test", R.drawable.ic_launcher_background))
+        }
+        fetchTracks()
     }
 
     init {

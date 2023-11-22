@@ -42,7 +42,7 @@ class GlobalViewModel @Inject constructor(
         FlowMapPointsbyCurrentTrackId_Start()
         FlowRunTimesbyCurrentRunId_Start()
         FlowTrackList_Start()
-        FlowRunsListbyTrackId_Start()
+        //FlowRunsListbyTrackId_Start()
         FlowAchievementList_Start()
     }
 // When it Ends
@@ -51,7 +51,7 @@ class GlobalViewModel @Inject constructor(
         FlowMapPointsbyCurrentTrackId_Stop()
         FlowRunTimesbyCurrentRunId_Stop()
         FlowTrackList_Stop()
-        FlowRunsListbyTrackId_Stop()
+        //FlowRunsListbyTrackId_Stop()
         FlowAchievementList_Stop()
     }
 
@@ -189,35 +189,34 @@ fun check_something(){
         FlowTrackList_Stop()
         FlowTrackList_Start()
     }
-    private fun FlowRunsListbyTrackId_Start(){
-        if (!_appstate.value.flowRunListByTrackIdActive && (_appstate.value.flowRunListByTrackIdJob== null)) {
-            val lifejob: Job = viewModelScope.launch {
-                repository.Runs_getByTrackId(_trackstate.value.currentTrackId)
-
-                    .collectLatest { runs ->
-                        _trackstate.value = trackstate.value.copy(
-                            runs = runs
-                        )
-                    }
-
-            }
-            _appstate.value = appstate.value.copy(
-                flowRunListByTrackIdJob = lifejob,
-                flowRunListByTrackIdActive = true,
-            )
-        }
-    }
-    private fun FlowRunsListbyTrackId_Stop() {
-        _appstate.value.flowRunListByTrackIdJob?.cancel()
-        _appstate.value = appstate.value.copy(
-            flowRunListByTrackIdJob = null,
-            flowRunListByTrackIdActive = false,
-        )
-    }
-    private fun FlowRunsListbyTrackId_Restart(){
-        FlowRunsListbyTrackId_Stop()
-        FlowRunsListbyTrackId_Start()
-    }
+//    private fun FlowRunsListbyTrackId_Start(){
+//        if (!_appstate.value.flowRunListByTrackIdActive && (_appstate.value.flowRunListByTrackIdJob== null)) {
+//            val lifejob: Job = viewModelScope.launch {
+//                repository.Runs_getByTrackId(_trackstate.value.currentTrackId)
+//                    .collectLatest { runs ->
+//                        _trackstate.value = trackstate.value.copy(
+//                            runs = runs
+//                        )
+//                    }
+//
+//            }
+//            _appstate.value = appstate.value.copy(
+//                flowRunListByTrackIdJob = lifejob,
+//                flowRunListByTrackIdActive = true,
+//            )
+//        }
+//    }
+//    private fun FlowRunsListbyTrackId_Stop() {
+//        _appstate.value.flowRunListByTrackIdJob?.cancel()
+//        _appstate.value = appstate.value.copy(
+//            flowRunListByTrackIdJob = null,
+//            flowRunListByTrackIdActive = false,
+//        )
+//    }
+//    private fun FlowRunsListbyTrackId_Restart(){
+//        FlowRunsListbyTrackId_Stop()
+//        FlowRunsListbyTrackId_Start()
+//    }
 
 
 
