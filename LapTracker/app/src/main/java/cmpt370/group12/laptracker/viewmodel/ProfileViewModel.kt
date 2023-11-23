@@ -19,16 +19,10 @@ class ProfileViewModel @Inject constructor(
     private val db: LapTrackerRepository
 ): ViewModel() {
 
-    data class ProfileTab(
-        val text: String,
-        val icon: Int,
-    )
-
     val achievements: MutableState<List<Achievement>> = mutableStateOf(emptyList())
     var selectedAchievement: Achievement by mutableStateOf(Achievement(null, "", "", false, R.drawable.ic_launcher_foreground, 0))
     var achievementDetailsVisible by mutableStateOf(false)
     var currentPage by mutableIntStateOf(0)
-    val profileTabs = listOf(ProfileTab("Statistics", R.drawable.ic_launcher_foreground), ProfileTab("Achievements", R.drawable.ic_launcher_foreground))
 
     fun setPage(index: Int) {
         currentPage = index

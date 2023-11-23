@@ -29,7 +29,12 @@ class TracksViewModel @Inject constructor(
     var selectedTrack: Track by mutableStateOf(Track(null, "", "", 0))
     var selectedTrackRuns: List<Runs> by mutableStateOf(emptyList())
     var trackDetailsVisible by mutableStateOf(false)
+    var deleteModeToggled by mutableStateOf(false)
 
+
+    fun toggleDeleteMode() {
+        deleteModeToggled = !deleteModeToggled
+    }
 
     fun toggleTrackDetails(selectedTrack: Track) {
         trackDetailsVisible = !trackDetailsVisible
