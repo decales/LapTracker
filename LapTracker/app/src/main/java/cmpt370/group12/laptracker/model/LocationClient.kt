@@ -15,7 +15,9 @@ import com.google.android.gms.location.Granularity
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
+import dagger.Provides
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -26,16 +28,18 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import java.math.BigDecimal
 import java.math.RoundingMode
+import javax.inject.Inject
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.pow
 import kotlin.math.sin
 import kotlin.math.sqrt
 
-class LocationClient (
-    private val context: Context,
+
+class LocationClient(
     private val activity: Activity,
-    private val client: FusedLocationProviderClient
+    private val context: Context = activity.applicationContext,
+    private val client: FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(activity)
 ) {
 
     private fun servicesEnabled(): Boolean {

@@ -37,7 +37,7 @@ data class Point (
 
 @Composable
 fun trackingView(activity: Activity) {
-    val locationClient = LocationClient(activity.applicationContext, activity, LocationServices.getFusedLocationProviderClient(activity))
+    val locationClient = LocationClient(activity)
     val points = remember { mutableStateListOf<Point>() } // Remember list of points
     var setToggle by remember { mutableStateOf(false) } // Remember set button toggle
 
