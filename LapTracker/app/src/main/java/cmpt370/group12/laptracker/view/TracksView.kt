@@ -15,16 +15,19 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilledIconToggleButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconToggleButton
+import androidx.compose.material3.OutlinedIconToggleButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import cmpt370.group12.laptracker.R
 import cmpt370.group12.laptracker.viewmodel.TracksViewModel
 
 class TracksView(
@@ -40,9 +43,7 @@ class TracksView(
         // TODO initialize necessary view data in viewmodel/main/TracksViewModel.kt. Data is accessed through constructor var 'viewModel'
         Column {
             Header()
-            Button(onClick = {viewModel.addTrack()}) {
-                Text(text = "test")
-            }
+            ToolBar()
             TrackCardColumn()
         }
         if (viewModel.trackDetailsVisible) TrackDetails()
@@ -65,12 +66,29 @@ class TracksView(
 
 
     @Composable
-    fun SearchBar() {
-        TextField(
-            value = "",
-            onValueChange = {},
-            shape = RoundedCornerShape(80.dp)
-        )
+    fun ToolBar() {
+//        TextField(
+//            value = "",
+//            onValueChange = {},
+//            shape = RoundedCornerShape(80.dp)
+//        )
+        Row(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+//            Button(onClick = {viewModel.addTrack()}) {
+//                Text(text = "test")
+//            }
+            if (viewModel.deleteModeToggled) {
+                Button(onClick = { /*TODO*/ }) {
+                    Text(text = "Delete selected")
+                }
+            }
+            
+            FilledIconToggleButton(checked = viewModel.deleteModeToggled, onCheckedChange = { viewModel.toggleDeleteMode()}) {
+                Icon(painter = painterResource(id = R.drawable.tracksview_delete),
+                    contentDescription = "fuck")
+            }
+        }
     }
 
 

@@ -34,6 +34,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import cmpt370.group12.laptracker.R
 import cmpt370.group12.laptracker.model.domain.model.Achievement
 import cmpt370.group12.laptracker.viewmodel.ProfileViewModel
 
@@ -49,7 +50,7 @@ class ProfileView(
     @Composable
     fun View() {
         Column {
-            val pagerState = rememberPagerState { viewModel.profileTabs.size }
+            val pagerState = rememberPagerState { 2 }
             LaunchedEffect(viewModel.currentPage) { pagerState.scrollToPage(viewModel.currentPage) }
             // TODO fix pagerState and viewModel.currentPage so tabs are in sync with page selection using both swipe and tab selection
             Header()
@@ -84,23 +85,26 @@ class ProfileView(
     fun ProfileTabBar() {
         TabRow(
             selectedTabIndex = viewModel.currentPage,
-            modifier = Modifier.padding(top = 5.dp)
+            modifier = Modifier.padding(top = 10.dp)
         ) {
-            viewModel.profileTabs.forEachIndexed { index, item ->
+            listOf(
+                Pair("Statistics", R.drawable.profileview_statisticstab),
+                Pair("Achievements", R.drawable.profileview_achievementstab)
+            ).forEachIndexed { index, item ->
                 Tab(
                     selected = false,
                     onClick = { viewModel.setPage(index) }
                 )
                 {
                     Row(
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.padding(bottom = 5.dp)
                     ) {
-                        Text(text = item.text)
+                        Text(text = item.first)
                         Icon(
-                            painter = painterResource(id = item.icon),
-                            contentDescription = item.text,
-                            modifier = Modifier
-                                .size(50.dp)
+                            painter = painterResource(id = item.second),
+                            contentDescription = item.first,
+                            modifier = Modifier.padding(start = 5.dp)
                         )
                     }
                 }
