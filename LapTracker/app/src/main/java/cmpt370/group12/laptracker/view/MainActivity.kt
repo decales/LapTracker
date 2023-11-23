@@ -20,7 +20,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -31,7 +30,6 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import cmpt370.group12.laptracker.R
 import cmpt370.group12.laptracker.model.LocationClient
-import cmpt370.group12.laptracker.view.main.ProfileView
 import cmpt370.group12.laptracker.view.main.SettingsView
 import cmpt370.group12.laptracker.view.main.StartView
 import cmpt370.group12.laptracker.view.theme.LapTrackerTheme
