@@ -11,19 +11,19 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Badge
+import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledIconToggleButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconToggleButton
-import androidx.compose.material3.OutlinedIconToggleButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -75,9 +75,9 @@ class TracksView(
         Row(
             modifier = Modifier.fillMaxWidth()
         ) {
-//            Button(onClick = {viewModel.addTrack()}) {
-//                Text(text = "test")
-//            }
+            Button(onClick = {viewModel.addTrack()}) {
+                Text(text = "test add")
+            }
             if (viewModel.deleteModeToggled) {
                 Button(onClick = { /*TODO*/ }) {
                     Text(text = "Delete selected")
@@ -86,53 +86,74 @@ class TracksView(
             
             FilledIconToggleButton(checked = viewModel.deleteModeToggled, onCheckedChange = { viewModel.toggleDeleteMode()}) {
                 Icon(painter = painterResource(id = R.drawable.tracksview_delete),
-                    contentDescription = "fuck")
+                    contentDescription = "delete track")
             }
         }
     }
 
 
+    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun TrackCardColumn() {
         Card(
             colors = CardDefaults.cardColors(Color(0xff1c212d)),
             modifier = Modifier.padding(20.dp)
         ) {
-            if (viewModel.tracks.value.isNotEmpty()) {
+            if (viewModel.tracksCards.value.isNotEmpty()) {
                 LazyColumn(
                     contentPadding = PaddingValues(top = 20.dp, start = 20.dp, end = 20.dp),
                 ) {
-                    viewModel.tracks.value.forEach { track ->
+                    viewModel.tracksCards.value.forEach { trackCard ->
                         item {
-                            Card(
-                                elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
-                                modifier = Modifier
-                                    .padding(bottom = 25.dp)
-                                    .fillMaxWidth()
-                                    .clickable { viewModel.toggleTrackDetails(track) }
-                            ) {
-                                Row (modifier = Modifier.padding(20.dp)) {
-                                    Column (
+                            BadgedBox(badge = {
+                                if (viewModel.deleteModeToggled) { // Display badge in corner of track card to select tracks to be deleted
+                                    Badge(
                                         modifier = Modifier
-                                            .weight(0.4f)
-                                    ){
-                                        Text(
-                                            text = track.name,
-                                            fontSize = 20.sp
-                                        )
-                                        Text(text = track.location)
+                                            .graphicsLayer {
+                                                translationY = 15.0F
+                                                translationX = -40.0F
+                                            },
+                                        containerColor = Color.Transparent,
+                                        contentColor = Color.Transparent
+                                    ) {
+                                        Icon(painter = painterResource(id = R.drawable.tracksview_selected), contentDescription = "selected badge")
+
                                     }
-                                    Icon(
-                                        painter = painterResource(id = track.mapImage),
-                                        contentDescription = track.name,
-                                        modifier = Modifier
-                                            .weight(0.6f)
-                                            .border(
-                                                width = 1.dp,
-                                                color = Color.White,
-                                                shape = RoundedCornerShape(10.dp)
+                                }
+                            }
+                            ) {
+                                Card(
+                                    elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
+                                    modifier = Modifier
+                                        .padding(bottom = 25.dp)
+                                        .fillMaxWidth()
+                                        .clickable {
+                                            if (viewModel.deleteModeToggled) /* TODO */ else viewModel.toggleTrackDetails(trackCard.track)
+                                        }
+                                ) {
+                                    Row (modifier = Modifier.padding(20.dp)) {
+                                        Column (
+                                            modifier = Modifier
+                                                .weight(0.4f)
+                                        ){
+                                            Text(
+                                                text = trackCard.track.name,
+                                                fontSize = 20.sp
                                             )
-                                    )
+                                            Text(text = trackCard.track.location)
+                                        }
+                                        Icon(
+                                            painter = painterResource(id = trackCard.track.mapImage),
+                                            contentDescription = trackCard.track.name,
+                                            modifier = Modifier
+                                                .weight(0.6f)
+                                                .border(
+                                                    width = 1.dp,
+                                                    color = Color.White,
+                                                    shape = RoundedCornerShape(10.dp)
+                                                )
+                                        )
+                                    }
                                 }
                             }
                         }
@@ -150,14 +171,14 @@ class TracksView(
     @Composable
     fun TrackDetails() { // TODO finish making this
         AlertDialog(
-            onDismissRequest = { viewModel.toggleTrackDetails(viewModel.selectedTrack) }
+            onDismissRequest = { viewModel.toggleTrackDetails(viewModel.currentTrackDetails) }
         ) {
             Card (modifier = Modifier
                 .padding(0.dp)
             ) {
                 Column {
-                    Text(text = viewModel.selectedTrack.name)
-                    Text(text = viewModel.selectedTrack.location)
+                    Text(text = viewModel.currentTrackDetails.name)
+                    Text(text = viewModel.currentTrackDetails.location)
                     TrackDetailsRuns()
                 }
             }
@@ -172,9 +193,9 @@ class TracksView(
                 Text(text = "Run History")
             }
             Card {
-                if (viewModel.selectedTrackRuns.isNotEmpty()) {
+                if (viewModel.currentTrackDetailsRuns.isNotEmpty()) {
                     LazyColumn {
-                        viewModel.selectedTrackRuns.forEach { run ->
+                        viewModel.currentTrackDetailsRuns.forEach { run ->
                             item {
                                 Text(text = "Date: Start time: ${run.startTime} End time: ${run.endTime}")
                             }

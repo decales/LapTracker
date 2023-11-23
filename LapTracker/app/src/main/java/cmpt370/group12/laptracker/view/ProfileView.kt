@@ -1,4 +1,4 @@
-package cmpt370.group12.laptracker.view.main
+package cmpt370.group12.laptracker.view
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.border
@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.pager.HorizontalPager
@@ -35,7 +34,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cmpt370.group12.laptracker.R
-import cmpt370.group12.laptracker.model.domain.model.Achievement
 import cmpt370.group12.laptracker.viewmodel.ProfileViewModel
 
 class ProfileView(
