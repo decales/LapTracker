@@ -6,11 +6,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import cmpt370.group12.laptracker.R
 import cmpt370.group12.laptracker.model.domain.model.Runs
 import cmpt370.group12.laptracker.model.domain.model.Track
 import cmpt370.group12.laptracker.model.domain.repository.LapTrackerRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -24,7 +26,7 @@ class TracksViewModel @Inject constructor(
 
     data class TrackCard(
         val track: Track,
-        val isSelected: Boolean
+        var isSelected: MutableState<Boolean>
     )
 
     val tracksCards: MutableState<List<TrackCard>> = mutableStateOf(emptyList())
@@ -39,33 +41,48 @@ class TracksViewModel @Inject constructor(
     }
 
     fun toggleTrackDetails(selectedTrack: Track) {
-        trackDetailsVisible = !trackDetailsVisible
-        this.currentTrackDetails = selectedTrack
-        fetchTrackRuns()
-    }
-
-    private fun fetchTracks() {
-        viewModelScope.launch {
-            tracksCards.value = db.Track_getAll().map { track ->
-                TrackCard(track, false)
-            }
+        viewModelScope.launch{
+            trackDetailsVisible = !trackDetailsVisible
+            currentTrackDetails = selectedTrack
+            fetchTrackRuns()
         }
     }
 
-    private fun fetchTrackRuns() {
+    fun toggleSelectTrack(trackCard: TrackCard) {
+        trackCard.isSelected.value = !trackCard.isSelected.value
+    }
+
+    fun deleteSelectedTracks() {
+        viewModelScope.launch {
+            tracksCards.value.forEach { trackCard ->
+                if (trackCard.isSelected.value) db.Track_delete(trackCard.track)
+            }
+            fetchTracks()
+        }
+    }
+
+    private suspend fun fetchTracks() {
+        tracksCards.value = db.Track_getAll().map { track ->
+            TrackCard(track, mutableStateOf(false))
+        }
+    }
+
+    private suspend fun fetchTrackRuns() {
         viewModelScope.launch {
             currentTrackDetailsRuns = db.Runs_getByTrackId(currentTrackDetails.id!!)
         }
     }
 
-    fun addTrack() {
+    fun addTrack() { // TODO temporary for testing, remove later
         viewModelScope.launch{
             db.Track_insert(Track(null, "test", "test", R.drawable.ic_launcher_foreground))
+            fetchTracks()
         }
-        fetchTracks()
     }
 
     init {
-        fetchTracks()
+        viewModelScope.launch {
+            fetchTracks()
+        }
     }
 }
