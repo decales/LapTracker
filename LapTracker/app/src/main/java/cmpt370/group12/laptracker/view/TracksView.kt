@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -79,7 +80,7 @@ class TracksView(
                 Text(text = "test add")
             }
             if (viewModel.deleteModeToggled) {
-                Button(onClick = { /*TODO*/ }) {
+                Button(onClick = { viewModel.deleteSelectedTracks() }) {
                     Text(text = "Delete selected")
                 }
             }
@@ -113,10 +114,14 @@ class TracksView(
                                                 translationY = 15.0F
                                                 translationX = -40.0F
                                             },
-                                        containerColor = Color.Transparent,
-                                        contentColor = Color.Transparent
+                                        containerColor = if (trackCard.isSelected.value) Color.LightGray else Color.Transparent,
+                                        contentColor = if (trackCard.isSelected.value) Color.Black else Color.Transparent
                                     ) {
-                                        Icon(painter = painterResource(id = R.drawable.tracksview_selected), contentDescription = "selected badge")
+                                        Icon(
+                                            painter = painterResource(id = R.drawable.tracksview_selected),
+                                            contentDescription = "selected badge",
+                                            modifier = Modifier.height(32.dp)
+                                        )
 
                                     }
                                 }
@@ -128,7 +133,8 @@ class TracksView(
                                         .padding(bottom = 25.dp)
                                         .fillMaxWidth()
                                         .clickable {
-                                            if (viewModel.deleteModeToggled) /* TODO */ else viewModel.toggleTrackDetails(trackCard.track)
+                                            if (viewModel.deleteModeToggled) viewModel.toggleSelectTrack(trackCard)
+                                            else viewModel.toggleTrackDetails(trackCard.track)
                                         }
                                 ) {
                                     Row (modifier = Modifier.padding(20.dp)) {
