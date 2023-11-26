@@ -53,8 +53,4 @@ class Achievements {
             }
         }
     }
-    //TODO
-    //need an accessor to be able to track achievement progress through realtime UI
-    //this can be as simple as a bar or a can scale up to a progress wheel
-    //I just need a way to access total # of achievements and # completed
 }

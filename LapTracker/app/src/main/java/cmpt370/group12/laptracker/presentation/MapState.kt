@@ -33,6 +33,8 @@ data class MapState(
     val uiSettings: MapUiSettings = MapUiSettings(),
     val currentLocation: Location? = Location(null),
 
+
+
 )
 data class TrackState(
     val currentTrackId: Int = 0,
