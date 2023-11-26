@@ -45,8 +45,8 @@ class Feature13 : ComponentActivity() {
             LapTrackerTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                        modifier = Modifier.fillMaxSize(),
+                        color = MaterialTheme.colorScheme.background
                 ) {
                     //Greeting14("Feature 13")
                     RunSelector()
@@ -68,8 +68,8 @@ fun RunSelector (){
             modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp),
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.End
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.End
     ){
         Text(
                 text = "Run analysis",
