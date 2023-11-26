@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -21,6 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import cmpt370.group12.laptracker.R
 import cmpt370.group12.laptracker.viewmodel.TracksViewModel
 
 class TracksView(
@@ -48,10 +50,16 @@ class TracksView(
             .padding(start = 20.dp, top = 20.dp)
         )
         {
-            Text(
-                text = "Saved Tracks",
-                fontSize = 30.sp
-            )
+            Row(){
+                Text(
+                    text = "Saved Tracks",
+                    fontSize = 30.sp
+                )
+                Button(onClick = { viewModel.backend.Set_isCreateTrackVisible(true)}) {
+                    
+                }
+            }
+
         }
     }
 
@@ -72,10 +80,11 @@ class TracksView(
             colors = CardDefaults.cardColors(Color(0xff1c212d)),
             modifier = Modifier.padding(20.dp)
         ) {
+
             LazyColumn(
                 contentPadding = PaddingValues(top = 20.dp, start = 20.dp, end = 20.dp),
             ) {
-                viewModel.trackCards.forEach { card ->
+                viewModel.backend.appstate.value.tracks.forEach { card ->
                     item {
                         Card(
                             elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
@@ -93,10 +102,10 @@ class TracksView(
                                         text = card.name,
                                         fontSize = 20.sp
                                     )
-                                    Text(text = card.location)
+                                    Text(text = card.description)
                                 }
                                 Icon(
-                                    painter = painterResource(id = card.mapSnippet),
+                                    painter = painterResource(id = R.drawable.ic_launcher_foreground),
                                     contentDescription = card.name,
                                     modifier = Modifier
                                         .weight(0.6f)
@@ -109,6 +118,9 @@ class TracksView(
                             }
                         }
                     }
+                }
+                if (viewModel.backend.appstate.value.isCreateTrackCardVisible){
+
                 }
             }
         }
