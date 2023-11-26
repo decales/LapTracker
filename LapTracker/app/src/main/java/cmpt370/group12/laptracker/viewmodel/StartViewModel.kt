@@ -4,6 +4,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
+import androidx.navigation.NavController
 import cmpt370.group12.laptracker.R
 import cmpt370.group12.laptracker.model.LocationClient
 import kotlinx.coroutines.CoroutineScope
@@ -11,7 +12,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 
-class StartViewModel(locationClient: LocationClient, backend: GlobalViewModel) : ViewModel() {
+class StartViewModel(locationClient: LocationClient, val backend: GlobalViewModel,val nav: NavController) : ViewModel() {
     // TODO add all data and states values required for SettingsView composable functions
     // TODO (if applicable) retrieve data from database (model)
     var createRace = mutableStateOf(false)

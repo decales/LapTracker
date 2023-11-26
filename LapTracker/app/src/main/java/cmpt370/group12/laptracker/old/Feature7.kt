@@ -11,7 +11,7 @@ class Feature7 : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MapScreen()
+            //MapScreen()
         }
     }
 }

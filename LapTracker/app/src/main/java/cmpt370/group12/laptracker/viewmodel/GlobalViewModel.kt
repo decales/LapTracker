@@ -3,14 +3,17 @@
 package cmpt370.group12.laptracker.viewmodel
 
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavController
 import cmpt370.group12.laptracker.R
 import cmpt370.group12.laptracker.model.domain.location.LocationTracker
 import cmpt370.group12.laptracker.model.domain.model.Achievement
 import cmpt370.group12.laptracker.model.domain.model.MapPoint
+import cmpt370.group12.laptracker.model.domain.model.Track
 import cmpt370.group12.laptracker.model.domain.repository.LapTrackerRepository
 import cmpt370.group12.laptracker.presentation.AppEvent
 import cmpt370.group12.laptracker.presentation.AppState
@@ -38,6 +41,9 @@ class GlobalViewModel @Inject constructor(
     val trackstate: State<TrackState> = _trackstate
     val mapstate: State<MapState> = _mapstate
     val appstate: State<AppState> = _appstate
+
+
+
 
 
 //When it Starts up
@@ -104,7 +110,7 @@ fun check_something(){
 }
     private fun FlowCurrentLocation_Start() {
         if (!_appstate.value.flowCurrentLocationActive && (_appstate.value.flowCurrentLocationJob == null)) {
-
+Log.d("KRIS","CLoc Floww Start")
             val lifejob: Job = viewModelScope.launch {
                 locationTracker.currentLocationFlow(1)
                     .collectLatest {
@@ -112,7 +118,7 @@ fun check_something(){
                             _mapstate.value = mapstate.value.copy(
                                 currentLocation = it
                             )
-                            check_something()
+
 
                         }
 
@@ -170,7 +176,7 @@ fun check_something(){
     private fun FlowMapPointsbyCurrentTrackId_Start() {
         if (!_appstate.value.flowCurrentTrackMapPointActive && (_appstate.value.flowCurrentTrackMapPointJob == null)) {
             val lifejob: Job = viewModelScope.launch {
-                repository.MapPoints_getByTrackId(_trackstate.value.currentTrackId)
+                repository.MapPoints_getByTrackId(_trackstate.value.currentTrackId.toInt())
 
                     .collectLatest { mappoints ->
                         _trackstate.value = trackstate.value.copy(
@@ -232,7 +238,7 @@ fun check_something(){
     private fun FlowRunsListbyTrackId_Start(){
         if (!_appstate.value.flowRunListByTrackIdActive && (_appstate.value.flowRunListByTrackIdJob== null)) {
             val lifejob: Job = viewModelScope.launch {
-                repository.Runs_getByTrackId(_trackstate.value.currentTrackId)
+                repository.Runs_getByTrackId(_trackstate.value.currentTrackId.toInt())
 
                     .collectLatest { runs ->
                         _trackstate.value = trackstate.value.copy(
@@ -247,6 +253,7 @@ fun check_something(){
             )
         }
     }
+
     private fun FlowRunsListbyTrackId_Stop() {
         _appstate.value.flowRunListByTrackIdJob?.cancel()
         _appstate.value = appstate.value.copy(
@@ -260,26 +267,10 @@ fun check_something(){
     }
 
 
-
-    fun Change_Map(mapId: Int) {
-        _trackstate.value = trackstate.value.copy(
-            currentTrackId = mapId
-        )
-        FlowMapPointsbyCurrentTrackId_Restart()
-    }
-    fun Change_Run(runId: Int) {
-        _trackstate.value = trackstate.value.copy(
-            currentRunId = runId
-        )
-        FlowRunTimesbyCurrentRunId_Restart()
-    }
-
-
-
     private fun FlowRunTimesbyCurrentRunId_Start() {
         if (!_appstate.value.flowCurrentRunTimesActive && (_appstate.value.flowCurrentRunTimesJob == null)) {
              val lifejob: Job = viewModelScope.launch {
-                repository.RunTimes_getByRunId(_trackstate.value.currentRunId)
+                repository.RunTimes_getByRunId(_trackstate.value.currentRunId.toInt())
 
                     .collectLatest { runtimes ->
                         _trackstate.value = trackstate.value.copy(
@@ -316,10 +307,10 @@ fun check_something(){
     fun onEvent(event: AppEvent) {
         when (event) {
             is AppEvent.ToggleMap -> {
-                if (trackstate.value.currentTrackId == 0) {
-                    Change_Map(1)
+                if (trackstate.value.currentTrackId.toInt() == 0) {
+                    Change_Track(1)
                 } else {
-                    Change_Map(0)
+                    Change_Track(0)
                 }
 
             }
@@ -329,7 +320,7 @@ fun check_something(){
                     repository.MapPoint_insert(
                         MapPoint(
                             null,
-                            trackstate.value.currentTrackId,
+                            trackstate.value.currentTrackId.toInt(),
                             event.latLng.latitude,
                             event.latLng.longitude,
                             "",
@@ -350,6 +341,60 @@ fun check_something(){
             else -> {}
         }
     }
+
+
+
+
+    fun Change_Track(trackid: Long) {
+        _trackstate.value = trackstate.value.copy(
+            currentTrackId = trackid
+        )
+        FlowMapPointsbyCurrentTrackId_Restart()
+    }
+    fun Change_Run(runId: Long) {
+        _trackstate.value = trackstate.value.copy(
+            currentRunId = runId
+        )
+        FlowRunTimesbyCurrentRunId_Restart()
+    }
+
+    fun Create_Track(track: Track){
+        viewModelScope.launch {
+            val newtrackid = repository.Track_insert(track)
+            Log.d("TEST",newtrackid.toString())
+            Change_Track(newtrackid)
+        }
+
+    }
+
+    fun Set_isStartCardVisible(value: Boolean){
+        _appstate.value = appstate.value.copy(
+            isStartUpCardVisible = value
+        )
+    }
+
+    fun Set_isCreateTrackVisible(value: Boolean){
+        _appstate.value = appstate.value.copy(
+            isCreateTrackCardVisible = value
+        )
+    }
+
+
+    fun Set_mainNavController(nav: NavController){
+        _appstate.value = appstate.value.copy(
+            mainNavController = nav
+        )
+    }
+
+
+
+
+
+
+
+
+
+
 
 }
 

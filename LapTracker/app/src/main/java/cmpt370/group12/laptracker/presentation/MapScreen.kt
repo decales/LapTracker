@@ -8,11 +8,12 @@ import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.viewmodel.compose.viewModel
 import cmpt370.group12.laptracker.viewmodel.GlobalViewModel
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.MapEffect
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 
@@ -20,7 +21,7 @@ import com.google.maps.android.compose.MarkerState
 
 @Composable
 fun MapScreen(
-    viewModel: GlobalViewModel = viewModel()
+    viewModel: GlobalViewModel
 ) {
 
 
@@ -41,6 +42,9 @@ fun MapScreen(
 
                 Row() {
 
+
+
+
                     GoogleMap(
                         modifier = Modifier
                             .fillMaxSize(),
@@ -52,7 +56,18 @@ fun MapScreen(
                         }
                     )
                     {
+                        MapEffect(viewModel.mapstate.value.currentLocation){map ->
+                            map.setOnMapLoadedCallback {
+                                if (viewModel.mapstate.value.isFollowMe) {
+                                    map.animateCamera(CameraUpdateFactory.newLatLng(LatLng(viewModel.mapstate.value.currentLocation?.latitude?:52.0,viewModel.mapstate.value.currentLocation?.longitude?:-106.0)))
+                                }
+                                else
+                                {
 
+                                }
+
+                            }
+                        }
                         Marker(
                             state = MarkerState(
                                 LatLng(
@@ -64,27 +79,32 @@ fun MapScreen(
                             icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)
                         )
 
-
-                        viewModel.trackstate.value.mapPoints.forEach { mappoint ->
-                            Marker(
-                                state = MarkerState(LatLng(mappoint.latitude, mappoint.longitude)),
-                                title = "(${mappoint.latitude}, ${mappoint.longitude})",
-                                snippet = "Long click to delete",
-                                onInfoWindowLongClick = {
-                                    viewModel.onEvent(
-                                        AppEvent.OnInfoWindowLongClick(mappoint)
+                        if (viewModel.appstate.value.isMapLoaded) {
+                            viewModel.trackstate.value.mapPoints.forEach { mappoint ->
+                                Marker(
+                                    state = MarkerState(
+                                        LatLng(
+                                            mappoint.latitude,
+                                            mappoint.longitude
+                                        )
+                                    ),
+                                    title = "(${mappoint.latitude}, ${mappoint.longitude})",
+                                    snippet = "Long click to delete",
+                                    onInfoWindowLongClick = {
+                                        viewModel.onEvent(
+                                            AppEvent.OnInfoWindowLongClick(mappoint)
+                                        )
+                                    },
+                                    onClick = {
+                                        it.showInfoWindow()
+                                        true
+                                    },
+                                    icon = BitmapDescriptorFactory.defaultMarker(
+                                        BitmapDescriptorFactory.HUE_GREEN
                                     )
-                                },
-                                onClick = {
-                                    it.showInfoWindow()
-                                    true
-                                },
-                                icon = BitmapDescriptorFactory.defaultMarker(
-                                    BitmapDescriptorFactory.HUE_GREEN
                                 )
-                            )
+                            }
                         }
-
                     }
                 }
             }

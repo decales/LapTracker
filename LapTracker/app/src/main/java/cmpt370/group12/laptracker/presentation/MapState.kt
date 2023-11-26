@@ -1,6 +1,7 @@
 package cmpt370.group12.laptracker.presentation
 
 import android.location.Location
+import androidx.navigation.NavController
 import cmpt370.group12.laptracker.model.domain.model.Achievement
 import cmpt370.group12.laptracker.model.domain.model.Comment
 import com.google.maps.android.compose.MapProperties
@@ -32,15 +33,15 @@ data class MapState(
     val properties: MapProperties = MapProperties(),
     val uiSettings: MapUiSettings = MapUiSettings(),
     val currentLocation: Location? = Location(null),
-
+    val isFollowMe: Boolean = true
 
 
 )
 data class TrackState(
-    val currentTrackId: Int = 0,
-    val currentRunId: Int = 0,
-    val currentTargetId: Int = 0,
-    val currentTargetDistance: Int = 0,
+    val currentTrackId: Long = 0,
+    val currentRunId: Long = 0,
+    val currentTargetId: Long = 0,
+    val currentTargetDistance: Long = 0,
     val comments: List<Comment> = emptyList(),
     val mapPoints: List<MapPoint> = emptyList(),
     val runtimes: List<Runtimes> = emptyList(),
@@ -50,6 +51,7 @@ data class TrackState(
 
 data class AppState(
     val achievements: List<Achievement> = emptyList(),
+    val isMapLoaded: Boolean = false,
     val tracks: List<Track> = emptyList(),
     val mapPoints: List<MapPoint> = emptyList(),
     val runs: List<Runs> = emptyList(),
@@ -68,6 +70,9 @@ data class AppState(
     val flowCurrentTrackRunsListActive :Boolean = false,
     val flowAchievementListActive: Boolean = false,
     val flowAchievementListJob: Job? = null,
+    var isCreateTrackCardVisible : Boolean = false,
+    var isStartUpCardVisible: Boolean = true,
+    val mainNavController: NavController? = null
 
     )
 

@@ -85,10 +85,11 @@ override fun onCreate(savedInstanceState: Bundle?) {
             // Initialize view models to pass to associated views
             // TODO fix view models to preserve states on MainActivity re-compose (i.e. on screen rotation)
 
-            val startViewModel = StartViewModel(locationClient,backend)
-            val tracksViewModel = TracksViewModel(backend)
-            val profileViewModel = ProfileViewModel(backend)
-            val settingsViewModel = SettingsViewModel(backend)
+            val startViewModel = StartViewModel(locationClient,backend,navController)
+            val tracksViewModel = TracksViewModel(backend,navController)
+            val profileViewModel = ProfileViewModel(backend,navController)
+            val settingsViewModel = SettingsViewModel(backend,navController)
+            backend.Set_mainNavController(navController)
 
             // Handle routes
             composable("Start") {
@@ -113,6 +114,7 @@ override fun onCreate(savedInstanceState: Bundle?) {
         - Bar persists throughout the MainActivity */
     @Composable
     fun BottomNavigationBar(controller: NavController) {
+
         NavigationBar (
             content = {
                 listOf(

@@ -5,10 +5,11 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.navigation.NavController
 import cmpt370.group12.laptracker.R
 import cmpt370.group12.laptracker.model.domain.model.Achievement
 
-class ProfileViewModel(val backend: GlobalViewModel): ViewModel() {
+class ProfileViewModel(val backend: GlobalViewModel,val nav: NavController): ViewModel() {
     // TODO add all data and states values required for ProfileView composable functions
     // TODO (if applicable) retrieve data from database (model)
 

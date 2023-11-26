@@ -41,8 +41,8 @@ class LapTrackerRepositoryImpl(
 ): LapTrackerRepository {
 
 
-    override suspend fun MapPoint_insert(mappoint: MapPoint) {
-        mapPointDao.MapPoint_insert(mappoint.toMapPointEntity())
+    override suspend fun MapPoint_insert(mappoint: MapPoint): Long {
+        return mapPointDao.MapPoint_insert(mappoint.toMapPointEntity())
     }
 
     override suspend fun MapPoint_delete(mappoint: MapPoint) {
@@ -74,8 +74,8 @@ class LapTrackerRepositoryImpl(
     }
 
 
-    override suspend fun Achievement_insert(achievement: Achievement){
-        achievementDao.Achievement_insert(achievement.toAchievementEntity())
+    override suspend fun Achievement_insert(achievement: Achievement): Long{
+        return achievementDao.Achievement_insert(achievement.toAchievementEntity())
     }
     override suspend fun Achievement_delete(achievement: Achievement){
         achievementDao.Achievement_delete(achievement.toAchievementEntity())
@@ -86,8 +86,8 @@ class LapTrackerRepositoryImpl(
             it.map { it.toAchievement() }}
     }
 
-    override suspend fun Comment_insert(comment: Comment){
-        commentDao.Comment_insert(comment.toCommentEntity())
+    override suspend fun Comment_insert(comment: Comment): Long{
+        return commentDao.Comment_insert(comment.toCommentEntity())
     }
     override suspend fun Comment_delete(comment: Comment){
         commentDao.Comment_delete(comment.toCommentEntity())
@@ -107,8 +107,8 @@ class LapTrackerRepositoryImpl(
 
     }
 
-    override suspend fun Runs_insert(runs: Runs){
-        runsDao.Runs_insert(runs.toRunsEntity())
+    override suspend fun Runs_insert(runs: Runs): Long{
+        return runsDao.Runs_insert(runs.toRunsEntity())
     }
     override suspend fun Runs_delete(runs: Runs){
         runsDao.Runs_delete(runs.toRunsEntity())
@@ -128,8 +128,8 @@ class LapTrackerRepositoryImpl(
     }
 
 
-    override suspend fun RunTimes_insert(runtimes: Runtimes){
-        runtimesDao.RunTimes_insert(runtimes.toRunTimesEntity())
+    override suspend fun RunTimes_insert(runtimes: Runtimes): Long{
+        return runtimesDao.RunTimes_insert(runtimes.toRunTimesEntity())
     }
     override suspend fun RunTimes_delete(runtimes: Runtimes){
             runtimesDao.RunTimes_delete(runtimes.toRunTimesEntity())
@@ -149,8 +149,8 @@ class LapTrackerRepositoryImpl(
 
     }
 
-    override suspend fun Track_insert(track: Track){
-        trackDao.Track_insert(track.toTrackEntity())
+    override suspend fun Track_insert(track: Track): Long{
+        return trackDao.Track_insert(track.toTrackEntity())
     }
     override suspend fun Track_delete(track: Track){
         trackDao.Track_delete(track.toTrackEntity())
