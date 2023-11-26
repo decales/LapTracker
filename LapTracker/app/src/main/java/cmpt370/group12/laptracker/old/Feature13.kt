@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import cmpt370.group12.laptracker.presentation.AppState
 import cmpt370.group12.laptracker.view.theme.LapTrackerTheme
 
 class Feature13 : ComponentActivity() {
@@ -56,7 +57,10 @@ class Feature13 : ComponentActivity() {
 fun RunSelector (){
     var dropOpen by remember { mutableStateOf(false) }
     val selectedItems = remember { mutableStateListOf<String>() }
-    val options = listOf("damon", "needs", "the", "run", "id's")
+    val runs = AppState().runs
+    val names: List<String> = runs.map { it.id.toString() }
+    //val options = { mutableStateListOf<String>(names) }
+    val options = names.toMutableList()
     val selectedRunsViewModel = viewModel<SelectedRunsViewModel>()
     Column(
             modifier = Modifier
