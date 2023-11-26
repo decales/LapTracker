@@ -30,9 +30,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.DialogWindowProvider
 import cmpt370.group12.laptracker.R
 import cmpt370.group12.laptracker.viewmodel.ProfileViewModel
 
@@ -208,6 +210,7 @@ class ProfileView(
         AlertDialog(
             onDismissRequest = { viewModel.toggleAchievementDetails(viewModel.selectedAchievement) }
         ) {
+            (LocalView.current.parent as DialogWindowProvider).window.setDimAmount(0.8f)
             Card (modifier = Modifier
                 .padding(0.dp)
             ) {
