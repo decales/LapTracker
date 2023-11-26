@@ -2,6 +2,8 @@ package cmpt370.group12.laptracker.model.data.dao
 
 import androidx.room.Dao
 import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Upsert
 import cmpt370.group12.laptracker.model.data.entities.RunsEntity
@@ -14,8 +16,8 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface RunsDao {
-    @Upsert
-    suspend fun Runs_insert(runs: RunsEntity)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun Runs_insert(runs: RunsEntity): Long
 
     @Delete
     suspend fun Runs_delete(runs: RunsEntity)
