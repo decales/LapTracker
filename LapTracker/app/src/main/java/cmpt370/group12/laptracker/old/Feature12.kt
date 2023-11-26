@@ -49,7 +49,7 @@ class Feature12 : ComponentActivity() {
                         modifier = Modifier.fillMaxSize(),
                         color = MaterialTheme.colorScheme.background
                 ) {
-                    val stateClass = MapState()
+
                     RealTimeUI()
 
                 }
