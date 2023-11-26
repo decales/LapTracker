@@ -1,54 +1,63 @@
 package cmpt370.group12.laptracker.viewmodel
 
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import cmpt370.group12.laptracker.R
 import cmpt370.group12.laptracker.model.domain.model.Achievement
+import cmpt370.group12.laptracker.model.domain.repository.LapTrackerRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ProfileViewModel(val backend: GlobalViewModel): ViewModel() {
-    // TODO add all data and states values required for ProfileView composable functions
-    // TODO (if applicable) retrieve data from database (model)
+@HiltViewModel
+class ProfileViewModel @Inject constructor(
+    private val db: LapTrackerRepository
+): ViewModel() {
 
-
-    // Data classes
-    data class ProfileTab(
-        val text: String,
-        val icon: Int,
-    )
-    
-    //val backend.appstate.value.achievements: List<Achievement> = backend.appstate.value.achievements
-    //var x = backend.appstate.value.achievements
-    //val backend.appstate.value.achievements = mutableStateOf(backend.appstate.value.achievements)
-
-
-    // Variables and objects
-
-    var currentPage by mutableIntStateOf(0)
-
-    val profileTabs = listOf(
-        ProfileTab("Statistics", R.drawable.ic_launcher_foreground),
-        ProfileTab("Achievements", R.drawable.ic_launcher_foreground)
-    )
-
-    //val achievements = List(18) { Achievement(0, "Name", "Description", R.drawable.ic_launcher_foreground, (it % 3 == 0), "Date unlocked") }
-    //val achievements = backend.
-    //val unlockedCount = backend.appstate.value.achievements.count { it.achieved }
-
+    val achievements: MutableState<List<Achievement>> = mutableStateOf(emptyList())
+    var selectedAchievement: Achievement by mutableStateOf(Achievement(null, "", "", false, R.drawable.ic_launcher_foreground, 0))
     var achievementDetailsVisible by mutableStateOf(false)
-
-    var currentAchievement: Achievement by mutableStateOf(Achievement(null, "", "", false, R.drawable.ic_launcher_foreground, 0))
-
-    // Methods
+    var currentPage by mutableIntStateOf(0)
 
     fun setPage(index: Int) {
         currentPage = index
     }
 
-    fun toggleAchievementDetails(achievement: Achievement) {
+    fun toggleAchievementDetails(selectedAchievement: Achievement) {
         achievementDetailsVisible = !achievementDetailsVisible
-        currentAchievement = achievement
+        this.selectedAchievement = selectedAchievement
+    }
+
+    private suspend fun fetchAchievements() {
+        val fetched = db.Achievement_getAll()
+        if (fetched.isNotEmpty()) achievements.value = fetched
+        else { // On app install, populate db with achievements
+            listOf(
+                Achievement(null, "name1", "desc", false, R.drawable.ic_launcher_foreground, 0),
+                Achievement(null, "name2", "desc", false, R.drawable.ic_launcher_foreground, 0),
+                Achievement(null, "name3", "desc", false, R.drawable.ic_launcher_foreground, 0),
+                Achievement(null, "name4", "desc", false, R.drawable.ic_launcher_foreground, 0),
+                Achievement(null, "name5", "desc", false, R.drawable.ic_launcher_foreground, 0),
+                Achievement(null, "name6", "desc", false, R.drawable.ic_launcher_foreground, 0),
+                Achievement(null, "name6", "desc", false, R.drawable.ic_launcher_foreground, 0),
+                Achievement(null, "name6", "desc", false, R.drawable.ic_launcher_foreground, 0),
+                Achievement(null, "name6", "desc", false, R.drawable.ic_launcher_foreground, 0),
+                Achievement(null, "name6", "desc", false, R.drawable.ic_launcher_foreground, 0),
+                Achievement(null, "name6", "desc", false, R.drawable.ic_launcher_foreground, 0),
+                Achievement(null, "name6", "desc", false, R.drawable.ic_launcher_foreground, 0)
+            ).forEach { achievement -> db.Achievement_insert(achievement) }
+            achievements.value = db.Achievement_getAll()
+        }
+    }
+
+    init {
+        viewModelScope.launch {
+            fetchAchievements()
+        }
     }
 }

@@ -1,4 +1,4 @@
-package cmpt370.group12.laptracker.view.main
+package cmpt370.group12.laptracker.view
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.border
@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.pager.HorizontalPager
@@ -31,10 +30,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import cmpt370.group12.laptracker.model.domain.model.Achievement
+import androidx.compose.ui.window.DialogWindowProvider
+import cmpt370.group12.laptracker.R
 import cmpt370.group12.laptracker.viewmodel.ProfileViewModel
 
 class ProfileView(
@@ -49,7 +50,7 @@ class ProfileView(
     @Composable
     fun View() {
         Column {
-            val pagerState = rememberPagerState { viewModel.profileTabs.size }
+            val pagerState = rememberPagerState { 2 }
             LaunchedEffect(viewModel.currentPage) { pagerState.scrollToPage(viewModel.currentPage) }
             // TODO fix pagerState and viewModel.currentPage so tabs are in sync with page selection using both swipe and tab selection
             Header()
@@ -84,23 +85,25 @@ class ProfileView(
     fun ProfileTabBar() {
         TabRow(
             selectedTabIndex = viewModel.currentPage,
-            modifier = Modifier.padding(top = 5.dp)
+            modifier = Modifier.padding(top = 10.dp)
         ) {
-            viewModel.profileTabs.forEachIndexed { index, item ->
+            listOf(
+                Pair("Statistics", R.drawable.profileview_statisticstab),
+                Pair("Achievements", R.drawable.profileview_achievementstab)
+            ).forEachIndexed { index, item ->
                 Tab(
                     selected = false,
                     onClick = { viewModel.setPage(index) }
-                )
-                {
+                ) {
                     Row(
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.padding(bottom = 5.dp)
                     ) {
-                        Text(text = item.text)
+                        Text(text = item.first)
                         Icon(
-                            painter = painterResource(id = item.icon),
-                            contentDescription = item.text,
-                            modifier = Modifier
-                                .size(50.dp)
+                            painter = painterResource(id = item.second),
+                            contentDescription = item.first,
+                            modifier = Modifier.padding(start = 5.dp)
                         )
                     }
                 }
@@ -134,9 +137,7 @@ class ProfileView(
             CompletionText()
             AchievementsGrid()
         }
-        if (viewModel.achievementDetailsVisible) {
-            AchievementDetails(viewModel.currentAchievement)
-        }
+        if (viewModel.achievementDetailsVisible) AchievementDetails()
     }
 
 
@@ -150,10 +151,10 @@ class ProfileView(
                 horizontalArrangement = Arrangement.SpaceAround,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(text = "${viewModel.backend.appstate.value.achievements.count { it.achieved }}/${viewModel.backend.appstate.value.achievements.size} Unlocked",
+                Text(text = "${viewModel.achievements.value.count { it.achieved }}/${viewModel.achievements.value.size} Unlocked",
                     fontSize = 14.sp
                 )
-                Text(text = "${(viewModel.backend.appstate.value.achievements.count { it.achieved }.toDouble() / viewModel.backend.appstate.value.achievements.size.toDouble() * 100).toInt()}% Completion",
+                Text(text = "${(viewModel.achievements.value.count { it.achieved }.toDouble() / viewModel.achievements.value.size.toDouble() * 100).toInt()}% Completion",
                     fontSize = 14.sp
                 )
             }
@@ -171,7 +172,7 @@ class ProfileView(
                 columns = GridCells.Fixed(3),
                 contentPadding = PaddingValues(top = 20.dp),
                 content = {
-                    viewModel.backend.appstate.value.achievements.forEach { achievement ->
+                    viewModel.achievements.value.forEach { achievement ->
                         item {
                             Column (
                                 horizontalAlignment = CenterHorizontally,
@@ -204,10 +205,11 @@ class ProfileView(
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    fun AchievementDetails(achievement: Achievement) {
+    fun AchievementDetails() {
         AlertDialog(
-            onDismissRequest = { viewModel.toggleAchievementDetails(achievement) }
+            onDismissRequest = { viewModel.toggleAchievementDetails(viewModel.selectedAchievement) }
         ) {
+            (LocalView.current.parent as DialogWindowProvider).window.setDimAmount(0.8f)
             Card (modifier = Modifier
                 .padding(0.dp)
             ) {
@@ -219,19 +221,19 @@ class ProfileView(
                         .align(CenterHorizontally)
                 ) {
                     Text(
-                        text = achievement.name,
+                        text = viewModel.selectedAchievement.name,
                         fontSize = 22.sp
                     )
                     Icon(
-                        painter = painterResource(id = achievement.iconID),
-                        contentDescription = achievement.name,
+                        painter = painterResource(id = viewModel.selectedAchievement.iconID),
+                        contentDescription = viewModel.selectedAchievement.name,
                         modifier = Modifier
                             .padding(top = 5.dp, bottom = 5.dp)
                             .border(1.dp, Color.White, RoundedCornerShape(15.dp))
                     )
-                    Text(text = achievement.description)
+                    Text(text = viewModel.selectedAchievement.description)
                     Text(
-                        text = achievement.timestamp.toString(),
+                        text = if (viewModel.selectedAchievement.achieved) "Unlocked ${viewModel.selectedAchievement.timestamp}" else "You have not unlocked this achievement!",
                         fontSize = 12.sp,
                         modifier = Modifier.padding(top = 5.dp)
                     )
