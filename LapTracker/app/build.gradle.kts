@@ -53,6 +53,10 @@ android {
 }
 
 dependencies {
+
+    // for graphing
+    implementation ("co.yml:ycharts:2.1.0")
+
     //implementation ("androidx.core:core-ktx:1.10.0")
     implementation ("androidx.core:core-ktx:1.12.0")
 
