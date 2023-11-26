@@ -9,7 +9,6 @@ data class TrackEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int? = null,
     //name is the Title of the achievement
-    val name: String = "",
-    val location: String = "",
-    val mapImage: Int = 0
+    val name: String = ""
+
 )
