@@ -290,15 +290,28 @@ class TracksView(
 
 
     @Composable
-    fun TrackDetailsOverview() { // TODO make this
-        Box(
-            contentAlignment = Center,
-            modifier = Modifier.fillMaxSize()
+    fun TrackDetailsOverview(/*lapDataList: List<LapData> */) {
+        // Calculate average speed, distance, and time
+//        val averageSpeed = lapDataList.map { it.speed }.average()
+//        val totalDistance = lapDataList.map { it.distance }.sum()
+//        val averageTime = lapDataList.map { it.time }.sum()
+
+        // Format the time in seconds
+//        val totalTimeSeconds = averageTime / 1000
+//        val minutes = totalTimeSeconds / 60
+//        val seconds = totalTimeSeconds % 60
+
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = "Overview")
+            Text(text = "Average Speed: %.2f km/h".format(12 /*averageSpeed*/))
+            Text(text = "Total Distance: %.2f km".format(10/*totalDistance*/))
+            Text(text = "Total Time: %02d:%02d".format(15/*averageTime*/))
         }
     }
-
 
     @Composable
     fun TrackDetailsRuns() { // TODO make this
