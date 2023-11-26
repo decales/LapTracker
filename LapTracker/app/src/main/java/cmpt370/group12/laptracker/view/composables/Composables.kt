@@ -86,7 +86,7 @@ fun CreateTrackCard(viewModel: GlobalViewModel) {
                         viewModel.Create_Track(Track(name = nametext, description = desctext, lapcount = 1 ))
                         viewModel.Set_isStartCardVisible(false)
                         viewModel.Set_isCreateTrackVisible(false)
-                        //viewModel.backend.Set_isStartCardVisible(false)
+                        viewModel.appstate.value.mainNavController?.navigate("Start")
                     }
                 ) {
                     Text(text = "Create")
