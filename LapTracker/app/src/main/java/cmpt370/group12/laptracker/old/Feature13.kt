@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -19,6 +20,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -34,6 +36,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import cmpt370.group12.laptracker.presentation.AppState
 import cmpt370.group12.laptracker.view.theme.LapTrackerTheme
+import co.yml.charts.ui.linechart.LineChart
 
 class Feature13 : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,7 +55,6 @@ class Feature13 : ComponentActivity() {
         }
     }
 }
-
 @Composable
 fun RunSelector (){
     var dropOpen by remember { mutableStateOf(false) }
@@ -128,8 +130,50 @@ fun RunSelector (){
         //Text ("The Dropdown composable for lap selection")
     }
 }
-//Todo
-//create an encode or some way to get the names of all the runs available
+
+@Composable
+fun DisplaySelectedRuns(selectedRunsViewModel: SelectedRunsViewModel){
+    val selectedRuns = selectedRunsViewModel.selectedItems.value
+    LaunchedEffect(selectedRuns){
+    }
+
+}
+
+//this will be for the progress bar
+fun createDonutChar (){
+
+}
+//this will be for the main data (distance/time, speed/time, ...)
+@Composable
+fun creatLineGraph(yAxis: List<Long>, xAxis: List<Long>){
+    /*
+    data class LineChartData(
+            val linePlotData: LinePlotData,
+            val xAxisData: AxisData = AxisData.Builder().build(),
+            val yAxisData: AxisData = AxisData.Builder().build(),
+            val isZoomAllowed: Boolean = true,
+            val paddingTop: Dp = 30.dp,
+            val bottomPadding: Dp = 10.dp,
+            val paddingRight: Dp = 10.dp,
+            val containerPaddingEnd: Dp = 15.dp,
+            val backgroundColor: Color = Color.White,
+            val gridLines: GridLines? = null,
+            val accessibilityConfig: AccessibilityConfig = AccessibilityConfig()
+    )
+
+     */
+
+    /*
+    LineChart(
+            modifier = Modifier
+                    .fillMaxWidth()
+                    .height(300.dp),
+            lineChartData = data
+    )
+
+     */
+}
+
 class SelectedRunsViewModel: ViewModel() {
     val selectedItems = mutableStateOf(emptyList<String>())
     fun toggleItem(item: String){
@@ -143,18 +187,3 @@ class SelectedRunsViewModel: ViewModel() {
     }
 }
 
-@Composable
-fun Greeting14(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview14() {
-    LapTrackerTheme {
-        Greeting14("Android")
-    }
-}
