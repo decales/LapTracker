@@ -33,25 +33,31 @@ class ProfileViewModel @Inject constructor(
         this.selectedAchievement = selectedAchievement
     }
 
-    private fun fetchAchievements() {
-        viewModelScope.launch {
-            val fetched = db.Achievement_getAll()
-            if (fetched.isNotEmpty()) achievements.value = fetched
-            else { // On app install, populate db with achievements
-                listOf(
-                    Achievement(null, "name1", "desc", false, R.drawable.ic_launcher_foreground, 0),
-                    Achievement(null, "name2", "desc", false, R.drawable.ic_launcher_foreground, 0),
-                    Achievement(null, "name3", "desc", false, R.drawable.ic_launcher_foreground, 0),
-                    Achievement(null, "name4", "desc", false, R.drawable.ic_launcher_foreground, 0),
-                    Achievement(null, "name5", "desc", false, R.drawable.ic_launcher_foreground, 0),
-                    Achievement(null, "name6", "desc", false, R.drawable.ic_launcher_foreground, 0)
-                ).forEach { achievement -> db.Achievement_insert(achievement) }
-                achievements.value = db.Achievement_getAll()
-            }
+    private suspend fun fetchAchievements() {
+        val fetched = db.Achievement_getAll()
+        if (fetched.isNotEmpty()) achievements.value = fetched
+        else { // On app install, populate db with achievements
+            listOf(
+                Achievement(null, "name1", "desc", false, R.drawable.ic_launcher_foreground, 0),
+                Achievement(null, "name2", "desc", false, R.drawable.ic_launcher_foreground, 0),
+                Achievement(null, "name3", "desc", false, R.drawable.ic_launcher_foreground, 0),
+                Achievement(null, "name4", "desc", false, R.drawable.ic_launcher_foreground, 0),
+                Achievement(null, "name5", "desc", false, R.drawable.ic_launcher_foreground, 0),
+                Achievement(null, "name6", "desc", false, R.drawable.ic_launcher_foreground, 0),
+                Achievement(null, "name6", "desc", false, R.drawable.ic_launcher_foreground, 0),
+                Achievement(null, "name6", "desc", false, R.drawable.ic_launcher_foreground, 0),
+                Achievement(null, "name6", "desc", false, R.drawable.ic_launcher_foreground, 0),
+                Achievement(null, "name6", "desc", false, R.drawable.ic_launcher_foreground, 0),
+                Achievement(null, "name6", "desc", false, R.drawable.ic_launcher_foreground, 0),
+                Achievement(null, "name6", "desc", false, R.drawable.ic_launcher_foreground, 0)
+            ).forEach { achievement -> db.Achievement_insert(achievement) }
+            achievements.value = db.Achievement_getAll()
         }
     }
 
     init {
-        fetchAchievements()
+        viewModelScope.launch {
+            fetchAchievements()
+        }
     }
 }

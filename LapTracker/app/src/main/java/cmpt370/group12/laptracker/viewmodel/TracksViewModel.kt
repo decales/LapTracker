@@ -67,6 +67,16 @@ class TracksViewModel @Inject constructor(
                 if (trackCard.isSelected.value) db.Track_delete(trackCard.track)
             }
             fetchTracks()
+            toggleDeleteConfirmation()
+        }
+    }
+
+    fun deleteCurrentTrack() {
+        viewModelScope.launch {
+            db.Track_delete(currentTrackDetails)
+            fetchTracks()
+            toggleDeleteConfirmation()
+            toggleTrackDetails()
         }
     }
 

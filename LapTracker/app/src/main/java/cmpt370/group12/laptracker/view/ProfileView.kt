@@ -94,8 +94,7 @@ class ProfileView(
                 Tab(
                     selected = false,
                     onClick = { viewModel.setPage(index) }
-                )
-                {
+                ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.padding(bottom = 5.dp)

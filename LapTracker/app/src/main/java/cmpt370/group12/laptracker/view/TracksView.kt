@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -22,20 +24,27 @@ import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.FilledIconToggleButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedIconButton
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.DialogWindowProvider
 import cmpt370.group12.laptracker.R
 import cmpt370.group12.laptracker.viewmodel.TracksViewModel
 
@@ -50,13 +59,10 @@ class TracksView(
     fun View() {
         // TODO build view from class defined composable functions.
         // TODO initialize necessary view data in viewmodel/main/TracksViewModel.kt. Data is accessed through constructor var 'viewModel'
-        Column {
+        Column (modifier = Modifier.padding(20.dp)) {
             Header()
-            if (!viewModel.trackDetailsVisible) {
-                ToolBar()
-                TrackCardColumn()
-            }
-            else TrackDetails()
+            if (!viewModel.trackDetailsVisible) TrackListView()
+            else TrackDetailsView()
         }
         if (viewModel.deleteConfirmationVisible) DeleteConfirmation()
     }
@@ -66,9 +72,8 @@ class TracksView(
     fun Header() {
         Box(modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 20.dp, top = 20.dp)
-        )
-        {
+            .padding(bottom = 10.dp)
+        ) {
             Text(
                 text = "Saved Tracks",
                 fontSize = 30.sp
@@ -78,13 +83,22 @@ class TracksView(
 
 
     @Composable
-    fun ToolBar() {
-        Row(
-            modifier = Modifier.fillMaxWidth()
+    fun TrackListView() {
+        TrackListToolBar()
+        TrackList()
+    }
+
+
+    @Composable
+    fun TrackListToolBar() {
+        Row(modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 10.dp)
         ) {
-            Button(onClick = { viewModel.addTrack()}) {
-                Text(text = "test add")
+            Button(onClick = { viewModel.addTrack()}) { // TODO Remove this later
+                Text(text = "add")
             }
+            Spacer(modifier = Modifier.weight(1.0f))
             if (viewModel.deleteModeToggled) {
                 Button(
                     onClick = { viewModel.toggleDeleteConfirmation() },
@@ -93,7 +107,11 @@ class TracksView(
                     Text(text = "Delete selected")
                 }
             }
-            FilledIconToggleButton(checked = viewModel.deleteModeToggled, onCheckedChange = { viewModel.toggleDeleteMode()}) {
+            FilledIconToggleButton(
+                checked = viewModel.deleteModeToggled,
+                onCheckedChange = { viewModel.toggleDeleteMode()},
+                modifier = Modifier.padding(start = 5.dp)
+            ) {
                 Icon(painter = painterResource(id = R.drawable.tracksview_delete),
                     contentDescription = "delete track")
             }
@@ -103,10 +121,10 @@ class TracksView(
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    fun TrackCardColumn() {
+    fun TrackList() {
         Card(
             colors = CardDefaults.cardColors(Color(0xff1c212d)),
-            modifier = Modifier.padding(20.dp)
+            modifier = Modifier.fillMaxSize()
         ) {
             if (viewModel.tracksCards.value.isNotEmpty()) {
                 LazyColumn(
@@ -115,15 +133,15 @@ class TracksView(
                     viewModel.tracksCards.value.forEach { trackCard ->
                         item {
                             BadgedBox(badge = {
-                                if (viewModel.deleteModeToggled) { // Display badge in corner of track card to select tracks to be deleted
+                                if (viewModel.deleteModeToggled && trackCard.isSelected.value) { // Display badge in corner of track card to select tracks to be deleted
                                     Badge(
+                                        containerColor = Color(0xFF91b5fa),
+                                        contentColor = Color.White,
                                         modifier = Modifier
                                             .graphicsLayer {
                                                 translationY = 15.0F
                                                 translationX = -40.0F
-                                            },
-                                        containerColor = if (trackCard.isSelected.value) Color(0xFF91b5fa) else Color.Transparent,
-                                        contentColor = if (trackCard.isSelected.value) Color.White else Color.Transparent
+                                            }
                                     ) {
                                         Icon(
                                             painter = painterResource(id = R.drawable.tracksview_selected),
@@ -176,7 +194,12 @@ class TracksView(
                 }
             }
             else {
-                Text(text = "You have no saved tracks LOL") // TODO make this screen
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    Text(text = "It's empty in here :(")
+                }
             }
         }
     }
@@ -184,54 +207,107 @@ class TracksView(
 
     @OptIn(ExperimentalFoundationApi::class)
     @Composable
-    fun TrackDetails() {// TODO give this an enter and exit animation
-        Column(
-            verticalArrangement = Arrangement.SpaceEvenly,
-            modifier = Modifier.padding(20.dp)
+    fun TrackDetailsView() {// TODO give this an enter and exit animation
+        Card(
+            colors = CardDefaults.cardColors(Color(0xff1c212d)),
+            modifier = Modifier.fillMaxSize()
         ) {
-            Text(
-                text = viewModel.currentTrackDetails.name,
-                fontSize = 28.sp
-            )
-            Divider(thickness = 1.dp, color = Color.White)
+            Column(
+                modifier = Modifier.padding(top = 10.dp, bottom = 20.dp, start = 20.dp, end = 20.dp)
+            ) {
+                TrackDetailsToolBar()
+                Text(text = viewModel.currentTrackDetails.name, fontSize = 28.sp)
+                TrackDetailsTabBar()
 
-            val pagerState = rememberPagerState { 3 }
-            HorizontalPager(
-                state = pagerState,
-                modifier = Modifier
-            ) {
-                when (it) {
-                    0 -> TrackDetailsOverview()
-                    1 -> TrackDetailsRuns()
-                    2 -> TrackDetailsNotes()
-                    else -> Text(text = "?")
+                val pagerState = rememberPagerState { 3 } // TODO sync tab bar with pagerState
+                HorizontalPager(
+                    state = pagerState,
+                    modifier = Modifier
+                ) {
+                    Card(modifier = Modifier.fillMaxSize()) {
+                        when (it) {
+                            0 -> TrackDetailsOverview()
+                            1 -> TrackDetailsRuns()
+                            2 -> TrackDetailsNotes()
+                            else -> Text(text = "?")
+                        }
+                    }
                 }
-            }
-            Button(
-                onClick = { viewModel.toggleTrackDetails() },
-                modifier = Modifier.align(CenterHorizontally)
-            ) {
-                Text(text = "Close")
             }
         }
     }
 
 
-
-
     @Composable
-    fun TrackDetailsOverview() {
-        Text(text = "Overview")
+    fun TrackDetailsToolBar() {
+        Row (
+            modifier = Modifier
+                .padding(bottom = 10.dp)
+                .fillMaxWidth()
+        ) {
+            OutlinedIconButton( // Back button
+                onClick = { viewModel.toggleTrackDetails() }
+            ) {
+                Icon(painter = painterResource(id = R.drawable.tracksview_back), contentDescription = "tracksview_detailsback")
+            }
+            Spacer(modifier = Modifier.weight(1.0f))
+            FilledIconButton( // Edit track button
+                onClick = { /* TODO edit track function */ },
+            ) {
+                Icon(painter = painterResource(id = R.drawable.tracksview_edit), contentDescription = "tracksview_detailsback")
+            }
+            FilledIconButton( // Delete track button
+                onClick = { viewModel.toggleDeleteConfirmation() },
+                modifier = Modifier.padding(start = 5.dp)
+            ) {
+                Icon(painter = painterResource(id = R.drawable.tracksview_delete), contentDescription = "tracksview_detailsback")
+            }
+        }
     }
 
 
     @Composable
-    fun TrackDetailsRuns() { // TODO finish making this
-        Box {
+    fun TrackDetailsTabBar() {
+        TabRow(
+            selectedTabIndex = 0,
+            containerColor = Color.Transparent,
+            modifier = Modifier
+                .padding(top = 10.dp, bottom = 20.dp)
+        ) {
+            listOf("Overview", "Run history", "Notes").forEachIndexed { index, item ->
+                Tab(
+                    selected = false,
+                    onClick = { /* TODO */ }
+                ) {
+                    Text(
+                        text = item,
+                        modifier = Modifier.padding(bottom = 5.dp)
+                    )
+                }
+            }
+        }
+    }
+
+
+    @Composable
+    fun TrackDetailsOverview() { // TODO make this
+        Box(
+            contentAlignment = Center,
+            modifier = Modifier.fillMaxSize()
+        ) {
+            Text(text = "Overview")
+        }
+    }
+
+
+    @Composable
+    fun TrackDetailsRuns() { // TODO make this
+        Box(
+            contentAlignment = Center,
+            modifier = Modifier.fillMaxSize()
+        ) {
             Column {
                 Text(text = "Run History")
-            }
-            Card {
                 if (viewModel.currentTrackDetailsRuns.isNotEmpty()) {
                     LazyColumn {
                         viewModel.currentTrackDetailsRuns.forEach { run ->
@@ -241,24 +317,33 @@ class TracksView(
                         }
                     }
                 }
-                else {
-                    Text(text = "You have not completed any runs on this track!")
-                }
+                else Text(text = "You have not completed any runs on this track!")
             }
         }
     }
 
 
     @Composable
-    fun TrackDetailsNotes() {
-        Text(text = "Notes")
+    fun TrackDetailsNotes() { // TODO make this
+        Box(
+            contentAlignment = Center,
+            modifier = Modifier.fillMaxSize()
+        ) {
+            Text(text = "Overview")
+        }
     }
 
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun DeleteConfirmation() {
+        // Change message and delete function depending on if deletion is triggered from track details or track list
+        val mode: Pair<String,()-> Unit> = when(viewModel.trackDetailsVisible) {
+            true -> Pair("Are you sure you want to permanently delete this track?") { viewModel.deleteCurrentTrack() }
+            false -> Pair("Are you sure want to permanently delete the ${viewModel.tracksCards.value.filter { it.isSelected.value }.size} selected track(s)?") { viewModel.deleteSelectedTracks() }
+        }
         AlertDialog(onDismissRequest = { viewModel.toggleDeleteConfirmation() }) {
+            (LocalView.current.parent as DialogWindowProvider).window.setDimAmount(0.8f)
             Card {
                 Column(
                     horizontalAlignment = CenterHorizontally,
@@ -271,12 +356,12 @@ class TracksView(
                     )
                     Text(
                         text = "Confirm deletion",
-                        fontSize = 28.sp,
+                        fontSize = 26.sp,
                         modifier = Modifier.padding(top = 5.dp)
                     )
                     Text(
-                        text = "Are you sure want to permanently delete the ${viewModel.tracksCards.value.filter { it.isSelected.value }.size} selected track(s) ?",
-                        fontSize = 16.sp,
+                        text = mode.first, // mode string
+                        fontSize = 14.sp,
                         modifier = Modifier.padding(top = 10.dp)
                     )
                     Row (
@@ -286,15 +371,9 @@ class TracksView(
                             .fillMaxWidth()
                     ){
                         OutlinedButton(onClick = { viewModel.toggleDeleteConfirmation() }) {
-                            Text(
-                                text = "Cancel",
-                                color = Color(0xFFce3e5a)
-                            )
+                            Text(text = "Cancel", color = Color(0xFFce3e5a))
                         }
-                        OutlinedButton(onClick = {
-                            viewModel.deleteSelectedTracks()
-                            viewModel.toggleDeleteConfirmation()
-                        }
+                        OutlinedButton(onClick = mode.second // mode function
                         ) {
                             Text(text = "Confirm")
                         }
@@ -303,6 +382,4 @@ class TracksView(
             }
         }
     }
-
-
 }
