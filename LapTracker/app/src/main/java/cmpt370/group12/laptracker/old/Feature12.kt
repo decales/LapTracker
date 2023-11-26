@@ -271,7 +271,7 @@ fun SpeedPaceWidget (speed: Float) {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
 
-    ) {
+            ) {
         Text(
                 text = "Speed: $speed",
                 style = MaterialTheme.typography.bodyLarge.copy(
@@ -445,8 +445,8 @@ fun TimeWidgetButton ( text: String, onClick: () -> Unit, enabled: Boolean) {
 @Composable
 fun Greeting13(name: String, modifier: Modifier = Modifier) {
     Text(
-        text = "Hello $name!",
-        modifier = modifier
+            text = "Hello $name!",
+            modifier = modifier
     )
 }
 @Preview(showBackground = true)
