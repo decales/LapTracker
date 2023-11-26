@@ -19,6 +19,7 @@ interface LapTrackerRepository {
 
     suspend fun Achievement_insert(achievement: Achievement)
     suspend fun Achievement_delete(achievement: Achievement)
+
     fun Achievement_getAllFlow(): Flow<List<Achievement>>
     suspend fun Achievement_getAll(): List<Achievement>
 
@@ -30,10 +31,12 @@ interface LapTrackerRepository {
     fun Comments_getAllFlow(): Flow<List<Comment>>
 
 
+
     suspend fun Runs_insert(runs: Runs)
     suspend fun Runs_delete(runs: Runs)
-    suspend fun Runs_getByTrackId(trackId: Int): List<Runs>
+    fun Runs_getByTrackId(trackId: Int): Flow<List<Runs>>
     fun Runs_getAllFlow(): Flow<List<Runs>>
+
     suspend fun Runs_getAll(): List<Runs>
 
 
@@ -41,12 +44,13 @@ interface LapTrackerRepository {
     suspend fun RunTimes_delete(runtimes: Runtimes)
     fun RunTimes_getByRunId(runId: Int): Flow<List<Runtimes>>
     fun RunTimes_getAllFlow(): Flow<List<Runtimes>>
-    suspend fun RunTimes_getAll(): List<Runtimes>
 
+    suspend fun RunTimes_getAll(): List<Runtimes>
 
     suspend fun Track_insert(track: Track)
     suspend fun Track_delete(track: Track)
     fun Track_getById(id: Int): Flow<List<Track>>
     fun Track_getAllFlow(): Flow<List<Track>>
+
     suspend fun Track_getAll(): List<Track>
 }

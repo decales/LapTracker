@@ -1,4 +1,4 @@
-package cmpt370.group12.laptracker.view
+package cmpt370.group12.laptracker.view.main
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -13,11 +13,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
@@ -32,19 +30,25 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import cmpt370.group12.laptracker.R
 import cmpt370.group12.laptracker.model.LocationClient
-import cmpt370.group12.laptracker.view.main.SettingsView
-import cmpt370.group12.laptracker.view.main.StartView
 import cmpt370.group12.laptracker.view.theme.LapTrackerTheme
+import cmpt370.group12.laptracker.viewmodel.GlobalViewModel
+import cmpt370.group12.laptracker.viewmodel.TracksViewModel
 import cmpt370.group12.laptracker.viewmodel.ProfileViewModel
 import cmpt370.group12.laptracker.viewmodel.SettingsViewModel
 import cmpt370.group12.laptracker.viewmodel.StartViewModel
-import cmpt370.group12.laptracker.viewmodel.TracksViewModel
+import com.google.android.gms.location.LocationServices
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity: ComponentActivity() {
+class
+
+MainActivity : ComponentActivity() {
+
 override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+    var locationClient = LocationClient(this.applicationContext, this, LocationServices.getFusedLocationProviderClient(
+        this
+    ))
     setContent {
         LapTrackerTheme {
             Surface (
@@ -53,9 +57,11 @@ override fun onCreate(savedInstanceState: Bundle?) {
             ) {
                 val controller = rememberNavController() // Navigation controller
                 Scaffold (
-                    bottomBar = { BottomNavigationBar(controller) },
+                    bottomBar = {
+                        BottomNavigationBar(controller)
+                    }
                 ) { navBarPadding ->
-                    NavigationView(controller, navBarPadding)
+                    NavigationView(controller, navBarPadding, locationClient)
                 }
             }
             }
@@ -69,21 +75,22 @@ override fun onCreate(savedInstanceState: Bundle?) {
         - Navigation controller sets view based on the 'route' passed from the navigation bar */
     @Composable
     fun NavigationView(
-        navController: NavHostController,
-        navBarPadding: PaddingValues,
-        startViewModel: StartViewModel = viewModel(),
-        tracksViewModel: TracksViewModel = viewModel(),
-        profileViewModel: ProfileViewModel = viewModel(),
-        settingsViewModel: SettingsViewModel = viewModel()
+        navController: NavHostController, navBarPadding: PaddingValues, locationClient: LocationClient, backend: GlobalViewModel = viewModel()
     ) {
+
         NavHost(
             navController = navController,
             startDestination = "Start",
             modifier = Modifier.padding(navBarPadding)
         ) {
 
-            // Late init locationClient in startViewmodel
-            startViewModel.locationClient = LocationClient(this@MainActivity)
+            // Initialize view models to pass to associated views
+            // TODO fix view models to preserve states on MainActivity re-compose (i.e. on screen rotation)
+
+            val startViewModel = StartViewModel(locationClient,backend)
+            val tracksViewModel = TracksViewModel(backend)
+            val profileViewModel = ProfileViewModel(backend)
+            val settingsViewModel = SettingsViewModel(backend)
 
             // Handle routes
             composable("Start") {
