@@ -1,34 +1,23 @@
 package cmpt370.group12.laptracker.viewmodel
 
-import androidx.compose.runtime.mutableDoubleStateOf
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import cmpt370.group12.laptracker.R
 import cmpt370.group12.laptracker.model.LocationClient
-import cmpt370.group12.laptracker.model.domain.repository.LapTrackerRepository
-import cmpt370.group12.laptracker.view.MainActivity
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
-import javax.inject.Inject
 
-@HiltViewModel
-class StartViewModel @Inject constructor(
-    private val db: LapTrackerRepository
-) : ViewModel() {
-
-    lateinit var locationClient: LocationClient // Passed in nav controller in MainActivity
-
+class StartViewModel(locationClient: LocationClient, backend: GlobalViewModel) : ViewModel() {
     // TODO add all data and states values required for SettingsView composable functions
     // TODO (if applicable) retrieve data from database (model)
     var createRace = mutableStateOf(false)
     var pickTrack = mutableStateOf(false)
     var trackPicked = mutableStateOf(false)
+    var location = locationClient
     var points = mutableStateListOf<Point>()
     var setToggle = mutableStateOf(false)
     val scope = CoroutineScope(Dispatchers.Main)
@@ -40,8 +29,8 @@ class StartViewModel @Inject constructor(
     var thread = mutableStateOf<Job?>(null)
 
     // Tracking UI variables
-    var distance = mutableDoubleStateOf(0.0)
-    var laps = mutableIntStateOf(0)
+    var distance = mutableStateOf(0.0)
+    var laps = mutableStateOf(0)
     var next = mutableStateOf("")
 
     data class TrackCard(
@@ -71,10 +60,10 @@ class StartViewModel @Inject constructor(
     )
 
     suspend fun getProximityFlow(latlon: Pair<Double, Double>): Flow<Double> {
-        return this.locationClient.getProximityFlow(latlon)
+        return location.getProximityFlow(latlon)
     }
 
     suspend fun getAverageLocation(): Pair<Double, Double>{
-        return this.locationClient.getAverageLocation(6)
+        return location.getAverageLocation(6)
     }
 }

@@ -2,6 +2,7 @@ package cmpt370.group12.laptracker.model.di
 
 import android.app.Application
 import androidx.room.Room
+
 import cmpt370.group12.laptracker.model.data.database.LapTrackerDatabase
 import cmpt370.group12.laptracker.model.data.location.DefaultLocationTracker
 import cmpt370.group12.laptracker.model.data.repository.LapTrackerRepositoryImpl
@@ -12,9 +13,9 @@ import com.google.android.gms.location.LocationServices
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
-
 const val DEBUGDB: Boolean = false
 @Module
 @InstallIn(SingletonComponent::class)
@@ -24,19 +25,8 @@ private var DBNAME:String = "LapTrackerDB.db"
     @Singleton
     fun providesFusedLocationProviderClient(
         application: Application
-    ): FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(application)
-
-
-//    @Provides
-//    @Singleton
-//    fun provideLocationClient(
-//        fusedLocationProviderClient: FusedLocationProviderClient,
-//        application: Application,
-//        activity: Activity
-//    ): LocationClient {
-//        return LocationClient(application.applicationContext, activity, fusedLocationProviderClient )
-//    }
-
+    ): FusedLocationProviderClient =
+        LocationServices.getFusedLocationProviderClient(application)
 
     @Provides
     @Singleton
