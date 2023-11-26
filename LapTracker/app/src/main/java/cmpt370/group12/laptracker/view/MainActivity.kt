@@ -1,5 +1,6 @@
-package cmpt370.group12.laptracker.view.main
+package cmpt370.group12.laptracker.view
 
+import android.Manifest
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -21,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.core.app.ActivityCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
@@ -29,14 +31,16 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import cmpt370.group12.laptracker.R
-import cmpt370.group12.laptracker.model.LocationClient
+import cmpt370.group12.laptracker.view.main.ProfileView
+import cmpt370.group12.laptracker.view.main.SettingsView
+import cmpt370.group12.laptracker.view.main.StartView
+import cmpt370.group12.laptracker.view.main.TracksView
 import cmpt370.group12.laptracker.view.theme.LapTrackerTheme
 import cmpt370.group12.laptracker.viewmodel.GlobalViewModel
-import cmpt370.group12.laptracker.viewmodel.TracksViewModel
 import cmpt370.group12.laptracker.viewmodel.ProfileViewModel
 import cmpt370.group12.laptracker.viewmodel.SettingsViewModel
 import cmpt370.group12.laptracker.viewmodel.StartViewModel
-import com.google.android.gms.location.LocationServices
+import cmpt370.group12.laptracker.viewmodel.TracksViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -44,9 +48,7 @@ class MainActivity : ComponentActivity() {
 
 override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    var locationClient = LocationClient(this.applicationContext, this, LocationServices.getFusedLocationProviderClient(
-        this
-    ))
+    ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_FINE_LOCATION), 666)
     setContent {
         LapTrackerTheme {
             Surface (
@@ -59,7 +61,7 @@ override fun onCreate(savedInstanceState: Bundle?) {
                         BottomNavigationBar(controller)
                     }
                 ) { navBarPadding ->
-                    NavigationView(controller, navBarPadding, locationClient)
+                    NavigationView(controller, navBarPadding)
                 }
             }
             }
@@ -73,7 +75,7 @@ override fun onCreate(savedInstanceState: Bundle?) {
         - Navigation controller sets view based on the 'route' passed from the navigation bar */
     @Composable
     fun NavigationView(
-        navController: NavHostController, navBarPadding: PaddingValues, locationClient: LocationClient, backend: GlobalViewModel = viewModel()
+        navController: NavHostController, navBarPadding: PaddingValues,backend: GlobalViewModel = viewModel()
     ) {
 
         NavHost(
@@ -85,7 +87,7 @@ override fun onCreate(savedInstanceState: Bundle?) {
             // Initialize view models to pass to associated views
             // TODO fix view models to preserve states on MainActivity re-compose (i.e. on screen rotation)
 
-            val startViewModel = StartViewModel(locationClient,backend,navController)
+            val startViewModel = StartViewModel(backend,navController)
             val tracksViewModel = TracksViewModel(backend,navController)
             val profileViewModel = ProfileViewModel(backend,navController)
             val settingsViewModel = SettingsViewModel(backend,navController)

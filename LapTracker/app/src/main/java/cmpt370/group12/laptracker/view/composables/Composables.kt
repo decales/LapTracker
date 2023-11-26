@@ -26,7 +26,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import cmpt370.group12.laptracker.model.domain.model.Track
 import cmpt370.group12.laptracker.viewmodel.GlobalViewModel
-import cmpt370.group12.laptracker.viewmodel.StartViewModel
 
 @Composable
 fun CreateTrackCard(viewModel: GlobalViewModel) {
@@ -38,7 +37,7 @@ fun CreateTrackCard(viewModel: GlobalViewModel) {
         ),
         //colors = CardDefaults.cardColors(containerColor = Color.LightGray),
         modifier = Modifier
-            .size(width = 300.dp, height = 300.dp)
+            .size(width = 250.dp, height = 300.dp)
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -85,6 +84,7 @@ fun CreateTrackCard(viewModel: GlobalViewModel) {
                         .padding(5.dp),
                     onClick = {
                         viewModel.Create_Track(Track(name = nametext, description = desctext, lapcount = 1 ))
+                        viewModel.Set_isStartCardVisible(false)
                         viewModel.Set_isCreateTrackVisible(false)
                         //viewModel.backend.Set_isStartCardVisible(false)
                     }
@@ -136,7 +136,7 @@ fun StartupCard(viewModel: GlobalViewModel){
             }
             Button(
                 onClick = {
-
+                    viewModel.appstate.value.mainNavController?.navigate("Tracks")
                 }
             ) {
                 Text(text = "Load a Track")

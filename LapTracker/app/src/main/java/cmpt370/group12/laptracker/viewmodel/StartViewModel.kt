@@ -12,13 +12,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 
-class StartViewModel(locationClient: LocationClient, val backend: GlobalViewModel,val nav: NavController) : ViewModel() {
+class StartViewModel(val backend: GlobalViewModel,val nav: NavController) : ViewModel() {
     // TODO add all data and states values required for SettingsView composable functions
     // TODO (if applicable) retrieve data from database (model)
     var createRace = mutableStateOf(false)
     var pickTrack = mutableStateOf(false)
     var trackPicked = mutableStateOf(false)
-    var location = locationClient
+    //var location = locationClient
     var points = mutableStateListOf<Point>()
     var setToggle = mutableStateOf(false)
     val scope = CoroutineScope(Dispatchers.Main)
@@ -60,11 +60,11 @@ class StartViewModel(locationClient: LocationClient, val backend: GlobalViewMode
         var isPassed: Boolean
     )
 
-    suspend fun getProximityFlow(latlon: Pair<Double, Double>): Flow<Double> {
-        return location.getProximityFlow(latlon)
-    }
+    //suspend fun getProximityFlow(latlon: Pair<Double, Double>): Flow<Double> {
+       // return location.getProximityFlow(latlon)
+  //  }
 
-    suspend fun getAverageLocation(): Pair<Double, Double>{
-        return location.getAverageLocation(6)
-    }
+  //  suspend fun getAverageLocation(): Pair<Double, Double>{
+  //      return location.getAverageLocation(6)
+  //  }
 }

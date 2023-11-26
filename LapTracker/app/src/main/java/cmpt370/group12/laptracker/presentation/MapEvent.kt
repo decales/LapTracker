@@ -1,7 +1,7 @@
 package cmpt370.group12.laptracker.presentation
 
-import com.google.android.gms.maps.model.LatLng
 import cmpt370.group12.laptracker.model.domain.model.MapPoint
+import com.google.android.gms.maps.model.LatLng
 
 sealed class AppEvent {
 
@@ -9,7 +9,7 @@ sealed class AppEvent {
     //If it does need values passed, then make it a data class
     //everything should be of Type AppEvent()
 
-    object ToggleMap: AppEvent()
+    data object ToggleMap: AppEvent()
 
     data class AddPointByMapPoint(val mappoint: MapPoint)
     data class AddPointByLatLng(val latLng: LatLng): AppEvent()

@@ -17,12 +17,15 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cmpt370.group12.laptracker.R
+import cmpt370.group12.laptracker.view.composables.CreateTrackCard
 import cmpt370.group12.laptracker.viewmodel.TracksViewModel
 
 class TracksView(
@@ -34,11 +37,19 @@ class TracksView(
         - All data is stored retrieved from class view model */
     @Composable
     fun View() {
-        // TODO build view from class defined composable functions.
-        // TODO initialize necessary view data in viewmodel/main/TracksViewModel.kt. Data is accessed through constructor var 'viewModel'
-        Column {
-            Header()
-            TrackCardColumn()
+        Box(contentAlignment = Alignment.Center){
+
+            // TODO build view from class defined composable functions.
+            // TODO initialize necessary view data in viewmodel/main/TracksViewModel.kt. Data is accessed through constructor var 'viewModel'
+            Column {
+                Header()
+                TrackCardColumn()
+
+            }
+            if (viewModel.backend.appstate.value.isCreateTrackCardVisible){
+                CreateTrackCard(viewModel = viewModel.backend)
+
+            }
         }
     }
 
@@ -55,7 +66,14 @@ class TracksView(
                     text = "Saved Tracks",
                     fontSize = 30.sp
                 )
-                Button(onClick = { viewModel.backend.Set_isCreateTrackVisible(true)}) {
+                Button(onClick = {
+                    //Make the Create Track Card Visible
+                    viewModel.backend.Set_isCreateTrackVisible(true)
+                    //Set The is MapLoaded to False, so Create Track Card will be visible in Start
+                    //viewModel.backend.Set_isMapLoaded(false)
+                    //Move the Navigation back to Start
+                   // viewModel.backend.appstate.value.mainNavController?.navigate("Start")
+                }) {
                     
                 }
             }
@@ -119,11 +137,11 @@ class TracksView(
                         }
                     }
                 }
-                if (viewModel.backend.appstate.value.isCreateTrackCardVisible){
 
-                }
             }
+
         }
+
     }
 
 

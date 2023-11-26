@@ -8,6 +8,7 @@ import cmpt370.group12.laptracker.model.domain.model.Runtimes
 import cmpt370.group12.laptracker.model.domain.model.Track
 import kotlinx.coroutines.flow.Flow
 
+@Suppress("FunctionName")
 interface LapTrackerRepository {
 
     suspend fun MapPoint_insert(mappoint: MapPoint): Long

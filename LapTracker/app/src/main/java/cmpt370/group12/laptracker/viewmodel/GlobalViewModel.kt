@@ -49,12 +49,12 @@ class GlobalViewModel @Inject constructor(
 //When it Starts up
     init {
         FlowCurrentLocation_Start()
-        FlowMapPointsbyCurrentTrackId_Start()
-        FlowRunTimesbyCurrentRunId_Start()
-        FlowTrackList_Start()
-        FlowRunsListbyTrackId_Start()
-        FlowAchievementList_Start()
-        AchievementSetDefaults()
+    //  FlowMapPointsbyCurrentTrackId_Start()
+     //   FlowRunTimesbyCurrentRunId_Start()
+     //  FlowTrackList_Start()
+    //  FlowRunsListbyTrackId_Start()
+    //  FlowAchievementList_Start()
+   //  AchievementSetDefaults()
     }
 // When it Ends
     override fun onCleared() {
@@ -106,16 +106,17 @@ fun check_something(){
     println("KRIS - FLOWS CurrentRun Runtimes:     ${appstate.value.flowCurrentRunTimesActive}")
     println("KRIS - FLOWS CurrentTrack MapPoints:  ${appstate.value.flowCurrentTrackMapPointActive}")
     println("KRIS - --------------------------------------------------------------------------------------")
+    Log.d("TEST","MAP: ${trackstate.value.mapPoints[0].latitude.toString()}"    )
 
 }
     private fun FlowCurrentLocation_Start() {
         if (!_appstate.value.flowCurrentLocationActive && (_appstate.value.flowCurrentLocationJob == null)) {
-Log.d("KRIS","CLoc Floww Start")
             val lifejob: Job = viewModelScope.launch {
                 locationTracker.currentLocationFlow(1)
                     .collectLatest {
 
                             _mapstate.value = mapstate.value.copy(
+                                previousLocation = mapstate.value.currentLocation,
                                 currentLocation = it
                             )
 
@@ -182,6 +183,7 @@ Log.d("KRIS","CLoc Floww Start")
                         _trackstate.value = trackstate.value.copy(
                             mapPoints = mappoints
                         )
+
                     }
 
             }
@@ -316,8 +318,8 @@ Log.d("KRIS","CLoc Floww Start")
             }
 
             is AppEvent.OnMapLongClick -> {
-                viewModelScope.launch {
-                    repository.MapPoint_insert(
+
+                    Create_MapPoint(
                         MapPoint(
                             null,
                             trackstate.value.currentTrackId.toInt(),
@@ -326,15 +328,12 @@ Log.d("KRIS","CLoc Floww Start")
                             "",
                             0
 
-                        )
-
-                    )
-                }
+                        ))
             }
 
             is AppEvent.OnInfoWindowLongClick -> {
                 viewModelScope.launch {
-                    repository.MapPoint_delete(event.mappoint)
+                    Delete_MapPoint(event.mappoint)
                 }
             }
 
@@ -350,6 +349,7 @@ Log.d("KRIS","CLoc Floww Start")
             currentTrackId = trackid
         )
         FlowMapPointsbyCurrentTrackId_Restart()
+        Set_isMapLoaded(true)
     }
     fun Change_Run(runId: Long) {
         _trackstate.value = trackstate.value.copy(
@@ -362,10 +362,45 @@ Log.d("KRIS","CLoc Floww Start")
         viewModelScope.launch {
             val newtrackid = repository.Track_insert(track)
             Log.d("TEST",newtrackid.toString())
+
             Change_Track(newtrackid)
+            Log.d("TEST",trackstate.value.currentTrackId.toString())
+                }
+
+    }
+
+    fun Create_MapPoint(mapPoint: MapPoint){
+        viewModelScope.launch {
+
+            val mapPointSequenced: MapPoint = mapPoint.copy(
+             sequenceNumber = trackstate.value.mapPoints.size
+            )
+
+            val newMapPointId = repository.MapPoint_insert(mapPointSequenced)
+
         }
 
     }
+    fun Delete_MapPoint(mapPoint: MapPoint){
+        viewModelScope.launch {
+            val plist : List<MapPoint> = trackstate.value.mapPoints
+            var index : Int = 0
+            // Delete The Point
+            repository.MapPoint_delete(mapPoint)
+            // Make a Copy of the List and then sort it by sequencenumber, so everything is
+            // accending.
+            val plist2 = plist.filterNot {it == mapPoint}.sortedBy { it.sequenceNumber }
+
+            // Go through each and starting with zero, resequence
+            plist2.forEach(){
+                val newmapPoint: MapPoint = it.copy(sequenceNumber =  index++)
+                repository.MapPoint_insert(newmapPoint)
+
+            }
+        }
+
+    }
+
 
     fun Set_isStartCardVisible(value: Boolean){
         _appstate.value = appstate.value.copy(
@@ -379,10 +414,20 @@ Log.d("KRIS","CLoc Floww Start")
         )
     }
 
+    fun Set_isFollowMe(value: Boolean){
+        _mapstate.value = mapstate.value.copy(
+            isFollowMe = value
+        )
+    }
 
     fun Set_mainNavController(nav: NavController){
         _appstate.value = appstate.value.copy(
             mainNavController = nav
+        )
+    }
+    fun Set_isMapLoaded(value: Boolean){
+        _appstate.value = appstate.value.copy(
+            isMapLoaded = value
         )
     }
 
