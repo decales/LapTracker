@@ -20,7 +20,7 @@ const val DEBUGDB: Boolean = false
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
-private var DBNAME:String = "LapTrackerDB.db"
+private var DBNAME:String = "LapTrackerDB1.db"
     @Provides
     @Singleton
     fun providesFusedLocationProviderClient(
