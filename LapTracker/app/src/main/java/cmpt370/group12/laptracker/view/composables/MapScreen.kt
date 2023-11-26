@@ -1,7 +1,6 @@
 package cmpt370.group12.laptracker.view.composables
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -37,7 +36,7 @@ fun MapScreen(
 ) {
    // var polypoints: MutableList<LatLng> = mutableListOf()
     val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(LatLng(54.7,-106.3), 15f)
+        position = CameraPosition.fromLatLngZoom(LatLng(0.0,0.0), 5f)
     }
     if (cameraPositionState.isMoving) {
         viewModel.Set_isFollowMe(false)
@@ -67,10 +66,10 @@ fun MapScreen(
                     {
                         MapEffect(viewModel.mapstate.value.currentLocation){map ->
                             map.setOnMapLoadedCallback {
-                                Log.d("KRIS","GOT HERE")
+
 
                                 if (viewModel.mapstate.value.isFollowMe) {
-                                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(((viewModel.mapstate.value.currentLocation?.latitude?:52.0) -0.001),viewModel.mapstate.value.currentLocation?.longitude?:-106.0),cameraPositionState.position.zoom))
+                                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(((viewModel.mapstate.value.currentLocation?.latitude?:52.0) -0.001),viewModel.mapstate.value.currentLocation?.longitude?:-106.0),16f))
                                 }
                                 else
                                 {

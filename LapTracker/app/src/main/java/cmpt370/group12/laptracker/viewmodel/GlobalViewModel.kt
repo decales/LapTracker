@@ -51,7 +51,7 @@ class GlobalViewModel @Inject constructor(
         FlowCurrentLocation_Start()
     //  FlowMapPointsbyCurrentTrackId_Start()
      //   FlowRunTimesbyCurrentRunId_Start()
-     //  FlowTrackList_Start()
+       FlowTrackList_Start()
     //  FlowRunsListbyTrackId_Start()
     //  FlowAchievementList_Start()
    //  AchievementSetDefaults()

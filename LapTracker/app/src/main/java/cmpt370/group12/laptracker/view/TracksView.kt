@@ -7,10 +7,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -20,7 +20,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -56,27 +55,17 @@ class TracksView(
 
     @Composable
     fun Header() {
-        Box(modifier = Modifier
+        Card(modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 20.dp, top = 20.dp)
+            .padding(start = 20.dp, top = 20.dp, end = 20.dp)
+            .height(100.dp)
+            .clickable {
+                viewModel.backend.Set_isCreateTrackVisible(true)
+            }
         )
         {
-            Row(){
-                Text(
-                    text = "Saved Tracks",
-                    fontSize = 30.sp
-                )
-                Button(onClick = {
-                    //Make the Create Track Card Visible
-                    viewModel.backend.Set_isCreateTrackVisible(true)
-                    //Set The is MapLoaded to False, so Create Track Card will be visible in Start
-                    //viewModel.backend.Set_isMapLoaded(false)
-                    //Move the Navigation back to Start
-                   // viewModel.backend.appstate.value.mainNavController?.navigate("Start")
-                }) {
-                    
-                }
-            }
+                            Text(text = "Create A New Track")
+
 
         }
     }
