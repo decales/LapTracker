@@ -21,7 +21,7 @@ interface RunsDao {
     suspend fun Runs_delete(runs: RunsEntity)
 
     @Query("SELECT * FROM runsentity WHERE fromTrackId =:trackId")
-    fun Runs_getByTrackId(trackId: Int): Flow<List<RunsEntity>>
+    suspend fun Runs_getByTrackId(trackId: Int): List<RunsEntity>
 
     @Query("SELECT * FROM runsentity")
     fun Runs_getAllFlow(): Flow<List<RunsEntity>>

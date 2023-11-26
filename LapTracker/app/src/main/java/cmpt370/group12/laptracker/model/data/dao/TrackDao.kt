@@ -27,7 +27,7 @@ interface TrackDao {
     fun Track_getAllFlow(): Flow<List<TrackEntity>>
 
     @Query("SELECT * FROM trackentity")
-    fun Track_getAll(): List<TrackEntity>
+    suspend fun Track_getAll(): List<TrackEntity>
 }
 
 
