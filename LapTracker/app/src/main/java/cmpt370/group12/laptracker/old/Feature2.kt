@@ -30,7 +30,7 @@ import kotlinx.coroutines.launch
 class Feature2 : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        var loc = LocationClient(this)
+        var loc = LocationClient(this.applicationContext, this, LocationServices.getFusedLocationProviderClient(this))
         setContent {
             LapTrackerTheme {
                 // A surface container using the 'background' color from the theme
