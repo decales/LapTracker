@@ -56,6 +56,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.DialogWindowProvider
 import cmpt370.group12.laptracker.R
+import cmpt370.group12.laptracker.model.domain.model.Comment
+import cmpt370.group12.laptracker.presentation.getCommentsByTrackID
 import cmpt370.group12.laptracker.viewmodel.TracksViewModel
 
 class TracksView(
@@ -332,6 +334,10 @@ class TracksView(
         }
     }
 
+    fun buildNoteString(commentsList: List<Comment>): String {
+        /* TODO build a string of all comments for a track */
+        return "String of all comments"
+    }
 
     @Composable
     fun TrackDetailsNotes() {
@@ -339,10 +345,10 @@ class TracksView(
             //contentAlignment = Center,
             modifier = Modifier.fillMaxSize()
         ) {
-            var comments = "Dummy timestamp \n Comment is written here \n --- \n 19/06/2023 3:32pm \n Comment 2 is written here..."
-            Text(text = comments)
+            Text(text = buildNoteString(getCommentsByTrackID(0)))
 
-            var comment by remember { mutableStateOf("Type here...") }
+
+//            var comment by remember { mutableStateOf("Type here...") }
 //            TextField(
 //                value = comment,
 //                onValueChange = { newComment -> comment = newComment },

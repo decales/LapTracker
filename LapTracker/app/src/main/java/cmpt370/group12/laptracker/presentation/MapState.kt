@@ -71,3 +71,12 @@ data class AppState(
 
     )
 
+fun getCommentsByTrackID(trackID: Int): List<Comment> {
+    /* TODO return a list of all comment items for a particular trackID */
+    return listOf()
+}
+
+fun setComment(comment: Comment){
+    /* TODO save a comment */
+}
+
