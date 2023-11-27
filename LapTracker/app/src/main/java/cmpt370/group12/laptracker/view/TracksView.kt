@@ -47,6 +47,8 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.DialogWindowProvider
 import cmpt370.group12.laptracker.R
 import cmpt370.group12.laptracker.presentation.GetAverageSpeed
+import cmpt370.group12.laptracker.presentation.GetTotalDistance
+import cmpt370.group12.laptracker.presentation.GetTotalTimeSpentOnTrack
 import cmpt370.group12.laptracker.presentation.MapState
 import cmpt370.group12.laptracker.viewmodel.TracksViewModel
 
@@ -301,9 +303,9 @@ class TracksView(
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = "Average Speed: %.2f km/h".format(GetAverageSpeed()))
-            Text(text = "Total Distance Travelled: %.2f km".format(10/*totalDistance*/))
-            Text(text = "Total Time Spent on Track: %02d:%02d".format(15/*averageTime*/))
+            Text(text = "Average Speed: %.2f km/h".format(GetAverageSpeed(0)))
+            Text(text = "Total Distance Travelled: %.2f km".format(GetTotalDistance(0)))
+            Text(text = "Total Time Spent on Track: %02d:%02d".format(GetTotalTimeSpentOnTrack(0)))
         }
     }
 

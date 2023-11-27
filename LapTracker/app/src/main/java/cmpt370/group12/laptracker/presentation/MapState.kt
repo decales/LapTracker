@@ -72,6 +72,17 @@ data class AppState(
 
     )
 
-fun GetAverageSpeed(): String {
+fun GetAverageSpeed(trackID: Int): String {
+    /* TODO build this function to return the average speed for a specific track */
     return "12"
+}
+
+fun GetTotalDistance(trackID: Int) : String {
+    /* TODO build this function to return the total distance travelled on a specific track */
+    return "10"
+}
+
+fun GetTotalTimeSpentOnTrack(trackID: Int) : String {
+    /* TODO build this function to return the total time spent on a specific track */
+    return "test 15h 30min"
 }
