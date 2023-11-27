@@ -1,6 +1,7 @@
 package cmpt370.group12.laptracker.presentation
 
 import android.location.Location
+import androidx.navigation.NavController
 import cmpt370.group12.laptracker.model.domain.model.Achievement
 import cmpt370.group12.laptracker.model.domain.model.Comment
 import com.google.maps.android.compose.MapProperties
@@ -8,6 +9,7 @@ import cmpt370.group12.laptracker.model.domain.model.MapPoint
 import cmpt370.group12.laptracker.model.domain.model.Runs
 import cmpt370.group12.laptracker.model.domain.model.Runtimes
 import cmpt370.group12.laptracker.model.domain.model.Track
+import com.google.maps.android.compose.MapType
 import com.google.maps.android.compose.MapUiSettings
 import kotlinx.coroutines.Job
 
@@ -29,10 +31,32 @@ runtimes list of all runtimes ( maybe for debugging)
 */
 
 data class MapState(
-    val properties: MapProperties = MapProperties(),
-    val uiSettings: MapUiSettings = MapUiSettings(),
+    val properties: MapProperties = MapProperties(
+        false,
+        isIndoorEnabled = false,
+        isMyLocationEnabled = false,
+        isTrafficEnabled = false,
+        latLngBoundsForCameraTarget = null,
+        mapStyleOptions = null,
+        mapType = MapType.NORMAL,
+        maxZoomPreference = 21.0f,
+        minZoomPreference = 5.0f
+    ),
+    val uiSettings: MapUiSettings = MapUiSettings(
+        compassEnabled = false,
+        indoorLevelPickerEnabled = false,
+        mapToolbarEnabled = false,
+        myLocationButtonEnabled = false,
+        rotationGesturesEnabled = false,
+        scrollGesturesEnabled = true,
+        scrollGesturesEnabledDuringRotateOrZoom = true,
+        tiltGesturesEnabled = false,
+        zoomControlsEnabled = false,
+        zoomGesturesEnabled = true
+    ),
     val currentLocation: Location? = Location(null),
-
+    val previousLocation: Location? = Location(null),
+    val isFollowMe: Boolean = true
 
 
 )
@@ -50,6 +74,7 @@ data class TrackState(
 
 data class AppState(
     val achievements: List<Achievement> = emptyList(),
+    val isMapLoaded: Boolean = false,
     val tracks: List<Track> = emptyList(),
     val mapPoints: List<MapPoint> = emptyList(),
     val runs: List<Runs> = emptyList(),
@@ -68,6 +93,9 @@ data class AppState(
     val flowCurrentTrackRunsListActive :Boolean = false,
     val flowAchievementListActive: Boolean = false,
     val flowAchievementListJob: Job? = null,
+    var isCreateTrackCardVisible : Boolean = false,
+    var isStartUpCardVisible: Boolean = true,
+    val mainNavController: NavController? = null
 
-    )
+)
 

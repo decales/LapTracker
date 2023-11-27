@@ -10,6 +10,7 @@ import android.os.Looper
 import androidx.core.content.ContextCompat
 import cmpt370.group12.laptracker.model.domain.location.LocationTracker
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.Granularity
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
@@ -45,24 +46,32 @@ class DefaultLocationTracker(
                 locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
 
         if (!isGpsEnabled && !(hasAccessCoarseLocationPermission || hasAccessFineLocationPermission)) {
-            //TODO: What To Do When Re Don't Have Permission
+
         }
 
         return callbackFlow {
-                val request = LocationRequest.create().setPriority(Priority.PRIORITY_HIGH_ACCURACY).setInterval((intervalInMilliSeconds))
-                val callback = object : LocationCallback() {
-                    override fun onLocationResult(result: LocationResult) {
-                        result.lastLocation.let { location ->
-                            launch {
-                                send(location)
-                            }
+            //val request = LocationRequest.create().setPriority(Priority.PRIORITY_HIGH_ACCURACY).setInterval((intervalInMilliSeconds))
+            val request = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 1).apply {
+                setMinUpdateDistanceMeters(3.0f)
+                setGranularity(Granularity.GRANULARITY_PERMISSION_LEVEL)
+                setWaitForAccurateLocation(true)
+            }.build()
+
+
+
+            val callback = object : LocationCallback() {
+                override fun onLocationResult(result: LocationResult) {
+                    result.lastLocation.let { location ->
+                        launch {
+                            send(location)
                         }
                     }
                 }
-           fusedLocationProviderClient.requestLocationUpdates(request, callback, Looper.getMainLooper())
-                awaitClose {
-                    fusedLocationProviderClient.removeLocationUpdates(callback)
-                }
+            }
+            fusedLocationProviderClient.requestLocationUpdates(request, callback, Looper.getMainLooper())
+            awaitClose {
+                fusedLocationProviderClient.removeLocationUpdates(callback)
             }
         }
+    }
 }

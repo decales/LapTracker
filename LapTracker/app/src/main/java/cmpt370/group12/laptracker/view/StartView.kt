@@ -1,8 +1,8 @@
 package cmpt370.group12.laptracker.view.main
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,6 +15,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
+
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.rememberCoroutineScope
@@ -25,91 +26,72 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import cmpt370.group12.laptracker.view.composables.MapScreen
+import cmpt370.group12.laptracker.view.composables.CreateTrackCard
+import cmpt370.group12.laptracker.view.composables.StartupCard
 import cmpt370.group12.laptracker.viewmodel.StartViewModel
 import cmpt370.group12.laptracker.viewmodel.StartViewModel.Point
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class StartView(
-    private val viewModel: StartViewModel
+    val viewModel: StartViewModel
 ) {
+
+
+
+
+
     /* View:
         - Represent the entire start view
         - Made up of class defined composable functions
         - All data is stored retrieved from class view model */
     @Composable
     fun View() {
+
+
         // TODO build view from class defined composable functions.
         // TODO initialize necessary view data in viewmodel/main/StartViewModel.kt. Data is accessed through constructor var 'viewModel'
-        Header()
         Box (
             contentAlignment = Alignment.Center,
             modifier = Modifier
                 .fillMaxSize()
         ) {
-            if (viewModel.createRace.value) {
-                TrackingView()
-            }
-            else if (viewModel.trackPicked.value) {
-                TrackingView()
-            }
-            else if (viewModel.pickTrack.value) {
-                TrackListView(viewModel.trackPicked)
-            }
-            else {
-                Card(
-                    modifier = Modifier
-                        .align(Alignment.Center)
-                        .size(width = 250.dp, height = 350.dp)
-                ) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        CreateATrackButton(viewModel.createRace)
-                        ChooseATrackButton(viewModel.pickTrack)
-                    }
+            //This Box will Have Three Things To Show
+            //MapScreen in background
+            //Card Showing Menu Options (Create a Track, Load a Track)
+            //CreateTrackCard
+            MapScreen(viewModel.backend)
+            if (!viewModel.backend.appstate.value.isMapLoaded)
+            {
+                if (viewModel.backend.appstate.value.isStartUpCardVisible) {
+                    StartupCard(viewModel.backend)
                 }
-            }
-        }
-    }
 
-    @Composable
-    fun Header() {
-        Box(modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 20.dp, top = 20.dp)
-        )
-        {
-            Text(
-                text = "Start Tracking",
-                fontSize = 30.sp
-            )
-        }
-    }
-
-    @Composable
-    fun CreateATrackButton(createRace: MutableState<Boolean>) {
-        Button(
-            onClick = {
-                createRace.value = true
+                if(viewModel.backend.appstate.value.isCreateTrackCardVisible)
+                    CreateTrackCard(viewModel.backend)
             }
-        ) {
-            Text(text = "Create a Track")
-        }
-    }
+        }}
+
+
+
+
+
+
+
+
 
     @Composable
     fun ChooseATrackButton(pickTrack: MutableState<Boolean>) {
         Button( // Set a new point and add it to points array
             onClick = {
-                pickTrack.value = true
+
             }
         ) {
             Text(text = "Choose a Track")
         }
     }
+
 
     @Composable
     fun TrackingView() {
@@ -151,7 +133,7 @@ class StartView(
                         SetPointButton(viewModel.points)
                     }
                     if (viewModel.points.isNotEmpty() && viewModel.setToggle.value) {
-                            TrackingButton(viewModel.points)
+                        TrackingButton(viewModel.points)
                     }
                 }
             }
@@ -169,7 +151,7 @@ class StartView(
                 viewModel.isLoading.value = true
                 viewModel.scope.launch {
                     val pointID = if (points.isEmpty()) "Start" else "L${points.size}"
-                    points.add(Point(viewModel.getAverageLocation(), pointID,false))
+                    //points.add(Point(viewModel.getAverageLocation(), pointID,false))
                     viewModel.isLoading.value = false
                 }
             }
@@ -248,10 +230,10 @@ class StartView(
                     while (viewModel.thread.value?.isActive == true) {
                         points.forEach { point ->
                             viewModel.next.value = point.name
-                            viewModel.getProximityFlow(point.latlon).first { d -> // Emit from flow until within 2 meters
-                                viewModel.distance.value = d // Update UI
-                                d < 2.0
-                            }
+                            //viewModel.getProximityFlow(point.latlon).first { d -> // Emit from flow until within 2 meters
+                            //    viewModel.distance.value = d // Update UI
+                            //     d < 2.0
+                            //  }
                         }
                         viewModel.laps.value += 1 // All points have been reached, +1 lap
                     }

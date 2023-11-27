@@ -41,8 +41,8 @@ class LapTrackerRepositoryImpl(
 ): LapTrackerRepository {
 
     // ###################### MAP FUNCTIONS ######################
-    override suspend fun MapPoint_insert(mappoint: MapPoint) {
-        mapPointDao.MapPoint_insert(mappoint.toMapPointEntity())
+    override suspend fun MapPoint_insert(mappoint: MapPoint): Long {
+        return mapPointDao.MapPoint_insert(mappoint.toMapPointEntity())
     }
 
     override suspend fun MapPoint_delete(mappoint: MapPoint) {
@@ -71,8 +71,8 @@ class LapTrackerRepositoryImpl(
         return achievementDao.Achievement_getAll2().map{ it.toAchievement()}
     }
 
-    override suspend fun Achievement_insert(achievement: Achievement){
-        achievementDao.Achievement_insert(achievement.toAchievementEntity())
+    override suspend fun Achievement_insert(achievement: Achievement): Long {
+        return achievementDao.Achievement_insert(achievement.toAchievementEntity())
     }
 
     override suspend fun Achievement_delete(achievement: Achievement){
@@ -87,8 +87,8 @@ class LapTrackerRepositoryImpl(
 
 
     // ###################### COMMENT FUNCTIONS ######################
-    override suspend fun Comment_insert(comment: Comment){
-        commentDao.Comment_insert(comment.toCommentEntity())
+    override suspend fun Comment_insert(comment: Comment): Long{
+        return commentDao.Comment_insert(comment.toCommentEntity())
     }
 
     override suspend fun Comment_delete(comment: Comment){
@@ -113,8 +113,8 @@ class LapTrackerRepositoryImpl(
 
 
     // ###################### RUN FUNCTIONS ######################
-    override suspend fun Runs_insert(runs: Runs){
-        runsDao.Runs_insert(runs.toRunsEntity())
+    override suspend fun Runs_insert(runs: Runs): Long {
+        return runsDao.Runs_insert(runs.toRunsEntity())
     }
 
     override suspend fun Runs_delete(runs: Runs){
@@ -123,6 +123,11 @@ class LapTrackerRepositoryImpl(
 
     override suspend fun Runs_getByTrackId(trackId: Int): List<Runs>{
         return runsDao.Runs_getByTrackId(trackId).map { it.toRuns() }
+    }
+    override fun Runs_getByTrackIdFlow(trackId: Int): Flow<List<Runs>>{
+        return runsDao.Runs_getByTrackIdFlow(trackId).map { it ->
+            it.map { it.toRuns() }
+        }
     }
 
     override fun Runs_getAllFlow(): Flow<List<Runs>>{
@@ -137,8 +142,8 @@ class LapTrackerRepositoryImpl(
 
 
     // ###################### RUNTIME FUNCTIONS ######################
-    override suspend fun RunTimes_insert(runtimes: Runtimes){
-        runtimesDao.RunTimes_insert(runtimes.toRunTimesEntity())
+    override suspend fun RunTimes_insert(runtimes: Runtimes):Long{
+        return runtimesDao.RunTimes_insert(runtimes.toRunTimesEntity())
     }
 
     override suspend fun RunTimes_delete(runtimes: Runtimes){
@@ -163,8 +168,8 @@ class LapTrackerRepositoryImpl(
 
 
     // ###################### TRACK FUNCTIONS ######################
-    override suspend fun Track_insert(track: Track){
-        trackDao.Track_insert(track.toTrackEntity())
+    override suspend fun Track_insert(track: Track):Long {
+        return trackDao.Track_insert(track.toTrackEntity())
     }
 
     override suspend fun Track_delete(track: Track){

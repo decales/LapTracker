@@ -2,6 +2,8 @@ package cmpt370.group12.laptracker.model.data.dao
 
 import androidx.room.Dao
 import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Upsert
 import cmpt370.group12.laptracker.model.data.entities.AchievementEntity
@@ -15,8 +17,8 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface AchievementDao {
-    @Upsert
-    suspend fun Achievement_insert(spot: AchievementEntity)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun Achievement_insert(spot: AchievementEntity): Long
 
     @Delete
     suspend fun Achievement_delete(spot: AchievementEntity)
