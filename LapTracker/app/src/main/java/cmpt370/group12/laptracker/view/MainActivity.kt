@@ -1,5 +1,6 @@
 package cmpt370.group12.laptracker.view
 
+import android.Manifest
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -23,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.core.app.ActivityCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
@@ -35,6 +37,7 @@ import cmpt370.group12.laptracker.model.LocationClient
 import cmpt370.group12.laptracker.view.main.SettingsView
 import cmpt370.group12.laptracker.view.main.StartView
 import cmpt370.group12.laptracker.view.theme.LapTrackerTheme
+import cmpt370.group12.laptracker.viewmodel.GlobalViewModel
 import cmpt370.group12.laptracker.viewmodel.ProfileViewModel
 import cmpt370.group12.laptracker.viewmodel.SettingsViewModel
 import cmpt370.group12.laptracker.viewmodel.StartViewModel
@@ -45,6 +48,9 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity: ComponentActivity() {
 override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+    ActivityCompat.requestPermissions(this, arrayOf(
+        Manifest.permission.ACCESS_FINE_LOCATION,
+        Manifest.permission.ACCESS_BACKGROUND_LOCATION), 666)
     setContent {
         LapTrackerTheme {
             Surface (
@@ -71,16 +77,20 @@ override fun onCreate(savedInstanceState: Bundle?) {
     fun NavigationView(
         navController: NavHostController,
         navBarPadding: PaddingValues,
-        startViewModel: StartViewModel = viewModel(),
+        backend: GlobalViewModel = viewModel(),
         tracksViewModel: TracksViewModel = viewModel(),
+        startViewModel: StartViewModel = viewModel(),
         profileViewModel: ProfileViewModel = viewModel(),
-        settingsViewModel: SettingsViewModel = viewModel()
+        settingsViewModel: SettingsViewModel = viewModel(),
     ) {
         NavHost(
             navController = navController,
             startDestination = "Start",
             modifier = Modifier.padding(navBarPadding)
         ) {
+
+
+            backend.Set_mainNavController(navController)
 
             // Late init locationClient in startViewmodel
             startViewModel.locationClient = LocationClient(this@MainActivity)
