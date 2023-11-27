@@ -36,6 +36,7 @@ data class MapState(
 
 
 )
+
 data class TrackState(
     val currentTrackId: Int = 0,
     val currentRunId: Int = 0,
@@ -71,3 +72,6 @@ data class AppState(
 
     )
 
+fun GetAverageSpeed(): String {
+    return "12"
+}
