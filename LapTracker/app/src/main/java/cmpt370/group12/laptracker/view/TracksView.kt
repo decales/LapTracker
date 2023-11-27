@@ -46,6 +46,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.DialogWindowProvider
 import cmpt370.group12.laptracker.R
+import cmpt370.group12.laptracker.view.composables.CreateTrackCard
 import cmpt370.group12.laptracker.viewmodel.TracksViewModel
 
 class TracksView(
@@ -65,6 +66,10 @@ class TracksView(
             else TrackDetailsView()
         }
         if (viewModel.deleteConfirmationVisible) DeleteConfirmation()
+        if (viewModel.backend.appstate.value.isCreateTrackCardVisible){
+            CreateTrackCard(viewModel = viewModel.backend)
+
+        }
     }
 
 
@@ -95,7 +100,8 @@ class TracksView(
             .fillMaxWidth()
             .padding(bottom = 10.dp)
         ) {
-            Button(onClick = { viewModel.addTrack()}) { // TODO Remove this later
+            //Button(onClick = { viewModel.addTrack()}) { // TODO Remove this later
+            Button(onClick = {  viewModel.backend.Set_isCreateTrackVisible(true)}) {
                 Text(text = "add")
             }
             Spacer(modifier = Modifier.weight(1.0f))
