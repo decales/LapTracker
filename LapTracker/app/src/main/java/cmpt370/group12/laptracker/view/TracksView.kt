@@ -1,5 +1,6 @@
 package cmpt370.group12.laptracker.view
 
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -18,6 +19,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
@@ -33,15 +36,22 @@ import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.DialogWindowProvider
@@ -324,14 +334,38 @@ class TracksView(
 
 
     @Composable
-    fun TrackDetailsNotes() { // TODO make this
+    fun TrackDetailsNotes() {
         Box(
-            contentAlignment = Center,
+            //contentAlignment = Center,
             modifier = Modifier.fillMaxSize()
         ) {
-            Text(text = "Overview")
+            var comments = "Dummy timestamp \n Comment is written here \n --- \n 19/06/2023 3:32pm \n Comment 2 is written here..."
+            Text(text = comments)
+
+            var comment by remember { mutableStateOf("Type here...") }
+//            TextField(
+//                value = comment,
+//                onValueChange = { newComment -> comment = newComment },
+//                label = { Text(text = "Type Comments Here") },
+//                maxLines = 3,
+//                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+//                keyboardActions = KeyboardActions(onGo = {
+//                    Log.d(
+//                        "ImeAction",
+//                        "Comment Saved" /* TODO save comment to database */
+//                    )
+//                })
+//            )
+
+            Button(
+                onClick = {/* TODO bring up textbox */}
+            ) {
+                Text(text = "+ Note")
+            }
         }
     }
+
+
 
 
     @OptIn(ExperimentalMaterial3Api::class)
