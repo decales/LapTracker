@@ -2,12 +2,18 @@
 
 package cmpt370.group12.laptracker.viewmodel
 
+
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavController
+import cmpt370.group12.laptracker.R
 import cmpt370.group12.laptracker.model.domain.location.LocationTracker
+import cmpt370.group12.laptracker.model.domain.model.Achievement
 import cmpt370.group12.laptracker.model.domain.model.MapPoint
+import cmpt370.group12.laptracker.model.domain.model.Track
 import cmpt370.group12.laptracker.model.domain.repository.LapTrackerRepository
 import cmpt370.group12.laptracker.presentation.AppEvent
 import cmpt370.group12.laptracker.presentation.AppState
@@ -23,10 +29,11 @@ import javax.inject.Inject
 @Suppress("FunctionName")
 @HiltViewModel
 class GlobalViewModel @Inject constructor(
-    private val repository: LapTrackerRepository,
+    val repository: LapTrackerRepository,
     private val locationTracker: LocationTracker
 
 ): ViewModel() {
+
 
     private val _trackstate = mutableStateOf(TrackState())
     private val _mapstate = mutableStateOf(MapState())
@@ -36,49 +43,89 @@ class GlobalViewModel @Inject constructor(
     val appstate: State<AppState> = _appstate
 
 
-//When it Starts up
+
+
+
+    //When it Starts up
     init {
         FlowCurrentLocation_Start()
-        FlowMapPointsbyCurrentTrackId_Start()
-        FlowRunTimesbyCurrentRunId_Start()
+        //  FlowMapPointsbyCurrentTrackId_Start()
+        //   FlowRunTimesbyCurrentRunId_Start()
         FlowTrackList_Start()
-        //FlowRunsListbyTrackId_Start()
-        FlowAchievementList_Start()
+        //  FlowRunsListbyTrackId_Start()
+        //  FlowAchievementList_Start()
+        //  AchievementSetDefaults()
     }
-// When it Ends
+    // When it Ends
     override fun onCleared() {
         FlowCurrentLocation_Stop()
         FlowMapPointsbyCurrentTrackId_Stop()
         FlowRunTimesbyCurrentRunId_Stop()
         FlowTrackList_Stop()
-        //FlowRunsListbyTrackId_Stop()
+        FlowRunsListbyTrackId_Stop()
         FlowAchievementList_Stop()
     }
 
+    fun addAchievement(ac: Achievement){
+        viewModelScope.launch {
+            repository.Achievement_insert(ac)
 
-fun check_something(){
-    //TODO: Does Nothing Yet.  This Will Run Functions At Each Update.
-    // Check Distances, Acheivments, Etc.
-    //println("KRIS - MapState: CurrentLocation ${mapstate.value.currentLocation.toString()}")
-    println("KRIS - FLOWS Current Location:        ${appstate.value.flowCurrentLocationActive}")
-    println("KRIS - FLOWS TrackList:               ${appstate.value.flowTrackListActive}")
-    println("KRIS - FLOWS CurrentTrack Runs List : ${appstate.value.flowRunListByTrackIdActive}")
-    println("KRIS - FLOWS CurrentRun Runtimes:     ${appstate.value.flowCurrentRunTimesActive}")
-    println("KRIS - FLOWS CurrentTrack MapPoints:  ${appstate.value.flowCurrentTrackMapPointActive}")
-    println("KRIS - --------------------------------------------------------------------------------------")
+        }
+    }
 
-}
+
+    fun AchievementSetDefaults() {
+        //TODO insert real achievements (dont change null id)
+        val achievements = listOf(
+            Achievement(null, "name", "desc", false, R.drawable.ic_launcher_foreground, 0),
+            Achievement(null, "name", "desc", false, R.drawable.ic_launcher_foreground, 0),
+            Achievement(null, "name", "desc", false, R.drawable.ic_launcher_foreground, 0),
+            Achievement(null, "name", "desc", false, R.drawable.ic_launcher_foreground, 0),
+            Achievement(null, "name", "desc", false, R.drawable.ic_launcher_foreground, 0),
+            Achievement(null, "name", "desc", false, R.drawable.ic_launcher_foreground, 0)
+        )
+
+        viewModelScope.launch {
+            if (repository.Achievement_getAll().isEmpty()) {
+                achievements.forEach { achievement ->
+                    repository.Achievement_insert(achievement)
+                }
+            }
+        }
+    }
+
+
+
+    fun check_something(){
+        //TODO: Does Nothing Yet.  This Will Run Functions At Each Update.
+        // Check Distances, Acheivments, Etc.
+        //println("KRIS - MapState: CurrentLocation ${mapstate.value.currentLocation.toString()}")
+        println("KRIS - FLOWS Current Location:        ${appstate.value.flowCurrentLocationActive}")
+        println("KRIS - FLOWS TrackList:               ${appstate.value.flowTrackListActive}")
+        println("KRIS - FLOWS CurrentTrack Runs List : ${appstate.value.flowRunListByTrackIdActive}")
+        println("KRIS - FLOWS CurrentRun Runtimes:     ${appstate.value.flowCurrentRunTimesActive}")
+        println("KRIS - FLOWS CurrentTrack MapPoints:  ${appstate.value.flowCurrentTrackMapPointActive}")
+        println("KRIS - --------------------------------------------------------------------------------------")
+        Log.d("TEST","MAP: ${trackstate.value.mapPoints[0].latitude.toString()}"    )
+
+    }
     private fun FlowCurrentLocation_Start() {
         if (!_appstate.value.flowCurrentLocationActive && (_appstate.value.flowCurrentLocationJob == null)) {
             val lifejob: Job = viewModelScope.launch {
                 locationTracker.currentLocationFlow(1)
                     .collectLatest {
-                            _mapstate.value = mapstate.value.copy(
-                                currentLocation = it
-                            )
-                            check_something()
-                        }
+
+                        _mapstate.value = mapstate.value.copy(
+                            previousLocation = mapstate.value.currentLocation,
+                            currentLocation = it
+                        )
+
+
                     }
+
+            }
+
+
             _appstate.value = appstate.value.copy(
                 flowCurrentLocationJob = lifejob,
                 flowCurrentLocationActive = true,
@@ -130,12 +177,13 @@ fun check_something(){
     private fun FlowMapPointsbyCurrentTrackId_Start() {
         if (!_appstate.value.flowCurrentTrackMapPointActive && (_appstate.value.flowCurrentTrackMapPointJob == null)) {
             val lifejob: Job = viewModelScope.launch {
-                repository.MapPoints_getByTrackId(_trackstate.value.currentTrackId)
+                repository.MapPoints_getByTrackId(_trackstate.value.currentTrackId.toInt())
 
                     .collectLatest { mappoints ->
                         _trackstate.value = trackstate.value.copy(
                             mapPoints = mappoints
                         )
+
                     }
 
             }
@@ -189,56 +237,42 @@ fun check_something(){
         FlowTrackList_Stop()
         FlowTrackList_Start()
     }
-//    private fun FlowRunsListbyTrackId_Start(){
-//        if (!_appstate.value.flowRunListByTrackIdActive && (_appstate.value.flowRunListByTrackIdJob== null)) {
-//            val lifejob: Job = viewModelScope.launch {
-//                repository.Runs_getByTrackId(_trackstate.value.currentTrackId)
-//                    .collectLatest { runs ->
-//                        _trackstate.value = trackstate.value.copy(
-//                            runs = runs
-//                        )
-//                    }
-//
-//            }
-//            _appstate.value = appstate.value.copy(
-//                flowRunListByTrackIdJob = lifejob,
-//                flowRunListByTrackIdActive = true,
-//            )
-//        }
-//    }
-//    private fun FlowRunsListbyTrackId_Stop() {
-//        _appstate.value.flowRunListByTrackIdJob?.cancel()
-//        _appstate.value = appstate.value.copy(
-//            flowRunListByTrackIdJob = null,
-//            flowRunListByTrackIdActive = false,
-//        )
-//    }
-//    private fun FlowRunsListbyTrackId_Restart(){
-//        FlowRunsListbyTrackId_Stop()
-//        FlowRunsListbyTrackId_Start()
-//    }
+    private fun FlowRunsListbyTrackId_Start(){
+        if (!_appstate.value.flowRunListByTrackIdActive && (_appstate.value.flowRunListByTrackIdJob== null)) {
+            val lifejob: Job = viewModelScope.launch {
+                repository.Runs_getByTrackIdFlow(_trackstate.value.currentTrackId.toInt())
 
+                    .collectLatest { runs ->
+                        _trackstate.value = trackstate.value.copy(
+                            runs = runs
+                        )
+                    }
 
-
-    fun Change_Map(mapId: Int) {
-        _trackstate.value = trackstate.value.copy(
-            currentTrackId = mapId
-        )
-        FlowMapPointsbyCurrentTrackId_Restart()
-    }
-    fun Change_Run(runId: Int) {
-        _trackstate.value = trackstate.value.copy(
-            currentRunId = runId
-        )
-        FlowRunTimesbyCurrentRunId_Restart()
+            }
+            _appstate.value = appstate.value.copy(
+                flowRunListByTrackIdJob = lifejob,
+                flowRunListByTrackIdActive = true,
+            )
+        }
     }
 
+    private fun FlowRunsListbyTrackId_Stop() {
+        _appstate.value.flowRunListByTrackIdJob?.cancel()
+        _appstate.value = appstate.value.copy(
+            flowRunListByTrackIdJob = null,
+            flowRunListByTrackIdActive = false,
+        )
+    }
+    private fun FlowRunsListbyTrackId_Restart(){
+        FlowRunsListbyTrackId_Stop()
+        FlowRunsListbyTrackId_Start()
+    }
 
 
     private fun FlowRunTimesbyCurrentRunId_Start() {
         if (!_appstate.value.flowCurrentRunTimesActive && (_appstate.value.flowCurrentRunTimesJob == null)) {
-             val lifejob: Job = viewModelScope.launch {
-                repository.RunTimes_getByRunId(_trackstate.value.currentRunId)
+            val lifejob: Job = viewModelScope.launch {
+                repository.RunTimes_getByRunId(_trackstate.value.currentRunId.toInt())
 
                     .collectLatest { runtimes ->
                         _trackstate.value = trackstate.value.copy(
@@ -271,38 +305,35 @@ fun check_something(){
 
 
 
-// The Event Tree
+    // The Event Tree
     fun onEvent(event: AppEvent) {
         when (event) {
             is AppEvent.ToggleMap -> {
-                if (trackstate.value.currentTrackId == 0) {
-                    Change_Map(1)
+                if (trackstate.value.currentTrackId.toInt() == 0) {
+                    Change_Track(1)
                 } else {
-                    Change_Map(0)
+                    Change_Track(0)
                 }
 
             }
 
             is AppEvent.OnMapLongClick -> {
-                viewModelScope.launch {
-                    repository.MapPoint_insert(
-                        MapPoint(
-                            null,
-                            trackstate.value.currentTrackId,
-                            event.latLng.latitude,
-                            event.latLng.longitude,
-                            "",
-                            0
 
-                        )
+                Create_MapPoint(
+                    MapPoint(
+                        null,
+                        trackstate.value.currentTrackId.toInt(),
+                        event.latLng.latitude,
+                        event.latLng.longitude,
+                        "",
+                        0
 
-                    )
-                }
+                    ))
             }
 
             is AppEvent.OnInfoWindowLongClick -> {
                 viewModelScope.launch {
-                    repository.MapPoint_delete(event.mappoint)
+                    Delete_MapPoint(event.mappoint)
                 }
             }
 
@@ -310,5 +341,102 @@ fun check_something(){
         }
     }
 
-}
 
+
+
+    fun Change_Track(trackid: Long) {
+        _trackstate.value = trackstate.value.copy(
+            currentTrackId = trackid.toInt()
+        )
+        FlowMapPointsbyCurrentTrackId_Restart()
+        Set_isMapLoaded(true)
+    }
+    fun Change_Run(runId: Long) {
+        _trackstate.value = trackstate.value.copy(
+            currentRunId = runId.toInt()
+        )
+        FlowRunTimesbyCurrentRunId_Restart()
+    }
+
+    fun Create_Track(track: Track){
+        viewModelScope.launch {
+            val newtrackid = repository.Track_insert(track)
+
+
+            Change_Track(newtrackid)
+            Log.d("TEST",trackstate.value.currentTrackId.toString())
+        }
+
+    }
+
+    fun Create_MapPoint(mapPoint: MapPoint){
+        viewModelScope.launch {
+
+            val mapPointSequenced: MapPoint = mapPoint.copy(
+                sequenceNumber = trackstate.value.mapPoints.size
+            )
+
+            val newMapPointId = repository.MapPoint_insert(mapPointSequenced)
+
+        }
+
+    }
+    fun Delete_MapPoint(mapPoint: MapPoint){
+        viewModelScope.launch {
+            val plist : List<MapPoint> = trackstate.value.mapPoints
+            var index : Int = 0
+            // Delete The Point
+            repository.MapPoint_delete(mapPoint)
+            // Make a Copy of the List and then sort it by sequencenumber, so everything is
+            // accending.
+            val plist2 = plist.filterNot {it == mapPoint}.sortedBy { it.sequenceNumber }
+
+            // Go through each and starting with zero, resequence
+            plist2.forEach(){
+                val newmapPoint: MapPoint = it.copy(sequenceNumber =  index++)
+                repository.MapPoint_insert(newmapPoint)
+
+            }
+        }
+
+    }
+
+
+    fun Set_isStartCardVisible(value: Boolean){
+        _appstate.value = appstate.value.copy(
+            isStartUpCardVisible = value
+        )
+    }
+
+    fun Set_isCreateTrackVisible(value: Boolean){
+        _appstate.value = appstate.value.copy(
+            isCreateTrackCardVisible = value
+        )
+    }
+
+    fun Set_isFollowMe(value: Boolean){
+        _mapstate.value = mapstate.value.copy(
+            isFollowMe = value
+        )
+    }
+
+    fun Set_mainNavController(nav: NavController){
+        _appstate.value = appstate.value.copy(
+            mainNavController = nav
+        )
+    }
+    fun Set_isMapLoaded(value: Boolean){
+        _appstate.value = appstate.value.copy(
+            isMapLoaded = value
+        )
+    }
+
+    fun Track_delete(track: Track) {
+        viewModelScope.launch { repository.Track_delete(track) }
+
+    }
+
+
+
+
+}
