@@ -41,6 +41,14 @@ fun trackingView(activity: Activity) {
     val points = remember { mutableStateListOf<Point>() } // Remember list of points
     var setToggle by remember { mutableStateOf(false) } // Remember set button toggle
 
+
+
+    locationClient.getLocationPermission()
+
+    locationClient.startLocationFlow(1.0)
+
+
+
     Box (
         contentAlignment = Alignment.Center,
         modifier = Modifier
@@ -81,6 +89,7 @@ fun ToggleSetPointsButton(
     setToggle: Boolean,
     onClick: () -> Unit
 ) {
+
     val text = if (points.isEmpty() && !setToggle) "Set points" else if (!setToggle) "Edit points" else "Done"
 
     Button(onClick = onClick) {
@@ -101,12 +110,14 @@ fun SetPointButton (
     var isLoading by remember { mutableStateOf(false) }
     val text = if (points.isEmpty()) "Set start" else "Set point"
 
+
+
     Button( // Set a new point and add it to points array
         onClick = {
             isLoading = true
             scope.launch {
                 val pointID = if (points.isEmpty()) "Start" else "L${points.size}"
-                points.add(Point(locationClient.getAverageLocation(6), pointID,false))
+                points.add(Point(locationClient.getAverageLocation(10), pointID,false))
                 isLoading = false
             }
         }
@@ -153,7 +164,7 @@ fun TrackingButton (
                 while (thread?.isActive == true) {
                     points.forEach { point ->
                         next = point.name
-                        locationClient.getProximityFlow(point.latlon).first { d -> // Emit from flow until within 2 meters
+                        locationClient.getProximityFlow(point.latlon)?.first { d -> // Emit from flow until within 2 meters
                             distance = d // Update UI
                             d < 2.0
                         }

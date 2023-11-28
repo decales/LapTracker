@@ -13,11 +13,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
@@ -33,7 +31,6 @@ import androidx.navigation.compose.rememberNavController
 import cmpt370.group12.laptracker.R
 import cmpt370.group12.laptracker.model.LocationClient
 import cmpt370.group12.laptracker.view.main.SettingsView
-import cmpt370.group12.laptracker.view.main.StartView
 import cmpt370.group12.laptracker.view.theme.LapTrackerTheme
 import cmpt370.group12.laptracker.viewmodel.ProfileViewModel
 import cmpt370.group12.laptracker.viewmodel.SettingsViewModel
