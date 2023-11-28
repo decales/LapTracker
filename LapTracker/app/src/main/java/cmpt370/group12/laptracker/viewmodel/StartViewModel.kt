@@ -70,7 +70,7 @@ class StartViewModel @Inject constructor(
         var isPassed: Boolean
     )
 
-    suspend fun getProximityFlow(latlon: Pair<Double, Double>): Flow<Double> {
+    suspend fun getProximityFlow(latlon: Pair<Double, Double>): Flow<Double>? {
         return this.locationClient.getProximityFlow(latlon)
     }
 
