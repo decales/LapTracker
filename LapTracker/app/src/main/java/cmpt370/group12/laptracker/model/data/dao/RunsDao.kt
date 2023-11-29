@@ -32,5 +32,11 @@ interface RunsDao {
 
     @Query("SELECT * FROM runsentity")
     suspend fun Runs_getAll(): List<RunsEntity>
+    @Query("SELECT * FROM runsentity ORDER BY (endTime - startTime) ASC LIMIT 1")
+    suspend fun Runs_getMin(): RunsEntity
+
+    @Query("SELECT * FROM runsentity ORDER BY (endTime - startTime) DESC LIMIT 1")
+    suspend fun Runs_getMax(): RunsEntity
+
 }
 
