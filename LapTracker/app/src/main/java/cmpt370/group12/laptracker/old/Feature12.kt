@@ -348,11 +348,7 @@ fun LapsWidget () {
 fun ProgressWidget () {
     Text("ProgressWidget")
 }
-
-
-
-
-
+/*
 //View model to manage which items are in the view, selected items
 //will be shown, non selected will be deleted
 class SelectedItemsViewModel : ViewModel() {
@@ -379,7 +375,7 @@ class SelectedItemsViewModel : ViewModel() {
 
 }
 
-
+ */
 
 //external composable for displaying the selected widget within the
 //dropdown menu of radio boxes
@@ -426,7 +422,7 @@ fun DisplaySelectedWidgets ( selectedViewModel: SelectedItemsViewModel) {
 fun DefaultWidget() {
     Text("Default Widget")
 }
-
+/*
 //format the time into readable text 00:00:00:000
 @Composable
 fun formatElapsedTime ( elapsedTime: Long): String {
@@ -439,6 +435,8 @@ fun formatElapsedTime ( elapsedTime: Long): String {
     return String.format( "%02d:%02d:%02d:%03d", hours, minutes % 60, seconds % 60, miliseconds)
 }
 
+ */
+/*
 @Composable
 fun TimeWidgetButton ( text: String, onClick: () -> Unit, enabled: Boolean) {
 
@@ -450,6 +448,8 @@ fun TimeWidgetButton ( text: String, onClick: () -> Unit, enabled: Boolean) {
         Text(text)
     }
 }
+
+ */
 @Composable
 fun Greeting13(name: String, modifier: Modifier = Modifier) {
     Text(
