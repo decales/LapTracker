@@ -91,7 +91,7 @@ fun RealTimeUI () {
         )
     }
 }
-
+/*
 /*
 The bottom buttoms contain start stop and resume which will all be handled differently
 by the respective widget that are currently on the screen
@@ -128,6 +128,8 @@ fun BottomButton(
         }
     }
 }
+
+ */
 @Composable
 fun DropdownMenu(selectedItemsViewModel: SelectedItemsViewModel) {
     //list of possible options
@@ -207,6 +209,8 @@ fun DropdownMenu(selectedItemsViewModel: SelectedItemsViewModel) {
     }
 }
 
+
+/*
 //Temporary text until the widgets themselves are working
 @Composable
 fun TimeWidget() {
@@ -260,6 +264,8 @@ fun TimeWidget() {
         }
     }
 }
+
+ */
 
 
 /*
