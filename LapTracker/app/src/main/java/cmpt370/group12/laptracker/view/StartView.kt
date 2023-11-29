@@ -132,7 +132,7 @@ class StartView(
                         }
                         else {
                             Button(onClick = {
-                                //viewModel.prepareSettingPoints()
+                                viewModel.prepareSettingPoints()
 
 
                             }) {
@@ -172,16 +172,14 @@ class StartView(
 
     @Composable
     fun Map() {
-        val cameraState by remember {
-            mutableStateOf(CameraPositionState(
-                CameraPosition(LatLng(Random.nextDouble() * 180.0 - 90.0, 0.0), 0F, 0F, 0F)))
-        }
+        viewModel.cameraState.value = CameraPositionState()
+        //CameraPosition(LatLng(Random.nextDouble() * 180.0 - 90.0, 0.0), 0F, 0F, 0F)))
 
         Card(modifier = Modifier.padding(20.dp)) {
             GoogleMap(
                 properties = viewModel.mapProperties.value,
                 uiSettings = viewModel.mapSettings.value,
-                cameraPositionState = cameraState,
+                cameraPositionState = viewModel.cameraState.value,
                 //onMapLongClick = { viewModel.onEvent(AppEvent.OnMapLongClick(it)) },
                 modifier = Modifier
                     .fillMaxSize()
@@ -189,7 +187,7 @@ class StartView(
             ) {
                 if (!viewModel.mapIsEnabled.value) {
                     LaunchedEffect(Unit) {
-                        viewModel.panMapCamera(cameraState)
+                        viewModel.panMapCamera()
                     }
                 }
 
