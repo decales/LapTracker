@@ -9,10 +9,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.sp
+import cmpt370.group12.laptracker.presentation.MapState
 
 class SpeedWidget {
+    val speed = MapState().currentLocation?.speed
     @Composable
-    fun SpeedPaceWidget (speed: Float) {
+    fun SpeedPaceWidget () {
         Column(
                 modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.Center,

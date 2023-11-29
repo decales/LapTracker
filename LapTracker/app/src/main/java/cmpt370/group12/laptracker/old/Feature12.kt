@@ -262,7 +262,7 @@ fun TimeWidget() {
 }
 
 
-
+/*
 @Composable
 fun SpeedPaceWidget (speed: Float) {
     Column(
@@ -281,6 +281,8 @@ fun SpeedPaceWidget (speed: Float) {
     }
 }
 
+ */
+/*
 @Composable
 fun DistanceWidget () {
 
@@ -301,6 +303,8 @@ fun DistanceWidget () {
         )
     }
 }
+
+ */
 /*
 class DistanceCalc {
     //I think this only get's called once, might need a global update(), that updates all live widgets
