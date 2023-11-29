@@ -6,5 +6,6 @@ data class Track(
     //name is the Title of the achievement
     val name: String,
     val location: String,
+    val comment: String,
     val mapImage: Int
 )
