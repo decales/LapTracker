@@ -4,7 +4,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 
 class SelectedItemsViewModel : ViewModel() {
-    private val selectedItems = mutableStateOf(emptyList<String>())
+    val selectedItems = mutableStateOf(emptyList<String>())
     //add the item if there's room, dont allow anything to be added
     //if there's already two selected
     fun toggleItem(item: String) {
