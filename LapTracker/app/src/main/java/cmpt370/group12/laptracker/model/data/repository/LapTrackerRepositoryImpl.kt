@@ -6,6 +6,7 @@ import cmpt370.group12.laptracker.model.data.dao.MapPointDao
 import cmpt370.group12.laptracker.model.data.dao.RunsDao
 import cmpt370.group12.laptracker.model.data.dao.RuntimesDao
 import cmpt370.group12.laptracker.model.data.dao.TrackDao
+import cmpt370.group12.laptracker.model.data.entities.TrackEntity
 import cmpt370.group12.laptracker.model.data.mapper.toAchievement
 import cmpt370.group12.laptracker.model.data.mapper.toAchievementEntity
 import cmpt370.group12.laptracker.model.data.mapper.toComment
@@ -185,5 +186,9 @@ class LapTrackerRepositoryImpl(
 
     override suspend fun Track_getAll(): List<Track>{
         return trackDao.Track_getAll().map { it.toTrack() }
+    }
+
+    override suspend fun getComment(id: Int): Track {
+        return trackDao.getComment(id).toTrack()
     }
 }

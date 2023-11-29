@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import cmpt370.group12.laptracker.R
+import cmpt370.group12.laptracker.model.domain.model.Comment
 import cmpt370.group12.laptracker.model.domain.model.Runs
 import cmpt370.group12.laptracker.model.domain.model.Track
 import cmpt370.group12.laptracker.model.domain.repository.LapTrackerRepository
@@ -31,7 +32,7 @@ class TracksViewModel @Inject constructor(
 
     // Public
     val tracksCards: MutableState<List<TrackCard>> = mutableStateOf(emptyList())
-    var currentTrackDetails: Track by mutableStateOf(Track(null, "", "", 0))
+    var currentTrackDetails: Track by mutableStateOf(Track(null, "", "", "",0))
     var currentTrackDetailsRuns: List<Runs> by mutableStateOf(emptyList())
     var trackDetailsVisible by mutableStateOf(false)
     var deleteConfirmationVisible by mutableStateOf(false)
@@ -95,7 +96,7 @@ class TracksViewModel @Inject constructor(
     fun addTrack() { // TODO temporary for testing, remove later
         viewModelScope.launch{
             val i = (Math.random() * 1000).toInt()
-            db.Track_insert(Track(null, "test $i", "test $i", R.drawable.ic_launcher_foreground))
+            db.Track_insert(Track(null, "test $i", "test $i", "", R.drawable.ic_launcher_foreground))
             fetchTracks()
         }
     }
@@ -105,4 +106,33 @@ class TracksViewModel @Inject constructor(
             fetchTracks()
         }
     }
+}
+
+fun getTrack(trackID: Int): Track? {
+    /* TODO optional - this function just returns a Track object to make implementing the other functions easier*/
+    return null
+}
+
+fun GetAverageSpeed(trackID: Int): String {
+    /* TODO build this function to return the average speed for a specific track */
+    return "12"
+}
+
+fun GetTotalDistance(trackID: Int) : String {
+    /* TODO build this function to return the total distance travelled on a specific track */
+    return "10"
+}
+
+fun GetTotalTimeSpentOnTrack(trackID: Int) : String {
+    /* TODO build this function to return the total time spent on a specific track */
+    return "test 15h 30min"
+}
+
+fun getComment(trackID: Int): String {
+    /* TODO Declan finish this function */
+    return "comment"
+}
+
+fun setComment(comment: Comment) {
+    /* TODO Declan finish this function */
 }

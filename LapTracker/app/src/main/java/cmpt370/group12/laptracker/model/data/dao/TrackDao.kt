@@ -28,6 +28,9 @@ interface TrackDao {
 
     @Query("SELECT * FROM trackentity")
     suspend fun Track_getAll(): List<TrackEntity>
+
+    @Query("SELECT comment FROM trackentity WHERE id =:id")
+    fun getComment(id: Int): TrackEntity
 }
 
 

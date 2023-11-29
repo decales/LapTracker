@@ -1,5 +1,6 @@
 package cmpt370.group12.laptracker.model.domain.repository
 
+import cmpt370.group12.laptracker.model.data.mapper.toTrack
 import cmpt370.group12.laptracker.model.domain.model.Achievement
 import cmpt370.group12.laptracker.model.domain.model.Comment
 import cmpt370.group12.laptracker.model.domain.model.MapPoint
@@ -49,4 +50,5 @@ interface LapTrackerRepository {
     fun Track_getById(id: Int): Flow<List<Track>>
     fun Track_getAllFlow(): Flow<List<Track>>
     suspend fun Track_getAll(): List<Track>
+    suspend fun getComment(id: Int): Track
 }
