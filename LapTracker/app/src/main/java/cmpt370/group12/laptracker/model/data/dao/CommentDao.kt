@@ -2,8 +2,9 @@ package cmpt370.group12.laptracker.model.data.dao
 
 import androidx.room.Dao
 import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Upsert
 import cmpt370.group12.laptracker.model.data.entities.CommentEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -16,18 +17,19 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CommentDao
+
 {
     //Using the Upset instead of Insert. This doubles as Insert/Update
     //If we send it a new mappoint, it will add it to the DB, but if we send it a Comment that
     //exists, it will update the mappoint
-    @Upsert
-        suspend fun Comment_insert(comment: CommentEntity)
-    @Delete()
-        suspend fun Comment_delete(comment: CommentEntity)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun Comment_insert(comment: CommentEntity): Long
+    @Delete
+    suspend fun Comment_delete(comment: CommentEntity)
 
     //todo: I probably want to return the Comments sorted by timeStamp
     @Query("SELECT * FROM commententity WHERE fromTrackId =:trackId")
-        fun Comments_getCommentsFromTrackId(trackId: Int): Flow<List<CommentEntity>>
+    fun Comments_getCommentsFromTrackId(trackId: Int): Flow<List<CommentEntity>>
     @Query("SELECT * FROM commententity")
     suspend fun Comments_getAll(): List<CommentEntity>
 
