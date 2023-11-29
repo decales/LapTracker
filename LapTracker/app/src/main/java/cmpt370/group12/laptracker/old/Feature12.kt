@@ -262,7 +262,6 @@ fun TimeWidget() {
 }
 
 
-//TODO
 
 @Composable
 fun SpeedPaceWidget (speed: Float) {
@@ -343,10 +342,14 @@ fun LapsWidget () {
     }
 }
 
+
+
 @Composable
 fun ProgressWidget () {
     Text("ProgressWidget")
 }
+
+
 
 
 
@@ -375,6 +378,9 @@ class SelectedItemsViewModel : ViewModel() {
     }
 
 }
+
+
+
 //external composable for displaying the selected widget within the
 //dropdown menu of radio boxes
 @Composable
@@ -414,6 +420,8 @@ fun DisplaySelectedWidgets ( selectedViewModel: SelectedItemsViewModel) {
         //Stopwatch()
     }
 }
+
+
 @Composable
 fun DefaultWidget() {
     Text("Default Widget")
