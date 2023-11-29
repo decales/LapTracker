@@ -50,11 +50,18 @@ class StartViewModel @Inject constructor(
 
     lateinit var locationClient: LocationClient // Passed in nav controller in MainActivity
 
-    // TODO add all data and states values required for SettingsView composable functions
-    // TODO (if applicable) retrieve data from database (model)
-    var createRace = mutableStateOf(false)
-    var pickTrack = mutableStateOf(false)
-    var trackPicked = mutableStateOf(false)
+    enum class ViewState {
+        chooseMode,
+        newTrack,
+        loadTrack,
+        saveTrack,
+        inRun,
+        postRun,
+        noServices
+    }
+
+    var viewState: MutableState<ViewState> = mutableStateOf(ViewState.chooseMode)
+
     var points = mutableStateListOf<Point>()
     var setToggle = mutableStateOf(false)
     val scope = CoroutineScope(Dispatchers.Main)
@@ -138,31 +145,31 @@ class StartViewModel @Inject constructor(
     }
 
 
-    fun prepareSettingPoints() {
-        locationClient.startLocationFlow(1.0)
-        viewModelScope.launch {
+//    fun prepareSettingPoints() {
+//        locationClient.startLocationFlow(1.0)
+//        viewModelScope.launch {
+//
+//            val location = locationClient.getCurrentLocation()
+//            currentLocation.value = LatLng(location!!.latitude, location.longitude)
+//
+//            mapIsEnabled.value = true
+//            async { panMapCameraToCurrentLocation() }.await()
+//            enableMap()
+//        }
+//    }
 
-            val location = locationClient.getCurrentLocation()
-            currentLocation.value = LatLng(location!!.latitude, location.longitude)
 
-            mapIsEnabled.value = true
-            async { panMapCameraToCurrentLocation() }.await()
-            enableMap()
-        }
-    }
-
-
-    fun panMapCamera() {
+    fun panMapCamera(cameraState: CameraPositionState) {
         cameraJob.value = viewModelScope.launch {
             while (!mapIsEnabled.value) {
-                cameraState.value.animate(CameraUpdateFactory.scrollBy(1000F, 0F), 60000)
+                cameraState.animate(CameraUpdateFactory.scrollBy(1000F, 0F), 60000)
             }
         }
     }
 
 
-    suspend fun panMapCameraToCurrentLocation() {
-       cameraState.value.animate(
+    suspend fun panMapCameraToCurrentLocation(cameraState: CameraPositionState) {
+       cameraState.animate(
             CameraUpdateFactory.newCameraPosition(CameraPosition(currentLocation.value, 18.0F, 0.0F, 0.0F)), 2000
        )
     }

@@ -303,11 +303,11 @@ class TracksView(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = CenterHorizontally
         ) {
-            Text(text = "Average Speed: %.2f km/h".format(GetAverageSpeed(0)))
-            Text(text = "Total Distance Travelled: %.2f km".format(GetTotalDistance(0)))
-            Text(text = "Total Time Spent on Track: %02d:%02d".format(GetTotalTimeSpentOnTrack(0)))
+//            Text(text = "Average Speed: %.2f km/h".format(GetAverageSpeed(0)))
+//            Text(text = "Total Distance Travelled: %.2f km".format(GetTotalDistance(0)))
+//            Text(text = "Total Time Spent on Track: %02d:%02d".format(GetTotalTimeSpentOnTrack(0)))
         }
     }
 
