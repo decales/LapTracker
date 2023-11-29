@@ -26,6 +26,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.MapProperties
+import com.google.maps.android.compose.MapType
 import com.google.maps.android.compose.MapUiSettings
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -72,10 +73,10 @@ class StartViewModel @Inject constructor(
     var next = mutableStateOf("")
 
     //Map variables
-    //var cameraPosition = mutableStateOf(CameraPositionState())
+    var cameraState = mutableStateOf(CameraPositionState())
     var cameraJob: MutableState<Job?> = mutableStateOf(null)
     var mapIsEnabled = mutableStateOf(false)
-    var mapProperties = mutableStateOf(MapProperties(mapStyleOptions = MapStyleOptions("dfs")))
+    var mapProperties = mutableStateOf(MapProperties())
     var mapSettings = mutableStateOf(MapUiSettings(
         zoomControlsEnabled = false,
         zoomGesturesEnabled = false,
@@ -137,7 +138,7 @@ class StartViewModel @Inject constructor(
     }
 
 
-    fun prepareSettingPoints(cameraState: CameraPositionState) {
+    fun prepareSettingPoints() {
         locationClient.startLocationFlow(1.0)
         viewModelScope.launch {
 
@@ -145,23 +146,23 @@ class StartViewModel @Inject constructor(
             currentLocation.value = LatLng(location!!.latitude, location.longitude)
 
             mapIsEnabled.value = true
-            async { panMapCameraToCurrentLocation(cameraState) }.await()
+            async { panMapCameraToCurrentLocation() }.await()
             enableMap()
         }
     }
 
 
-    fun panMapCamera(cameraState: CameraPositionState) {
+    fun panMapCamera() {
         cameraJob.value = viewModelScope.launch {
             while (!mapIsEnabled.value) {
-                cameraState.animate(CameraUpdateFactory.scrollBy(1000F, 0F), 60000)
+                cameraState.value.animate(CameraUpdateFactory.scrollBy(1000F, 0F), 60000)
             }
         }
     }
 
 
-    suspend fun panMapCameraToCurrentLocation(cameraState: CameraPositionState) {
-       cameraState.animate(
+    suspend fun panMapCameraToCurrentLocation() {
+       cameraState.value.animate(
             CameraUpdateFactory.newCameraPosition(CameraPosition(currentLocation.value, 18.0F, 0.0F, 0.0F)), 2000
        )
     }
