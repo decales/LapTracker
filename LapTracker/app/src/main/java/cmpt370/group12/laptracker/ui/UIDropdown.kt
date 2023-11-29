@@ -12,6 +12,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -20,6 +21,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import cmpt370.group12.laptracker.presentation.MapState
 
 class UIDropdown {
     @Composable
@@ -98,6 +100,51 @@ class UIDropdown {
 
                 )
             }
+        }
+    }
+    //external composable for displaying the selected widget within the
+    //dropdown menu of radio boxes
+    @Composable
+    fun DisplaySelectedWidgets ( selectedViewModel: SelectedItemsViewModel) {
+
+        val selectedItems = selectedViewModel.selectedItems.value
+        val stateClass = MapState()
+
+        //use this is you want something to happen when it's launched
+        //keep empty for now
+        LaunchedEffect ( selectedItems){
+        }
+        if ( selectedItems.contains("Time")) {
+            TimerWidget()
+        }
+
+        if ( selectedItems.contains("Speed/Pace")) {
+            /*
+            val speed = stateClass.currentLocation?.speed
+            if (speed != null) {
+                SpeedWidget()
+            }
+             */
+            //should be able to just call this now because it accesses the data independently
+            SpeedWidget()
+        }
+
+        if ( selectedItems.contains("Distance")){
+            val location = stateClass.currentLocation
+            //val prevLat = location?.latitude
+            //val prevLong = location?.longitude
+            DistanceWidget()
+        }
+        if ( selectedItems.contains("Laps")){
+            LapWidget()
+        }
+        /*
+        if ( selectedItems.contains("Progress")){
+            ProgressWidget()
+        }
+         */
+        if ( selectedItems.isEmpty()){
+            //Stopwatch()
         }
     }
 
