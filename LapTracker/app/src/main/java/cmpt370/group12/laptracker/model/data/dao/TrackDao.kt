@@ -2,8 +2,9 @@ package cmpt370.group12.laptracker.model.data.dao
 
 import androidx.room.Dao
 import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Upsert
 import cmpt370.group12.laptracker.model.data.entities.TrackEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -15,8 +16,8 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface TrackDao {
 
-    @Upsert
-    suspend fun Track_insert(track: TrackEntity)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun Track_insert(track: TrackEntity): Long
     @Delete
     suspend fun Track_delete(track: TrackEntity)
 
@@ -27,7 +28,7 @@ interface TrackDao {
     fun Track_getAllFlow(): Flow<List<TrackEntity>>
 
     @Query("SELECT * FROM trackentity")
-    suspend fun Track_getAll(): List<TrackEntity>
+    fun Track_getAll(): List<TrackEntity>
 }
 
 

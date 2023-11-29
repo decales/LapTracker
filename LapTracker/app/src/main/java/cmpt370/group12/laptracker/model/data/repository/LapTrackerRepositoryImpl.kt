@@ -134,6 +134,12 @@ class LapTrackerRepositoryImpl(
     override suspend fun Runs_getAll(): List<Runs>{
         return runsDao.Runs_getAll().map {  it.toRuns() }
     }
+    override suspend fun Runs_getMax(): Runs {
+        return runsDao.Runs_getMax().toRuns()
+    }
+    override suspend fun Runs_getMin(): Runs {
+        return runsDao.Runs_getMin().toRuns()
+    }
 
 
     // ###################### RUNTIME FUNCTIONS ######################
