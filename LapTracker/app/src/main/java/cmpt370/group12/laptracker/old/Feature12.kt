@@ -92,8 +92,6 @@ fun RealTimeUI () {
     }
 }
 
-
-
 /*
 The bottom buttoms contain start stop and resume which will all be handled differently
 by the respective widget that are currently on the screen
