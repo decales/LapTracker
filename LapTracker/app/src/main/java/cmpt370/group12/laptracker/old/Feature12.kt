@@ -57,7 +57,7 @@ class Feature12 : ComponentActivity() {
         }
     }
 }
-
+/*
 /*
 The main app composable where everything is added together
 the oncreate function will call this to compose the application
@@ -91,6 +91,8 @@ fun RealTimeUI () {
         )
     }
 }
+
+ */
 /*
 /*
 The bottom buttoms contain start stop and resume which will all be handled differently
@@ -130,6 +132,7 @@ fun BottomButton(
 }
 
  */
+/*
 @Composable
 fun DropdownMenu(selectedItemsViewModel: SelectedItemsViewModel) {
     //list of possible options
@@ -209,7 +212,7 @@ fun DropdownMenu(selectedItemsViewModel: SelectedItemsViewModel) {
     }
 }
 
-
+ */
 /*
 //Temporary text until the widgets themselves are working
 @Composable
