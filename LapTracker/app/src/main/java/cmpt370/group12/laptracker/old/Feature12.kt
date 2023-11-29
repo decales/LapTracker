@@ -301,7 +301,7 @@ fun DistanceWidget () {
         )
     }
 }
-
+/*
 class DistanceCalc {
     //I think this only get's called once, might need a global update(), that updates all live widgets
     private var totalDistance: Float = 0f
@@ -322,6 +322,8 @@ class DistanceCalc {
         return totalDistance
     }
 }
+
+ */
 /*
 @Composable
 fun LapsWidget () {
