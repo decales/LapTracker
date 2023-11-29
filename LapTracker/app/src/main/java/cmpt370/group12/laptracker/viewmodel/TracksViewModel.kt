@@ -31,7 +31,7 @@ class TracksViewModel @Inject constructor(
 
     // Public
     val tracksCards: MutableState<List<TrackCard>> = mutableStateOf(emptyList())
-    var currentTrackDetails: Track by mutableStateOf(Track(null, "", "", 0))
+    var currentTrackDetails: Track by mutableStateOf(Track(null, "", "", "", 0))
     var currentTrackDetailsRuns: List<Runs> by mutableStateOf(emptyList())
     var trackDetailsVisible by mutableStateOf(false)
     var deleteConfirmationVisible by mutableStateOf(false)
@@ -95,7 +95,7 @@ class TracksViewModel @Inject constructor(
     fun addTrack() { // TODO temporary for testing, remove later
         viewModelScope.launch{
             val i = (Math.random() * 1000).toInt()
-            db.Track_insert(Track(null, "test $i", "test $i", R.drawable.ic_launcher_foreground))
+            db.Track_insert(Track(null, "test $i", "test $i", "test comment", R.drawable.ic_launcher_foreground))
             fetchTracks()
         }
     }
