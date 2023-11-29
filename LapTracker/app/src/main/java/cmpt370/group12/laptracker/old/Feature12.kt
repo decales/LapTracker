@@ -57,7 +57,7 @@ class Feature12 : ComponentActivity() {
         }
     }
 }
-/*
+
 /*
 The main app composable where everything is added together
 the oncreate function will call this to compose the application
@@ -92,8 +92,8 @@ fun RealTimeUI () {
     }
 }
 
- */
-/*
+
+
 /*
 The bottom buttoms contain start stop and resume which will all be handled differently
 by the respective widget that are currently on the screen
@@ -131,8 +131,8 @@ fun BottomButton(
     }
 }
 
- */
-/*
+
+
 @Composable
 fun DropdownMenu(selectedItemsViewModel: SelectedItemsViewModel) {
     //list of possible options
@@ -212,8 +212,8 @@ fun DropdownMenu(selectedItemsViewModel: SelectedItemsViewModel) {
     }
 }
 
- */
-/*
+
+
 //Temporary text until the widgets themselves are working
 @Composable
 fun TimeWidget() {
@@ -268,10 +268,10 @@ fun TimeWidget() {
     }
 }
 
- */
 
 
-/*
+
+
 @Composable
 fun SpeedPaceWidget (speed: Float) {
     Column(
@@ -290,8 +290,8 @@ fun SpeedPaceWidget (speed: Float) {
     }
 }
 
- */
-/*
+
+
 @Composable
 fun DistanceWidget () {
 
@@ -313,8 +313,8 @@ fun DistanceWidget () {
     }
 }
 
- */
-/*
+
+
 class DistanceCalc {
     //I think this only get's called once, might need a global update(), that updates all live widgets
     private var totalDistance: Float = 0f
@@ -336,8 +336,8 @@ class DistanceCalc {
     }
 }
 
- */
-/*
+
+
 @Composable
 fun LapsWidget () {
     //TODO
@@ -357,12 +357,12 @@ fun LapsWidget () {
     }
 }
 
- */
+
 @Composable
 fun ProgressWidget () {
     Text("ProgressWidget")
 }
-/*
+
 //View model to manage which items are in the view, selected items
 //will be shown, non selected will be deleted
 class SelectedItemsViewModel : ViewModel() {
@@ -389,7 +389,7 @@ class SelectedItemsViewModel : ViewModel() {
 
 }
 
- */
+
 
 //external composable for displaying the selected widget within the
 //dropdown menu of radio boxes
@@ -432,11 +432,13 @@ fun DisplaySelectedWidgets ( selectedViewModel: SelectedItemsViewModel) {
 }
 
 
+
+
 @Composable
 fun DefaultWidget() {
     Text("Default Widget")
 }
-/*
+
 //format the time into readable text 00:00:00:000
 @Composable
 fun formatElapsedTime ( elapsedTime: Long): String {
@@ -449,8 +451,8 @@ fun formatElapsedTime ( elapsedTime: Long): String {
     return String.format( "%02d:%02d:%02d:%03d", hours, minutes % 60, seconds % 60, miliseconds)
 }
 
- */
-/*
+
+
 @Composable
 fun TimeWidgetButton ( text: String, onClick: () -> Unit, enabled: Boolean) {
 
@@ -463,7 +465,7 @@ fun TimeWidgetButton ( text: String, onClick: () -> Unit, enabled: Boolean) {
     }
 }
 
- */
+
 @Composable
 fun Greeting13(name: String, modifier: Modifier = Modifier) {
     Text(
