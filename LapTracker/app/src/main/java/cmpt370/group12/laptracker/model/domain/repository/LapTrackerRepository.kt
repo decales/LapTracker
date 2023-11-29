@@ -35,7 +35,8 @@ interface LapTrackerRepository {
     suspend fun Runs_getByTrackId(trackId: Int): List<Runs>
     fun Runs_getAllFlow(): Flow<List<Runs>>
     suspend fun Runs_getAll(): List<Runs>
-
+    suspend fun Runs_getMax(): Runs
+    suspend fun Runs_getMin(): Runs
 
     suspend fun RunTimes_insert(runtimes: Runtimes)
     suspend fun RunTimes_delete(runtimes: Runtimes)
