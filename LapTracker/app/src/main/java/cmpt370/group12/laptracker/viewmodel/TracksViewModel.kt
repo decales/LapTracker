@@ -113,26 +113,27 @@ fun getTrack(trackID: Int): Track? {
     return null
 }
 
+fun getComment(trackID: Int): String {
+    /* TODO necessary - Declan finish this function (may not actually need it because it's stored in the textField with remember... lol)*/
+    return "comment"
+}
+
+fun setComment(comment: String) {
+    /* TODO necessary - Declan finish this function */
+}
+
+// TODO The functions below are only ideas for the statistics to show on the 'Track Overview' page!!!
 fun GetAverageSpeed(trackID: Int): String {
-    /* TODO build this function to return the average speed for a specific track */
+    /* TODO re-definable - build this function to return the average speed for a specific track */
     return "12"
 }
 
 fun GetTotalDistance(trackID: Int) : String {
-    /* TODO build this function to return the total distance travelled on a specific track */
+    /* TODO re-definable - build this function to return the total distance travelled on a specific track */
     return "10"
 }
 
 fun GetTotalTimeSpentOnTrack(trackID: Int) : String {
-    /* TODO build this function to return the total time spent on a specific track */
+    /* TODO re-definable - build this function to return the total time spent on a specific track */
     return "test 15h 30min"
-}
-
-fun getComment(trackID: Int): String {
-    /* TODO Declan finish this function */
-    return "comment"
-}
-
-fun setComment(comment: Comment) {
-    /* TODO Declan finish this function */
 }

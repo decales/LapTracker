@@ -18,6 +18,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
@@ -33,7 +35,12 @@ import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
@@ -42,11 +49,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.DialogWindowProvider
 import cmpt370.group12.laptracker.R
 import cmpt370.group12.laptracker.viewmodel.TracksViewModel
+import cmpt370.group12.laptracker.viewmodel.setComment
 
 class TracksView(
     private val viewModel: TracksViewModel
@@ -324,12 +333,21 @@ class TracksView(
 
 
     @Composable
-    fun TrackDetailsNotes() { // TODO make this
+    fun TrackDetailsNotes() {
         Box(
             contentAlignment = Center,
             modifier = Modifier.fillMaxSize()
         ) {
-            Text(text = "Overview")
+            var comment by remember { mutableStateOf("Type here...") }
+            TextField(
+                value = comment,
+                onValueChange = { newComment -> comment = newComment },
+                label = { Text(text = "Type Comments Here") },
+                maxLines = 5, // May redefine this... depends on the dimensions of the display device
+                keyboardActions = KeyboardActions(onGo = { setComment(comment) }),
+                modifier = Modifier.fillMaxSize()
+            )
+
         }
     }
 
