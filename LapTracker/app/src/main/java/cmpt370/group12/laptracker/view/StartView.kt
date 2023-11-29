@@ -20,25 +20,46 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewModelScope
 import cmpt370.group12.laptracker.R
+import cmpt370.group12.laptracker.presentation.AppEvent
+import cmpt370.group12.laptracker.presentation.MapScreen
 import cmpt370.group12.laptracker.viewmodel.StartViewModel
 import cmpt370.group12.laptracker.viewmodel.StartViewModel.Point
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.LocationSource
+import com.google.android.gms.maps.MapView
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.compose.CameraPositionState
+import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.Marker
+import com.google.maps.android.compose.MarkerState
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlin.random.Random
 
 class StartView(
     private val viewModel: StartViewModel
@@ -51,7 +72,10 @@ class StartView(
     fun View() {
         // TODO build view from class defined composable functions.
         // TODO initialize necessary view data in viewmodel/main/StartViewModel.kt. Data is accessed through constructor var 'viewModel'
-        Header()
+        Column {
+            Header()
+            Map()
+        }
         Box (
             contentAlignment = Alignment.Center,
             modifier = Modifier
@@ -91,7 +115,7 @@ class StartView(
                             Text(text = refresh.toString(), color = Color.Transparent) // composable with var must be in parent composable to trigger recompose
                             if (!viewModel.locationClient.servicesEnabled()) {
                                 Text(text = "Location services not enabled", fontSize = 20.sp, modifier = Modifier.padding(bottom = 20.dp))
-                                Text(text = "Please enable your device's cellular and/or GPS to continue.")
+                                Text(text = "Please enable your device's cellular and/or GPS services to continue.")
                                 Spacer(modifier = Modifier.weight(1.0f))
                             }
                             else {
@@ -99,7 +123,7 @@ class StartView(
                                 Text(text = "Please allow access to your device's precise location to continue.")
                                 Spacer(modifier = Modifier.weight(1.0f))
                                 Button(onClick = { viewModel.locationClient.getLocationPermission() }) {
-                                    Text(text = "Set permissions")
+                                    Text(text = "Permissions")
                                 }
                             }
                             Button(onClick = { refresh++}) {
@@ -107,8 +131,23 @@ class StartView(
                             }
                         }
                         else {
-                            CreateATrackButton(viewModel.createRace)
-                            ChooseATrackButton(viewModel.pickTrack)
+                            Button(onClick = {
+                                //viewModel.prepareSettingPoints()
+
+
+                            }) {
+                                Text(text = "New Track")
+                            }
+                            Button(onClick = { /*TODO*/ }) {
+                                Text(text = "Load Track")
+                            }
+
+
+
+
+
+//                            CreateATrackButton(viewModel.createRace)
+//                            ChooseATrackButton(viewModel.pickTrack)
                         }
                     }
                 }
@@ -130,31 +169,84 @@ class StartView(
         }
     }
 
+
     @Composable
-    fun CreateATrackButton(createRace: MutableState<Boolean>) {
-        Button(
-            onClick = {
-                createRace.value = true
+    fun Map() {
+        val cameraState by remember {
+            mutableStateOf(CameraPositionState(
+                CameraPosition(LatLng(Random.nextDouble() * 180.0 - 90.0, 0.0), 0F, 0F, 0F)))
+        }
+
+        Card(modifier = Modifier.padding(20.dp)) {
+            GoogleMap(
+                properties = viewModel.mapProperties.value,
+                uiSettings = viewModel.mapSettings.value,
+                cameraPositionState = cameraState,
+                //onMapLongClick = { viewModel.onEvent(AppEvent.OnMapLongClick(it)) },
+                modifier = Modifier
+                    .fillMaxSize()
+                    .blur(if (!viewModel.mapIsEnabled.value) 5.dp else 0.dp)
+            ) {
+                if (!viewModel.mapIsEnabled.value) {
+                    LaunchedEffect(Unit) {
+                        viewModel.panMapCamera(cameraState)
+                    }
+                }
+
+                if (viewModel.mapIsEnabled.value) {
+                    Marker(
+                        title = "Current location",
+                        icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED),
+                        state = MarkerState(viewModel.currentLocation.value)
+                    )
+                    viewModel.mapPoints.forEach { point -> // Create markers for each track point
+                        Marker(
+                            state = MarkerState(LatLng(point.latitude, point.longitude)),
+                            title = "(${point.latitude}, ${point.longitude})",
+                            snippet = "Long click to delete",
+//                    onInfoWindowLongClick = {
+//                        viewModel.onEvent(
+//                            AppEvent.OnInfoWindowLongClick(mappoint)
+//                        )
+//                    },
+                            onClick = {
+                                it.showInfoWindow()
+                                true
+                            },
+                            icon = BitmapDescriptorFactory.defaultMarker(
+                                BitmapDescriptorFactory.HUE_GREEN
+                            )
+                        )
+                    }
+                }
             }
-        ) {
-            Text(text = "Create a Track")
         }
     }
 
-    @Composable
-    fun ChooseATrackButton(pickTrack: MutableState<Boolean>) {
-        Button( // Set a new point and add it to points array
-            onClick = {
-                pickTrack.value = true
-            }
-        ) {
-            Text(text = "Choose a Track")
-        }
-    }
+//    @Composable
+//    fun CreateATrackButton(createRace: MutableState<Boolean>) {
+//        Button(
+//            onClick = {
+//                createRace.value = true
+//            }
+//        ) {
+//            Text(text = "Create a Track")
+//        }
+//    }
+
+//    @Composable
+//    fun ChooseATrackButton(pickTrack: MutableState<Boolean>) {
+//        Button( // Set a new point and add it to points array
+//            onClick = {
+//                pickTrack.value = true
+//            }
+//        ) {
+//            Text(text = "Choose a Track")
+//        }
+//    }
 
     @Composable
     fun TrackingView() {
-
         Box (
             contentAlignment = Alignment.Center,
             modifier = Modifier
@@ -182,14 +274,13 @@ class StartView(
                                 .padding(top = 10.dp)
                                 .fillMaxSize()
                         ) {
-
                             viewModel.points.forEach { point ->
                                 Text(text = point.name)
                             }
                         }
                     }
                     if (!viewModel.setToggle.value && !viewModel.trackPicked.value) {
-                        SetPointButton(viewModel.points)
+                        //SetPointButton(viewModel.points)
                     }
                     if (viewModel.points.isNotEmpty() && viewModel.setToggle.value) {
                             TrackingButton(viewModel.points)
@@ -200,42 +291,42 @@ class StartView(
     }
 
 
-    @Composable
-    fun SetPointButton (
-        points: SnapshotStateList<Point>
-    ) {
-        viewModel.textSetPoints = if (points.isEmpty()) "Set start" else "Set point"
-        Button( // Set a new point and add it to points array
-            onClick = {
-                viewModel.isLoading.value = true
-                viewModel.scope.launch {
-                    val pointID = if (points.isEmpty()) "Start" else "L${points.size}"
-                    points.add(Point(viewModel.getAverageLocation(), pointID,false))
-                    viewModel.isLoading.value = false
-                }
-            }
-        ) {
-            Text(text = viewModel.textSetPoints)
-        }
-        if (points.isNotEmpty()) {
-            Button( // Remove last point entry from points array
-                onClick = { points.removeLast() }
-            ) {
-                Text(text = "Undo")
-            }
-            Button( // Remove last point entry from points array
-                onClick = { viewModel.setToggle.value = !viewModel.setToggle.value }
-            ) {
-                Text(text = "Done")
-            }
-        }
-        if (viewModel.isLoading.value) {
-            Text (
-                text = "Setting point...",
-                modifier = Modifier
-                    .padding(top = 20.dp))
-        }
-    }
+//    @Composable
+//    fun SetPointButton (
+//        points: SnapshotStateList<Point>
+//    ) {
+//        viewModel.textSetPoints = if (points.isEmpty()) "Set start" else "Set point"
+//        Button( // Set a new point and add it to points array
+//            onClick = {
+//                viewModel.isLoading.value = true
+//                viewModel.scope.launch {
+//                    val pointID = if (points.isEmpty()) "Start" else "L${points.size}"
+//                    points.add(Point(viewModel.getAverageLocation(), pointID,false))
+//                    viewModel.isLoading.value = false
+//                }
+//            }
+//        ) {
+//            Text(text = viewModel.textSetPoints)
+//        }
+//        if (points.isNotEmpty()) {
+//            Button( // Remove last point entry from points array
+//                onClick = { points.removeLast() }
+//            ) {
+//                Text(text = "Undo")
+//            }
+//            Button( // Remove last point entry from points array
+//                onClick = { viewModel.setToggle.value = !viewModel.setToggle.value }
+//            ) {
+//                Text(text = "Done")
+//            }
+//        }
+//        if (viewModel.isLoading.value) {
+//            Text (
+//                text = "Setting point...",
+//                modifier = Modifier
+//                    .padding(top = 20.dp))
+//        }
+//    }
 
     @Composable
     fun TrackListView(trackPicked: MutableState<Boolean>) {

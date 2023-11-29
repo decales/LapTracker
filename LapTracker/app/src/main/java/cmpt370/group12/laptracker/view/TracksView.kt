@@ -40,11 +40,13 @@ import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.DialogWindowProvider
+import androidx.core.content.ContextCompat
 import cmpt370.group12.laptracker.R
 import cmpt370.group12.laptracker.viewmodel.TracksViewModel
 
@@ -123,7 +125,7 @@ class TracksView(
     @Composable
     fun TrackList() {
         Card(
-            colors = CardDefaults.cardColors(Color(0xff1c212d)),
+            colors = CardDefaults.cardColors(Color(ContextCompat.getColor(LocalContext.current, R.color.cardSecondary))),
             modifier = Modifier.fillMaxSize()
         ) {
             if (viewModel.tracksCards.value.isNotEmpty()) {
@@ -209,7 +211,7 @@ class TracksView(
     @Composable
     fun TrackDetailsView() {// TODO give this an enter and exit animation
         Card(
-            colors = CardDefaults.cardColors(Color(0xff1c212d)),
+            colors = CardDefaults.cardColors(Color(ContextCompat.getColor(LocalContext.current, R.color.cardSecondary))),
             modifier = Modifier.fillMaxSize()
         ) {
             Column(

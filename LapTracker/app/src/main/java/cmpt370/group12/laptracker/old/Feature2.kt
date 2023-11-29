@@ -103,7 +103,7 @@ fun setStartLocationButton(locationClient: LocationClient, points: SnapshotState
         onClick = {
             isLoading = true
             scope.launch {
-                points.add(locationClient.getAverageLocation(6))
+                //points.add(locationClient.getAverageLocation(6))
                 isLoading = false
             }
         }
@@ -121,7 +121,7 @@ fun getAnotherSegmentButton(locationClient: LocationClient, points: SnapshotStat
         onClick = {
             isLoading = true
             scope.launch {
-                points.add(locationClient.getAverageLocation(6))
+                //points.add(locationClient.getAverageLocation(6))
                 isLoading = false
             }
         }

@@ -117,7 +117,7 @@ fun SetPointButton (
             isLoading = true
             scope.launch {
                 val pointID = if (points.isEmpty()) "Start" else "L${points.size}"
-                points.add(Point(locationClient.getAverageLocation(10), pointID,false))
+                //points.add(Point(locationClient.getAverageLocation(10), pointID,false))
                 isLoading = false
             }
         }
