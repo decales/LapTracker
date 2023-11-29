@@ -17,6 +17,7 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
+import com.google.android.gms.maps.model.LatLng
 import dagger.Provides
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.MainScope
@@ -66,22 +67,6 @@ class LocationClient(
 
 
     @SuppressLint("MissingPermission")
-    suspend fun getAverageLocation(numLocations: Int): Pair<Double, Double> {
-        return if (locationFlow != null) {
-            var tLat = 0.0
-            var tLon = 0.0
-            locationFlow?.take(numLocations)?.collectLatest { location -> // Collect x locations from flow
-                if (location != null) {
-                    tLat += location.latitude
-                    tLon += location.longitude
-                }
-            }
-            Pair(tLat/numLocations, tLon/numLocations)
-        } else Pair(0.0, 0.0)
-    }
-
-
-    @SuppressLint("MissingPermission")
     fun startLocationFlow(intervalInSeconds: Double) {
         if (locationFlow == null) {
             val request = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, (intervalInSeconds * 1000).toLong())
@@ -104,6 +89,27 @@ class LocationClient(
         if (locationFlow != null) {
             locationFlow = null
         }
+    }
+
+    @SuppressLint("MissingPermission")
+    suspend fun getAverageLocation(numLocations: Int): LatLng {
+        return if (locationFlow != null) {
+            var tLat = 0.0
+            var tLng = 0.0
+            locationFlow?.take(numLocations)?.collectLatest { location -> // Collect x locations from flow
+                if (location != null) {
+                    tLat += location.latitude
+                    tLng += location.longitude
+                }
+            }
+            LatLng(tLat / numLocations, tLng / numLocations)
+        } else LatLng(0.0, 0.0)
+    }
+
+    suspend fun getSingleLocation(): Location? {
+        var location:Location? = null
+        if (locationFlow != null) locationFlow?.take(1)?.collect { location = it }
+        return location
     }
 
 
@@ -163,7 +169,6 @@ class LocationClient(
                         send(meters)
                     }
                 }
-                awaitClose { locationFlow = null }
             }
         } else null
     }
