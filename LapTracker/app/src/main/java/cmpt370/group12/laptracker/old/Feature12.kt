@@ -322,7 +322,7 @@ class DistanceCalc {
         return totalDistance
     }
 }
-
+/*
 @Composable
 fun LapsWidget () {
     //TODO
@@ -342,8 +342,7 @@ fun LapsWidget () {
     }
 }
 
-
-
+ */
 @Composable
 fun ProgressWidget () {
     Text("ProgressWidget")
