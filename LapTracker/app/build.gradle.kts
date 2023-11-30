@@ -12,7 +12,7 @@ android {
 
     defaultConfig {
         applicationId = "cmpt370.group12.laptracker"
-        minSdk = 21
+        minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -53,6 +53,10 @@ android {
 }
 
 dependencies {
+
+    // for graphing
+    implementation ("co.yml:ycharts:2.1.0")
+
     //implementation ("androidx.core:core-ktx:1.10.0")
     implementation ("androidx.core:core-ktx:1.12.0")
 

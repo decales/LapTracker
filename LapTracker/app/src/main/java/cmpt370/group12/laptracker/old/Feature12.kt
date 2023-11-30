@@ -77,7 +77,7 @@ fun RealTimeUI () {
 
         Spacer ( modifier = Modifier.height(16.dp))
 
-        DisplaySelectedWidgets ( selectedViewModel)
+        //DisplaySelectedWidgets ( selectedViewModel)
 
         Spacer ( modifier = Modifier.height(16.dp))
 
@@ -128,6 +128,9 @@ fun BottomButton(
         }
     }
 }
+
+
+
 @Composable
 fun DropdownMenu(selectedItemsViewModel: SelectedItemsViewModel) {
     //list of possible options
@@ -207,6 +210,8 @@ fun DropdownMenu(selectedItemsViewModel: SelectedItemsViewModel) {
     }
 }
 
+
+
 //Temporary text until the widgets themselves are working
 @Composable
 fun TimeWidget() {
@@ -262,7 +267,8 @@ fun TimeWidget() {
 }
 
 
-//TODO
+
+
 
 @Composable
 fun SpeedPaceWidget (speed: Float) {
@@ -281,6 +287,8 @@ fun SpeedPaceWidget (speed: Float) {
         )
     }
 }
+
+
 
 @Composable
 fun DistanceWidget () {
@@ -303,6 +311,8 @@ fun DistanceWidget () {
     }
 }
 
+
+
 class DistanceCalc {
     //I think this only get's called once, might need a global update(), that updates all live widgets
     private var totalDistance: Float = 0f
@@ -324,6 +334,8 @@ class DistanceCalc {
     }
 }
 
+
+
 @Composable
 fun LapsWidget () {
     //TODO
@@ -343,12 +355,11 @@ fun LapsWidget () {
     }
 }
 
+
 @Composable
 fun ProgressWidget () {
     Text("ProgressWidget")
 }
-
-
 
 //View model to manage which items are in the view, selected items
 //will be shown, non selected will be deleted
@@ -375,10 +386,13 @@ class SelectedItemsViewModel : ViewModel() {
     }
 
 }
+
+
+
 //external composable for displaying the selected widget within the
 //dropdown menu of radio boxes
 @Composable
-fun DisplaySelectedWidgets ( selectedViewModel: SelectedItemsViewModel) {
+fun DisplaySelectedWidgets (selectedViewModel: cmpt370.group12.laptracker.ui.SelectedItemsViewModel) {
 
     val selectedItems = selectedViewModel.selectedItems.value
     val stateClass = MapState()
@@ -414,6 +428,10 @@ fun DisplaySelectedWidgets ( selectedViewModel: SelectedItemsViewModel) {
         //Stopwatch()
     }
 }
+
+
+
+
 @Composable
 fun DefaultWidget() {
     Text("Default Widget")
@@ -431,6 +449,8 @@ fun formatElapsedTime ( elapsedTime: Long): String {
     return String.format( "%02d:%02d:%02d:%03d", hours, minutes % 60, seconds % 60, miliseconds)
 }
 
+
+
 @Composable
 fun TimeWidgetButton ( text: String, onClick: () -> Unit, enabled: Boolean) {
 
@@ -442,6 +462,8 @@ fun TimeWidgetButton ( text: String, onClick: () -> Unit, enabled: Boolean) {
         Text(text)
     }
 }
+
+
 @Composable
 fun Greeting13(name: String, modifier: Modifier = Modifier) {
     Text(
