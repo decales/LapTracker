@@ -15,52 +15,35 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import cmpt370.group12.laptracker.old.DisplaySelectedWidgets
 import cmpt370.group12.laptracker.view.theme.LapTrackerTheme
 
-class MainUITracking : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            LapTrackerTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                        modifier = Modifier.fillMaxSize(),
-                        color = MaterialTheme.colorScheme.background
-                ) {
-
-                    RealTimeUI()
-
-                }
-            }
-        }
-    }
-}
+class MainUITracking {
 
     /*
     The main app composable where everything is added together
     the oncreate function will call this to compose the application
      */
     @Composable
-    fun RealTimeUI () {
-
-        var isRunning by remember {  mutableStateOf (false)}
-        val selectedViewModel = viewModel  <SelectedItemsViewModel>()
+    fun RealTimeUI() {
+        var isRunning by remember { mutableStateOf(false) }
+        val selectedViewModel = viewModel<SelectedItemsViewModel>()
         //val stateClass = MapState()
 
-        Column (
+        Column(
 
                 modifier = Modifier.fillMaxSize()
-        ){
+        ) {
             //DropdownMenu ( selectedViewModel)
-            UIDropdown().DropdownMenu (selectedViewModel)
-            Spacer ( modifier = Modifier.height(16.dp))
+            UIDropdown().DropdownMenu(selectedViewModel)
+            Spacer(modifier = Modifier.height(16.dp))
 
-            DisplaySelectedWidgets ( selectedViewModel)
+            DisplaySelectedWidgets(selectedViewModel)
 
-            Spacer ( modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             /*
             BottomButton(
@@ -74,3 +57,5 @@ class MainUITracking : ComponentActivity() {
              */
         }
     }
+}
+
