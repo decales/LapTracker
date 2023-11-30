@@ -44,6 +44,7 @@ import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.Polyline
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class StartView(
@@ -172,6 +173,12 @@ class StartView(
                 modifier = Modifier.align(Alignment.BottomStart)
             ) {
                 Text(text = "Undo")
+            }
+            viewModel.achievements.ShowAchievement("Created First Track", viewModel.update, false)
+            LaunchedEffect(Unit) {
+                viewModel.update = true
+                delay(2000)
+                viewModel.update = false
             }
         }
     }
