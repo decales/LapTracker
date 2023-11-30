@@ -56,7 +56,7 @@ fun AchievementsScreen(achievements: Achievements, achievementStatusInit: Snapsh
         ) {
             //Run these lines of code everytime you want to update an achievement
             achievementStatus["Created First Track"]?.let {
-                achievements.ShowAchievement("Created First Track", update, it
+                achievements.ShowAchievement("Created First Track", true, it
                 )
             }
             //This if is for demonstration purposes only

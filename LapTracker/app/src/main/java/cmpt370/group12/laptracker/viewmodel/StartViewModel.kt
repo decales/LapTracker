@@ -12,6 +12,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import cmpt370.group12.laptracker.Achievements
 import cmpt370.group12.laptracker.R
 import cmpt370.group12.laptracker.model.LocationClient
 import cmpt370.group12.laptracker.model.domain.model.MapPoint
@@ -58,6 +59,10 @@ class StartViewModel @Inject constructor(
     var color = Color(0, 153, 0)
     var textTracking = "Start Tracking"
     var thread = mutableStateOf<Job?>(null)
+
+    //Achievements
+    val achievements = Achievements()
+    var update by mutableStateOf(false)
 
 
     // Tracking UI variables
