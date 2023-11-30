@@ -1,47 +1,32 @@
 package cmpt370.group12.laptracker.viewmodel
 
-import android.location.Location
-import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalView
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import cmpt370.group12.laptracker.R
 import cmpt370.group12.laptracker.model.LocationClient
 import cmpt370.group12.laptracker.model.domain.model.MapPoint
 import cmpt370.group12.laptracker.model.domain.repository.LapTrackerRepository
-import cmpt370.group12.laptracker.view.MainActivity
-import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.MapProperties
-import com.google.maps.android.compose.MapType
 import com.google.maps.android.compose.MapUiSettings
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.async
-import kotlinx.coroutines.cancelFutureOnCompletion
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.coroutines.CoroutineContext
 
 @HiltViewModel
 class StartViewModel @Inject constructor(
@@ -51,16 +36,16 @@ class StartViewModel @Inject constructor(
     lateinit var locationClient: LocationClient // Passed in nav controller in MainActivity
 
     enum class ViewState {
-        chooseMode,
-        newTrack,
-        loadTrack,
-        saveTrack,
-        inRun,
-        postRun,
-        noServices
+        ChooseMode,
+        NewTrack,
+        LoadTrack,
+        SaveTrack,
+        InRun,
+        PostRun,
+        NoServices
     }
 
-    var viewState: MutableState<ViewState> = mutableStateOf(ViewState.chooseMode)
+    var viewState: ViewState by mutableStateOf(ViewState.ChooseMode)
 
     var points = mutableStateListOf<Point>()
     var setToggle = mutableStateOf(false)
@@ -72,12 +57,14 @@ class StartViewModel @Inject constructor(
     var textTracking = "Start Tracking"
     var thread = mutableStateOf<Job?>(null)
 
+
     // Tracking UI variables
     var mapPoints = mutableListOf<MapPoint>()
     var currentLocation = mutableStateOf(LatLng(0.0, 0.0))
     var distance = mutableDoubleStateOf(0.0)
     var laps = mutableIntStateOf(0)
     var next = mutableStateOf("")
+
 
     //Map variables
     var cameraState = mutableStateOf(CameraPositionState())
