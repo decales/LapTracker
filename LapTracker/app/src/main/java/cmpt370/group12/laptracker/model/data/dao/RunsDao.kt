@@ -2,8 +2,9 @@ package cmpt370.group12.laptracker.model.data.dao
 
 import androidx.room.Dao
 import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Upsert
 import cmpt370.group12.laptracker.model.data.entities.RunsEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -14,8 +15,8 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface RunsDao {
-    @Upsert
-    suspend fun Runs_insert(runs: RunsEntity)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun Runs_insert(runs: RunsEntity):Long
 
     @Delete
     suspend fun Runs_delete(runs: RunsEntity)
@@ -23,10 +24,19 @@ interface RunsDao {
     @Query("SELECT * FROM runsentity WHERE fromTrackId =:trackId")
     suspend fun Runs_getByTrackId(trackId: Int): List<RunsEntity>
 
+    @Query("SELECT * FROM runsentity WHERE fromTrackId =:trackId")
+    fun Runs_getByTrackIdFlow(trackId: Int): Flow<List<RunsEntity>>
+
     @Query("SELECT * FROM runsentity")
     fun Runs_getAllFlow(): Flow<List<RunsEntity>>
 
     @Query("SELECT * FROM runsentity")
-    fun Runs_getAll(): List<RunsEntity>
+    suspend fun Runs_getAll(): List<RunsEntity>
+    @Query("SELECT * FROM runsentity ORDER BY (endTime - startTime) ASC LIMIT 1")
+    suspend fun Runs_getMin(): RunsEntity
+
+    @Query("SELECT * FROM runsentity ORDER BY (endTime - startTime) DESC LIMIT 1")
+    suspend fun Runs_getMax(): RunsEntity
+
 }
 
