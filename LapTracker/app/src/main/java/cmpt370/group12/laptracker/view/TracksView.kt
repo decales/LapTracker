@@ -201,7 +201,7 @@ class TracksView(
             }
             else {
                 Box(
-                    contentAlignment = Alignment.Center,
+                    contentAlignment = Center,
                     modifier = Modifier.fillMaxSize()
                 ) {
                     Text(text = "It's empty in here :(")

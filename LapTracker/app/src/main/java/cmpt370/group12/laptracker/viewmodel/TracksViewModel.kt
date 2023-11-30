@@ -29,7 +29,6 @@ class TracksViewModel @Inject constructor(
         var isSelected: MutableState<Boolean>
     )
 
-    // Public
     val tracksCards: MutableState<List<TrackCard>> = mutableStateOf(emptyList())
     var currentTrackDetails: Track by mutableStateOf(Track(null, "", "", "", 0))
     var currentTrackDetailsRuns: List<Runs> by mutableStateOf(emptyList())

@@ -1,9 +1,10 @@
 package cmpt370.group12.laptracker.view
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -15,14 +16,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -34,7 +33,6 @@ import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
-import javax.annotation.meta.When
 
 class StartView(
     private val viewModel: StartViewModel
@@ -45,21 +43,22 @@ class StartView(
         - All data is stored retrieved from class view model */
     @Composable
     fun View() {
-        // Immediately check location services
-        if (!viewModel.locationClient.servicesEnabled() || !viewModel.locationClient.hasLocationPermissions()) viewModel.viewState.value = StartViewModel.ViewState.noServices
-        else viewModel.viewState.value = StartViewModel.ViewState.chooseMode
+        //Immediately check location services
+        if (!viewModel.locationClient.servicesEnabled() || !viewModel.locationClient.hasLocationPermissions()) viewModel.viewState = StartViewModel.ViewState.NoServices
 
-        MapView()
         Column {
             Header()
-            when(viewModel.viewState.value) {
-                StartViewModel.ViewState.chooseMode -> ChooseModeView()
-                StartViewModel.ViewState.newTrack -> NewTrackView()
-                StartViewModel.ViewState.loadTrack -> LoadTrackView()
-                StartViewModel.ViewState.saveTrack -> SaveTrackView()
-                StartViewModel.ViewState.inRun -> InRunView()
-                StartViewModel.ViewState.postRun -> PostRunView()
-                StartViewModel.ViewState.noServices -> NoServicesView()
+            Box {
+                MapView()
+                when(viewModel.viewState) {
+                    StartViewModel.ViewState.ChooseMode -> ChooseModeView()
+                    StartViewModel.ViewState.NewTrack -> NewTrackView()
+                    StartViewModel.ViewState.LoadTrack -> LoadTrackView()
+                    StartViewModel.ViewState.SaveTrack -> SaveTrackView()
+                    StartViewModel.ViewState.InRun -> InRunView()
+                    StartViewModel.ViewState.PostRun -> PostRunView()
+                    StartViewModel.ViewState.NoServices -> NoServicesView()
+                }
             }
         }
     }
@@ -79,46 +78,38 @@ class StartView(
         }
     }
 
-    @Composable
-    fun ChooseModeView() {
-        Card {
-            Column {
-                Button(onClick = { /*TODO*/ }) {
-                    Text(text = "New Track")
-                }
-                Button(onClick = { /*TODO*/ }) {
-                    Text(text = "Load Track")
-                }
-            }
-        }
-    }
 
     @Composable
-    fun NoServicesView() {
-        var refresh by remember { mutableIntStateOf(0) } // Arbitrary var that recomposes the screen upon updating
-        Card {
+    fun ChooseModeView() {
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = 200.dp, bottom = 200.dp, start = 50.dp, end = 50.dp)
+        ) {
             Column {
-                Icon(
-                    painter = painterResource(id = R.drawable.startview_noservices),
-                    contentDescription = "startview_noservices",
-                    modifier = Modifier.size(48.dp)
-                )
-                Text(text = refresh.toString(), color = Color.Transparent) // composable with var must be in parent composable to trigger recompose
-                if (!viewModel.locationClient.servicesEnabled()) {
-                    Text(text = "Location services not enabled", fontSize = 20.sp, modifier = Modifier.padding(bottom = 20.dp))
-                    Text(text = "Please enable your device's cellular and/or GPS services to continue.")
-                    Spacer(modifier = Modifier.weight(1.0f))
-                }
-                else {
-                    Text(text = "Location permissions not granted", fontSize = 20.sp, modifier = Modifier.padding(bottom = 20.dp))
-                    Text(text = "Please allow access to your device's precise location to continue.")
-                    Spacer(modifier = Modifier.weight(1.0f))
-                    Button(onClick = { viewModel.locationClient.getLocationPermission() }) {
-                        Text(text = "Permissions")
+                listOf(
+                    Triple("New Track", R.drawable.ic_launcher_foreground) { viewModel.viewState = StartViewModel.ViewState.NewTrack },
+                    Triple("Load Track", R.drawable.ic_launcher_foreground) { viewModel.viewState = StartViewModel.ViewState.LoadTrack }
+                ).forEach { item ->
+                    Card(modifier = Modifier
+                        .fillMaxSize()
+                        .weight(0.5F)
+                        .padding(10.dp)
+                        .shadow(20.dp)
+                        .clickable { item.third }
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceEvenly,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(start = 20.dp, end = 20.dp)
+                        ) {
+                            Text(text = item.first, fontSize = 24.sp)
+                            Icon(painter = painterResource(id = item.second), contentDescription = "")
+                        }
                     }
-                }
-                Button(onClick = { refresh++}) {
-                    Text(text = "Refresh")
                 }
             }
         }
@@ -127,31 +118,69 @@ class StartView(
 
     @Composable
     fun LoadTrackView() {
-
+        Text(text = "load")
     }
 
 
     @Composable
     fun NewTrackView() {
-
+        Text(text = "new track")
     }
 
 
     @Composable
     fun SaveTrackView() {
-
+        Text(text = "save track")
     }
 
 
     @Composable
     fun InRunView() {
-
+        Text(text = "in run")
     }
 
 
     @Composable
     fun PostRunView() {
+        Text(text = "post")
+    }
 
+
+    @Composable
+    fun NoServicesView() {
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(start = 50.dp, end = 50.dp)
+        ) {
+            Card {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.padding(20.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.startview_noservices),
+                        contentDescription = "",
+                        modifier = Modifier.size(48.dp)
+                    )
+                    if (!viewModel.locationClient.servicesEnabled()) {
+                        Text(text = "Location services not enabled", fontSize = 20.sp, modifier = Modifier.padding(bottom = 20.dp))
+                        Text(text = "Please enable your device's cellular and/or GPS services to continue.", modifier = Modifier.padding(bottom = 20.dp))
+                    }
+                    else {
+                        Text(text = "Location permissions not granted", fontSize = 20.sp, modifier = Modifier.padding(bottom = 20.dp))
+                        Text(text = "Please allow access to your device's precise location to continue.", modifier = Modifier.padding(bottom = 20.dp))
+                        Button(onClick = { viewModel.locationClient.getLocationPermission() }) {
+                            Text(text = "Permissions")
+                        }
+                    }
+                    Button(onClick = { viewModel.viewState = StartViewModel.ViewState.ChooseMode }) {
+                        Text(text = "Refresh")
+                    }
+                }
+            }
+        }
     }
 
 
