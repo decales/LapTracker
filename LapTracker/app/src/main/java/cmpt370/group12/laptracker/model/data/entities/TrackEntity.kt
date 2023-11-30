@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 data class TrackEntity(
     //id : This is the Primary Key For Database Entry into Table AchievementEntity
     @PrimaryKey(autoGenerate = true)
-    val id: Int? = null,
+    val id: Long = 0L,
     //name is the Title of the achievement
     val name: String = "",
     val location: String = "",

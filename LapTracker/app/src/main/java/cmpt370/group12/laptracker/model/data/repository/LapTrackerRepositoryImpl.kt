@@ -113,15 +113,15 @@ class LapTrackerRepositoryImpl(
 
 
     // ###################### RUN FUNCTIONS ######################
-    override suspend fun Runs_insert(runs: Runs){
-        runsDao.Runs_insert(runs.toRunsEntity())
+    override suspend fun Runs_insert(runs: Runs) : Long {
+        return runsDao.Runs_insert(runs.toRunsEntity())
     }
 
     override suspend fun Runs_delete(runs: Runs){
         runsDao.Runs_delete(runs.toRunsEntity())
     }
 
-    override suspend fun Runs_getByTrackId(trackId: Int): List<Runs>{
+    override suspend fun Runs_getByTrackId(trackId: Long?): List<Runs>{
         return runsDao.Runs_getByTrackId(trackId).map { it.toRuns() }
     }
 
@@ -169,8 +169,8 @@ class LapTrackerRepositoryImpl(
 
 
     // ###################### TRACK FUNCTIONS ######################
-    override suspend fun Track_insert(track: Track){
-        trackDao.Track_insert(track.toTrackEntity())
+    override suspend fun Track_insert(track: Track): Long {
+        return trackDao.Track_insert(track.toTrackEntity())
     }
 
     override suspend fun Track_delete(track: Track){

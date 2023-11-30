@@ -34,17 +34,18 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.DialogWindowProvider
+import androidx.core.content.ContextCompat
 import cmpt370.group12.laptracker.R
 import cmpt370.group12.laptracker.presentation.GetAverageSpeed
 import cmpt370.group12.laptracker.presentation.GetTotalDistance
@@ -67,8 +68,9 @@ class TracksView(
             Header()
             if (!viewModel.trackDetailsVisible) TrackListView()
             else TrackDetailsView()
+            if (viewModel.deleteConfirmationVisible) DeleteConfirmation()
         }
-        if (viewModel.deleteConfirmationVisible) DeleteConfirmation()
+
     }
 
 
@@ -113,7 +115,7 @@ class TracksView(
             }
             FilledIconToggleButton(
                 checked = viewModel.deleteModeToggled,
-                onCheckedChange = { viewModel.toggleDeleteMode()},
+                onCheckedChange = { viewModel.deleteModeToggled = !viewModel.deleteModeToggled},
                 modifier = Modifier.padding(start = 5.dp)
             ) {
                 Icon(painter = painterResource(id = R.drawable.tracksview_delete),
@@ -127,7 +129,7 @@ class TracksView(
     @Composable
     fun TrackList() {
         Card(
-            colors = CardDefaults.cardColors(Color(0xff1c212d)),
+            colors = CardDefaults.cardColors(Color(ContextCompat.getColor(LocalContext.current, R.color.cardSecondary))),
             modifier = Modifier.fillMaxSize()
         ) {
             if (viewModel.tracksCards.value.isNotEmpty()) {
@@ -162,9 +164,7 @@ class TracksView(
                                         .padding(bottom = 25.dp)
                                         .fillMaxWidth()
                                         .clickable {
-                                            if (viewModel.deleteModeToggled) viewModel.toggleSelectTrack(
-                                                trackCard
-                                            )
+                                            if (viewModel.deleteModeToggled) viewModel.toggleSelectTrack(trackCard)
                                             else viewModel.toggleTrackDetails(trackCard.track)
                                         }
                                 ) {
@@ -199,7 +199,7 @@ class TracksView(
             }
             else {
                 Box(
-                    contentAlignment = Alignment.Center,
+                    contentAlignment = Center,
                     modifier = Modifier.fillMaxSize()
                 ) {
                     Text(text = "It's empty in here :(")
@@ -213,7 +213,7 @@ class TracksView(
     @Composable
     fun TrackDetailsView() {// TODO give this an enter and exit animation
         Card(
-            colors = CardDefaults.cardColors(Color(0xff1c212d)),
+            colors = CardDefaults.cardColors(Color(ContextCompat.getColor(LocalContext.current, R.color.cardSecondary))),
             modifier = Modifier.fillMaxSize()
         ) {
             Column(
@@ -250,7 +250,7 @@ class TracksView(
                 .fillMaxWidth()
         ) {
             OutlinedIconButton( // Back button
-                onClick = { viewModel.toggleTrackDetails() }
+                onClick = { viewModel.trackDetailsVisible = !viewModel.trackDetailsVisible }
             ) {
                 Icon(painter = painterResource(id = R.drawable.tracksview_back), contentDescription = "tracksview_detailsback")
             }
@@ -301,11 +301,11 @@ class TracksView(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = CenterHorizontally
         ) {
-            Text(text = "Average Speed: %.2f km/h".format(GetAverageSpeed(0)))
-            Text(text = "Total Distance Travelled: %.2f km".format(GetTotalDistance(0)))
-            Text(text = "Total Time Spent on Track: %02d:%02d".format(GetTotalTimeSpentOnTrack(0)))
+//            Text(text = "Average Speed: %.2f km/h".format(GetAverageSpeed(0)))
+//            Text(text = "Total Distance Travelled: %.2f km".format(GetTotalDistance(0)))
+//            Text(text = "Total Time Spent on Track: %02d:%02d".format(GetTotalTimeSpentOnTrack(0)))
         }
     }
 

@@ -28,7 +28,6 @@ interface RuntimesDao {
 
     @Query("SELECT * FROM runtimesentity")
     fun RunTimes_getAllFlow(): Flow<List<RunTimesEntity>>
-
 }
 
 

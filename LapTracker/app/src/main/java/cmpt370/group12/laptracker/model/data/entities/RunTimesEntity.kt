@@ -14,6 +14,5 @@ data class RunTimesEntity(
     // fromMapPointId: This is a reference to the primary Key "id" for the MapPointEntity Table
     val fromMapPointId: Int =0,
     // timestamp: this is the timestamp when this point was reached in the run
-
     val timestamp: Long = 0
 )

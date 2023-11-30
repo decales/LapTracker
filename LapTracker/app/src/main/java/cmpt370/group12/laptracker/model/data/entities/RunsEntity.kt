@@ -1,6 +1,7 @@
 package cmpt370.group12.laptracker.model.data.entities
 
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import java.sql.Timestamp
 
