@@ -77,7 +77,7 @@ fun RealTimeUI () {
 
         Spacer ( modifier = Modifier.height(16.dp))
 
-        DisplaySelectedWidgets ( selectedViewModel)
+        //DisplaySelectedWidgets ( selectedViewModel)
 
         Spacer ( modifier = Modifier.height(16.dp))
 
@@ -392,7 +392,7 @@ class SelectedItemsViewModel : ViewModel() {
 //external composable for displaying the selected widget within the
 //dropdown menu of radio boxes
 @Composable
-fun DisplaySelectedWidgets ( selectedViewModel: SelectedItemsViewModel) {
+fun DisplaySelectedWidgets (selectedViewModel: cmpt370.group12.laptracker.ui.SelectedItemsViewModel) {
 
     val selectedItems = selectedViewModel.selectedItems.value
     val stateClass = MapState()

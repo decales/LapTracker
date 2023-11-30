@@ -32,6 +32,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import cmpt370.group12.laptracker.R
 import cmpt370.group12.laptracker.model.LocationClient
+import cmpt370.group12.laptracker.ui.MainUITracking
 import cmpt370.group12.laptracker.view.main.SettingsView
 import cmpt370.group12.laptracker.view.main.StartView
 import cmpt370.group12.laptracker.view.theme.LapTrackerTheme
@@ -57,6 +58,7 @@ override fun onCreate(savedInstanceState: Bundle?) {
                 ) { navBarPadding ->
                     NavigationView(controller, navBarPadding)
                 }
+
             }
             }
         }
