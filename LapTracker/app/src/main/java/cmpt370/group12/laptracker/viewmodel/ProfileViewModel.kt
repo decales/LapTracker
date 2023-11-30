@@ -38,18 +38,22 @@ class ProfileViewModel @Inject constructor(
         if (fetched.isNotEmpty()) achievements.value = fetched
         else { // On app install, populate db with achievements
             listOf(
+                // TODO replace with actual achievement names, descriptions, and icons
                 Achievement(null, "name1", "desc", false, R.drawable.ic_launcher_foreground, 0),
                 Achievement(null, "name2", "desc", false, R.drawable.ic_launcher_foreground, 0),
                 Achievement(null, "name3", "desc", false, R.drawable.ic_launcher_foreground, 0),
                 Achievement(null, "name4", "desc", false, R.drawable.ic_launcher_foreground, 0),
                 Achievement(null, "name5", "desc", false, R.drawable.ic_launcher_foreground, 0),
                 Achievement(null, "name6", "desc", false, R.drawable.ic_launcher_foreground, 0),
-                Achievement(null, "name6", "desc", false, R.drawable.ic_launcher_foreground, 0),
-                Achievement(null, "name6", "desc", false, R.drawable.ic_launcher_foreground, 0),
-                Achievement(null, "name6", "desc", false, R.drawable.ic_launcher_foreground, 0),
-                Achievement(null, "name6", "desc", false, R.drawable.ic_launcher_foreground, 0),
-                Achievement(null, "name6", "desc", false, R.drawable.ic_launcher_foreground, 0),
-                Achievement(null, "name6", "desc", false, R.drawable.ic_launcher_foreground, 0)
+                Achievement(null, "name7", "desc", false, R.drawable.ic_launcher_foreground, 0),
+                Achievement(null, "name8", "desc", false, R.drawable.ic_launcher_foreground, 0),
+                Achievement(null, "name9", "desc", false, R.drawable.ic_launcher_foreground, 0),
+                Achievement(null, "name10", "desc", false, R.drawable.ic_launcher_foreground, 0),
+                Achievement(null, "name11", "desc", false, R.drawable.ic_launcher_foreground, 0),
+                Achievement(null, "name12", "desc", false, R.drawable.ic_launcher_foreground, 0),
+                Achievement(null, "name13", "desc", false, R.drawable.ic_launcher_foreground, 0),
+                Achievement(null, "name14", "desc", false, R.drawable.ic_launcher_foreground, 0),
+                Achievement(null, "name15", "desc", false, R.drawable.ic_launcher_foreground, 0)
             ).forEach { achievement -> db.Achievement_insert(achievement) }
             achievements.value = db.Achievement_getAll()
         }

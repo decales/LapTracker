@@ -36,59 +36,41 @@ fun MapScreen(
             }
         }
     ) {
-        Column() {
-            Row() {
-
-                Row() {
-
-                    GoogleMap(
-                        modifier = Modifier
-                            .fillMaxSize(),
-
-                        properties = viewModel.mapstate.value.properties,
-                        uiSettings = viewModel.mapstate.value.uiSettings,
-                        onMapLongClick = {
-                            viewModel.onEvent(AppEvent.OnMapLongClick(it))
-                        }
+        GoogleMap(
+            properties = viewModel.mapstate.value.properties,
+            uiSettings = viewModel.mapstate.value.uiSettings,
+            onMapLongClick = { viewModel.onEvent(AppEvent.OnMapLongClick(it)) },
+            modifier = Modifier.fillMaxSize(),
+        ) {
+            Marker(
+                state = MarkerState(
+                    LatLng(
+                        viewModel.mapstate.value.currentLocation?.latitude!!,
+                        viewModel.mapstate.value.currentLocation?.longitude!!
                     )
-                    {
-
-                        Marker(
-                            state = MarkerState(
-                                LatLng(
-                                    viewModel.mapstate.value.currentLocation?.latitude!!,
-                                    viewModel.mapstate.value.currentLocation?.longitude!!
-                                )
-                            ),
-                            title = "ME",
-                            icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)
+                ),
+                title = "ME",
+                icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)
+            )
+            viewModel.trackstate.value.mapPoints.forEach { mappoint ->
+                Marker(
+                    state = MarkerState(LatLng(mappoint.latitude, mappoint.longitude)),
+                    title = "(${mappoint.latitude}, ${mappoint.longitude})",
+                    snippet = "Long click to delete",
+                    onInfoWindowLongClick = {
+                        viewModel.onEvent(
+                            AppEvent.OnInfoWindowLongClick(mappoint)
                         )
-
-
-                        viewModel.trackstate.value.mapPoints.forEach { mappoint ->
-                            Marker(
-                                state = MarkerState(LatLng(mappoint.latitude, mappoint.longitude)),
-                                title = "(${mappoint.latitude}, ${mappoint.longitude})",
-                                snippet = "Long click to delete",
-                                onInfoWindowLongClick = {
-                                    viewModel.onEvent(
-                                        AppEvent.OnInfoWindowLongClick(mappoint)
-                                    )
-                                },
-                                onClick = {
-                                    it.showInfoWindow()
-                                    true
-                                },
-                                icon = BitmapDescriptorFactory.defaultMarker(
-                                    BitmapDescriptorFactory.HUE_GREEN
-                                )
-                            )
-                        }
-
-                    }
-                }
+                    },
+                    onClick = {
+                        it.showInfoWindow()
+                        true
+                    },
+                    icon = BitmapDescriptorFactory.defaultMarker(
+                        BitmapDescriptorFactory.HUE_GREEN
+                    )
+                )
             }
-
         }
     }
 }

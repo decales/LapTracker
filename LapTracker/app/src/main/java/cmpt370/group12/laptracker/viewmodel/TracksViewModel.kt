@@ -6,13 +6,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import cmpt370.group12.laptracker.R
 import cmpt370.group12.laptracker.model.domain.model.Runs
 import cmpt370.group12.laptracker.model.domain.model.Track
 import cmpt370.group12.laptracker.model.domain.repository.LapTrackerRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -29,17 +27,12 @@ class TracksViewModel @Inject constructor(
         var isSelected: MutableState<Boolean>
     )
 
-    // Public
     val tracksCards: MutableState<List<TrackCard>> = mutableStateOf(emptyList())
-    var currentTrackDetails: Track by mutableStateOf(Track(null, "", "", 0))
+    var currentTrackDetails: Track by mutableStateOf(Track(null, "", "", "", 0))
     var currentTrackDetailsRuns: List<Runs> by mutableStateOf(emptyList())
     var trackDetailsVisible by mutableStateOf(false)
     var deleteConfirmationVisible by mutableStateOf(false)
     var deleteModeToggled by mutableStateOf(false)
-
-    fun toggleDeleteMode() {
-        deleteModeToggled = !deleteModeToggled
-    }
 
     fun toggleTrackDetails(selectedTrack: Track) {
         viewModelScope.launch{
@@ -47,10 +40,6 @@ class TracksViewModel @Inject constructor(
             currentTrackDetails = selectedTrack
             fetchTrackRuns()
         }
-    }
-
-    fun toggleTrackDetails() {
-        trackDetailsVisible =!trackDetailsVisible
     }
 
     fun toggleSelectTrack(trackCard: TrackCard) {
@@ -76,7 +65,7 @@ class TracksViewModel @Inject constructor(
             db.Track_delete(currentTrackDetails)
             fetchTracks()
             toggleDeleteConfirmation()
-            toggleTrackDetails()
+            trackDetailsVisible = !trackDetailsVisible
         }
     }
 
@@ -88,14 +77,14 @@ class TracksViewModel @Inject constructor(
 
     private suspend fun fetchTrackRuns() {
         viewModelScope.launch {
-            currentTrackDetailsRuns = db.Runs_getByTrackId(currentTrackDetails.id!!)
+            currentTrackDetailsRuns = db.Runs_getByTrackId(currentTrackDetails.id)
         }
     }
 
     fun addTrack() { // TODO temporary for testing, remove later
         viewModelScope.launch{
             val i = (Math.random() * 1000).toInt()
-            db.Track_insert(Track(null, "test $i", "test $i", R.drawable.ic_launcher_foreground))
+            db.Track_insert(Track(null, "test $i", "test $i", "test comment", R.drawable.ic_launcher_foreground))
             fetchTracks()
         }
     }

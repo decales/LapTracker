@@ -18,6 +18,7 @@ interface TrackDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun Track_insert(track: TrackEntity): Long
+
     @Delete
     suspend fun Track_delete(track: TrackEntity)
 
@@ -28,7 +29,7 @@ interface TrackDao {
     fun Track_getAllFlow(): Flow<List<TrackEntity>>
 
     @Query("SELECT * FROM trackentity")
-    fun Track_getAll(): List<TrackEntity>
+    suspend fun Track_getAll(): List<TrackEntity>
 }
 
 
