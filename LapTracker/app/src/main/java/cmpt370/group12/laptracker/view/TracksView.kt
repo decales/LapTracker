@@ -34,7 +34,6 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
@@ -69,8 +68,9 @@ class TracksView(
             Header()
             if (!viewModel.trackDetailsVisible) TrackListView()
             else TrackDetailsView()
+            if (viewModel.deleteConfirmationVisible) DeleteConfirmation()
         }
-        if (viewModel.deleteConfirmationVisible) DeleteConfirmation()
+
     }
 
 
@@ -115,7 +115,7 @@ class TracksView(
             }
             FilledIconToggleButton(
                 checked = viewModel.deleteModeToggled,
-                onCheckedChange = { viewModel.toggleDeleteMode()},
+                onCheckedChange = { viewModel.deleteModeToggled = !viewModel.deleteModeToggled},
                 modifier = Modifier.padding(start = 5.dp)
             ) {
                 Icon(painter = painterResource(id = R.drawable.tracksview_delete),
@@ -164,9 +164,7 @@ class TracksView(
                                         .padding(bottom = 25.dp)
                                         .fillMaxWidth()
                                         .clickable {
-                                            if (viewModel.deleteModeToggled) viewModel.toggleSelectTrack(
-                                                trackCard
-                                            )
+                                            if (viewModel.deleteModeToggled) viewModel.toggleSelectTrack(trackCard)
                                             else viewModel.toggleTrackDetails(trackCard.track)
                                         }
                                 ) {
@@ -252,7 +250,7 @@ class TracksView(
                 .fillMaxWidth()
         ) {
             OutlinedIconButton( // Back button
-                onClick = { viewModel.toggleTrackDetails() }
+                onClick = { viewModel.trackDetailsVisible = !viewModel.trackDetailsVisible }
             ) {
                 Icon(painter = painterResource(id = R.drawable.tracksview_back), contentDescription = "tracksview_detailsback")
             }
