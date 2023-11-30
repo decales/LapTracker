@@ -6,13 +6,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import cmpt370.group12.laptracker.R
 import cmpt370.group12.laptracker.model.domain.model.Runs
 import cmpt370.group12.laptracker.model.domain.model.Track
 import cmpt370.group12.laptracker.model.domain.repository.LapTrackerRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -36,20 +34,12 @@ class TracksViewModel @Inject constructor(
     var deleteConfirmationVisible by mutableStateOf(false)
     var deleteModeToggled by mutableStateOf(false)
 
-    fun toggleDeleteMode() {
-        deleteModeToggled = !deleteModeToggled
-    }
-
     fun toggleTrackDetails(selectedTrack: Track) {
         viewModelScope.launch{
             trackDetailsVisible = !trackDetailsVisible
             currentTrackDetails = selectedTrack
             fetchTrackRuns()
         }
-    }
-
-    fun toggleTrackDetails() {
-        trackDetailsVisible =!trackDetailsVisible
     }
 
     fun toggleSelectTrack(trackCard: TrackCard) {
@@ -75,7 +65,7 @@ class TracksViewModel @Inject constructor(
             db.Track_delete(currentTrackDetails)
             fetchTracks()
             toggleDeleteConfirmation()
-            toggleTrackDetails()
+            trackDetailsVisible = !trackDetailsVisible
         }
     }
 
@@ -87,7 +77,7 @@ class TracksViewModel @Inject constructor(
 
     private suspend fun fetchTrackRuns() {
         viewModelScope.launch {
-            currentTrackDetailsRuns = db.Runs_getByTrackId(currentTrackDetails.id!!)
+            currentTrackDetailsRuns = db.Runs_getByTrackId(currentTrackDetails.id)
         }
     }
 

@@ -1,18 +1,21 @@
 package cmpt370.group12.laptracker.viewmodel
 
-import androidx.compose.runtime.MutableState
+import android.location.Geocoder
+import android.location.Location
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cmpt370.group12.laptracker.R
 import cmpt370.group12.laptracker.model.LocationClient
 import cmpt370.group12.laptracker.model.domain.model.MapPoint
+import cmpt370.group12.laptracker.model.domain.model.Track
 import cmpt370.group12.laptracker.model.domain.repository.LapTrackerRepository
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
@@ -24,13 +27,13 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class StartViewModel @Inject constructor(
-    private val db: LapTrackerRepository
+    val db: LapTrackerRepository
 ) : ViewModel() {
 
     lateinit var locationClient: LocationClient // Passed in nav controller in MainActivity
@@ -47,7 +50,6 @@ class StartViewModel @Inject constructor(
 
     var viewState: ViewState by mutableStateOf(ViewState.ChooseMode)
 
-    var points = mutableStateListOf<Point>()
     var setToggle = mutableStateOf(false)
     val scope = CoroutineScope(Dispatchers.Main)
     var textSetPoints = "Set start"
@@ -59,19 +61,18 @@ class StartViewModel @Inject constructor(
 
 
     // Tracking UI variables
-    var mapPoints = mutableListOf<MapPoint>()
-    var currentLocation = mutableStateOf(LatLng(0.0, 0.0))
+
+    var mapPoints:SnapshotStateList<LatLng> = mutableStateListOf()
+    var currentLocation: Location? by mutableStateOf(null)
     var distance = mutableDoubleStateOf(0.0)
     var laps = mutableIntStateOf(0)
     var next = mutableStateOf("")
 
 
     //Map variables
-    var cameraState = mutableStateOf(CameraPositionState())
-    var cameraJob: MutableState<Job?> = mutableStateOf(null)
-    var mapIsEnabled = mutableStateOf(false)
-    var mapProperties = mutableStateOf(MapProperties())
-    var mapSettings = mutableStateOf(MapUiSettings(
+    var mapIsEnabled:Boolean by mutableStateOf(false)
+    var mapProperties:MapProperties by mutableStateOf(MapProperties())
+    var mapSettings:MapUiSettings by mutableStateOf(MapUiSettings(
         zoomControlsEnabled = false,
         zoomGesturesEnabled = false,
         scrollGesturesEnabled = false,
@@ -90,7 +91,6 @@ class StartViewModel @Inject constructor(
         val latlon: Pair<Double, Double>,
         val name: String,
         var isPassed: Boolean
-
     )
 
     // TODO Dummy values, replace with array of database query result
@@ -107,23 +107,13 @@ class StartViewModel @Inject constructor(
     }
 
 
-    suspend fun getProximityFlow(latlon: Pair<Double, Double>): Flow<Double>? {
-        return this.locationClient.getProximityFlow(latlon)
-    }
-
-
-    suspend fun getAverageLocation(): LatLng {
-        return this.locationClient.getAverageLocation(6)
-    }
-
     fun enableMap() {
-        mapIsEnabled.value = true
-        mapSettings.value = MapUiSettings()
+        mapSettings = MapUiSettings()
     }
+
 
     fun disableMap() {
-        mapIsEnabled.value = false
-        mapSettings.value = MapUiSettings(
+        mapSettings = MapUiSettings(
             zoomControlsEnabled = false,
             zoomGesturesEnabled = false,
             scrollGesturesEnabled = false,
@@ -132,32 +122,61 @@ class StartViewModel @Inject constructor(
     }
 
 
-//    fun prepareSettingPoints() {
-//        locationClient.startLocationFlow(1.0)
-//        viewModelScope.launch {
-//
-//            val location = locationClient.getCurrentLocation()
-//            currentLocation.value = LatLng(location!!.latitude, location.longitude)
-//
-//            mapIsEnabled.value = true
-//            async { panMapCameraToCurrentLocation() }.await()
-//            enableMap()
-//        }
-//    }
+    fun launchChooseMode() {
+        mapPoints.clear()
+        viewState = ViewState.ChooseMode
+        mapIsEnabled = false
+        disableMap()
+    }
+
+
+    fun launchNewTrack() {
+        viewModelScope.launch {
+            locationClient.startLocationFlow(0.5)
+            currentLocation = locationClient.getCurrentLocation()
+            viewState = ViewState.NewTrack
+            mapIsEnabled = true
+        }
+    }
+
+    fun launchInRun() {
+        viewState = ViewState.InRun
+        disableMap()
+    }
 
 
     fun panMapCamera(cameraState: CameraPositionState) {
-        cameraJob.value = viewModelScope.launch {
-            while (!mapIsEnabled.value) {
+        viewModelScope.launch {
+            while (!mapIsEnabled) {
                 cameraState.animate(CameraUpdateFactory.scrollBy(1000F, 0F), 60000)
             }
         }
     }
 
 
-    suspend fun panMapCameraToCurrentLocation(cameraState: CameraPositionState) {
-       cameraState.animate(
-            CameraUpdateFactory.newCameraPosition(CameraPosition(currentLocation.value, 18.0F, 0.0F, 0.0F)), 2000
-       )
+    fun panMapCameraToCurrentLocation(cameraState: CameraPositionState) {
+        disableMap()
+        viewModelScope.launch {
+            async {
+                cameraState.animate(
+                    CameraUpdateFactory.newCameraPosition
+                        (CameraPosition(LatLng(currentLocation!!.latitude, currentLocation!!.longitude), 18.0F, 0.0F, 0.0F)), 2000
+                )
+            }.invokeOnCompletion {
+                currentLocation = locationClient.locationFlow.value
+                enableMap()
+            }
+        }
+    }
+
+    fun saveTrack(nameInput: String, geoCoder: Geocoder) {
+        viewModelScope.launch{
+            val location = geoCoder.getFromLocation(mapPoints.first().latitude, mapPoints.first().longitude, 1)
+            val locationStr = "${location?.first()?.locality}\n${location?.first()?.countryName}"
+            val id = db.Track_insert(Track(null, nameInput, locationStr, "", R.drawable.ic_launcher_foreground))
+            mapPoints.forEachIndexed { index, point ->
+                db.MapPoint_insert(MapPoint(null, id.toInt(), point.latitude, point.longitude, "name?", index))
+            }
+        }
     }
 }

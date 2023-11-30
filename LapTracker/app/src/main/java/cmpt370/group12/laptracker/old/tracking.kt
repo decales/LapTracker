@@ -45,7 +45,7 @@ fun trackingView(activity: Activity) {
 
     locationClient.getLocationPermission()
 
-    locationClient.startLocationFlow(1.0)
+    //locationClient.startLocationFlow()
 
 
 
@@ -164,10 +164,10 @@ fun TrackingButton (
                 while (thread?.isActive == true) {
                     points.forEach { point ->
                         next = point.name
-                        locationClient.getProximityFlow(point.latlon)?.first { d -> // Emit from flow until within 2 meters
-                            distance = d // Update UI
-                            d < 2.0
-                        }
+//                        locationClient.getProximityFlow(point.latlon)?.first { d -> // Emit from flow until within 2 meters
+//                            distance = d // Update UI
+//                            d < 2.0
+//                        }
                     }
                     laps += 1 // All points have been reached, +1 lap
                 }
