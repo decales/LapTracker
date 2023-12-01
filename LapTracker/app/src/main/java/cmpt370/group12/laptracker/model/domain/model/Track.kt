@@ -11,5 +11,5 @@ data class Track(
     val comment: String,
     val mapImage: Int,
     val points: List<Pair<Double, Double>>, // latitude, longitude
-    val lapTimes: List<Pair<Long, Long>> // start time, finish time
+    var lapTimes: List<Pair<Long, Long>> // start time, finish time
 )
