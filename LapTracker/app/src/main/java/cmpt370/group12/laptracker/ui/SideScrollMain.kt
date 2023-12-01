@@ -17,10 +17,10 @@ class SideScrollMain {
                 TimerWidget().TimeWidget()
             }
             item {
-                SpeedWidget().SpeedPaceWidget()
+                //SpeedWidget().
             }
             item {
-                DistanceWidget().DistanceWidget()
+                //DistanceWidget().DistanceWidget()
             }
         }
     }

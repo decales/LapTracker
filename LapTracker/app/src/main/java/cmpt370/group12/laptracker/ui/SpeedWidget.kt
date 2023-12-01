@@ -1,5 +1,6 @@
 package cmpt370.group12.laptracker.ui
 
+import android.location.Location
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,11 +11,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.sp
 import cmpt370.group12.laptracker.presentation.MapState
+import cmpt370.group12.laptracker.viewmodel.StartViewModel
 
-class SpeedWidget {
+class SpeedWidget(location: Location) {
 
     //val speed = MapState().currentLocation?.speed
-    val speed =
+    val speed = location.speed
     @Composable
     fun SpeedPaceWidget () {
         Column(

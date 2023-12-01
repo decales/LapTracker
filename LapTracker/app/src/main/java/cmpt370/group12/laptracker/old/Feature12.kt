@@ -36,6 +36,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.*
 import androidx.compose.ui.unit.sp
 import cmpt370.group12.laptracker.presentation.MapState
+import cmpt370.group12.laptracker.ui.TimerWidget
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -49,9 +50,8 @@ class Feature12 : ComponentActivity() {
                         modifier = Modifier.fillMaxSize(),
                         color = MaterialTheme.colorScheme.background
                 ) {
-
                     //RealTimeUI()
-
+                    TimerWidget().TimeWidget()
                 }
             }
         }
@@ -475,7 +475,7 @@ fun Greeting13(name: String, modifier: Modifier = Modifier) {
 @Composable
 fun Prev() {
     LapTrackerTheme {
-        RealTimeUI()
+        //RealTimeUI()
     }
 }
 

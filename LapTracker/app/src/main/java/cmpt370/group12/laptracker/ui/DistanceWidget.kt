@@ -1,6 +1,7 @@
 package cmpt370.group12.laptracker.ui
 
 import android.annotation.SuppressLint
+import android.location.Location
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,18 +11,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import cmpt370.group12.laptracker.presentation.MapState
 import cmpt370.group12.laptracker.viewmodel.StartViewModel
 
-class DistanceWidget {
-
+class DistanceWidget (location: Location){
+    val local = location
     @SuppressLint("NotConstructor")
     @Composable
     fun DistanceWidget () {
-
         val tracker = DistanceCalc()
         //val local = MapState().currentLocation
-        val local = StartViewModel().currentLocation
+        //val local = StartViewModel().currentLocation
+
         tracker.update(local)
         val distance = tracker.getDistance()
         Column(

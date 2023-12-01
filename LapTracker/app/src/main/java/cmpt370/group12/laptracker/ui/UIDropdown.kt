@@ -126,14 +126,14 @@ class UIDropdown {
             }
              */
             //should be able to just call this now because it accesses the data independently
-            SpeedWidget()
+            //SpeedWidget()
         }
 
         if ( selectedItems.contains("Distance")){
             val location = stateClass.currentLocation
             //val prevLat = location?.latitude
             //val prevLong = location?.longitude
-            DistanceWidget()
+            //DistanceWidget()
         }
         if ( selectedItems.contains("Laps")){
             LapWidget()
