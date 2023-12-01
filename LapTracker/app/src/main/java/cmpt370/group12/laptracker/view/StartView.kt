@@ -195,6 +195,13 @@ class StartView(
         ) {
             Text(text = "load")
         }
+        viewModel.getAchievementState("Load First Track")
+        viewModel.achievements.ShowAchievement("Load First Track", viewModel.updateCreateTrack, viewModel.achieved)
+        LaunchedEffect(Unit) {
+            viewModel.updateCreateTrack = true
+            delay(2000)
+            viewModel.updateCreateTrack = false
+        }
     }
 
 
