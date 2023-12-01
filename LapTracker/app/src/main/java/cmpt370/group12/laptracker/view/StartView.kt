@@ -74,7 +74,6 @@ class StartView(
                     StartViewModel.ViewState.LoadTrack -> LoadTrackView()
                     StartViewModel.ViewState.SaveTrack -> SaveTrackView()
                     StartViewModel.ViewState.InRun -> InRunView()
-                    StartViewModel.ViewState.PostRun -> PostRunView()
                     StartViewModel.ViewState.NoServices -> NoServicesView()
                 }
             }
@@ -90,7 +89,6 @@ class StartView(
             StartViewModel.ViewState.LoadTrack -> "Load a track"
             StartViewModel.ViewState.SaveTrack -> "New track"
             StartViewModel.ViewState.InRun -> "Start tracking"
-            StartViewModel.ViewState.PostRun -> "Post tracking"
             StartViewModel.ViewState.NoServices -> "Select track mode"
         }
         Box(modifier = Modifier
@@ -342,20 +340,6 @@ class StartView(
         }
     }
 
-
-    @Composable
-    fun PostRunView() {
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(top = 200.dp, bottom = 200.dp, start = 50.dp, end = 50.dp)
-        ) {
-            Text(text = "post run")
-        }
-    }
-
-
     @Composable
     fun NoServicesView() {
         Box(
@@ -446,7 +430,6 @@ class StartView(
                     when(viewModel.viewState) {
                         StartViewModel.ViewState.ChooseMode -> viewModel.panMapCamera(cameraState)
                         StartViewModel.ViewState.NewTrack -> viewModel.panMapCameraToCurrentLocation(cameraState)
-                        StartViewModel.ViewState.PostRun -> viewModel.panMapCamera(cameraState)
                         StartViewModel.ViewState.NoServices -> viewModel.panMapCamera(cameraState)
                         StartViewModel.ViewState.InRun -> viewModel.panMapCameraToCurrentLocation(cameraState)
                         else -> {}
