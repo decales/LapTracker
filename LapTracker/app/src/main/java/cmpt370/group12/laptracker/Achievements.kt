@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,27 +28,23 @@ class Achievements {
         }
     }
     @Composable
-    fun ShowAchievement(achievementName: String, update: MutableState<Boolean>, trackCreated: Boolean) {
+    fun ShowAchievement(achievementName: String, update: Boolean, trackCreated: Boolean) {
         //popup that shows that achievement was gotten
         AnimatedVisibility(
-            visible = (update.value && !trackCreated ), enter = slideInVertically(),
+            visible = (update && !trackCreated ), enter = slideInVertically(),
             exit = slideOutVertically()
         ) {
             Box(
                 contentAlignment = Alignment.TopCenter,
                 modifier = Modifier
                     .size(1000.dp, 50.dp)
-                    .fillMaxSize().background(Color.Green)
+                    .fillMaxSize().background(Color(0xff98ede2))
             ) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text(text = "Achievement: $achievementName")
+                    Text(text = "Achievement: $achievementName", color = Color.Black)
                 }
-            }
-            LaunchedEffect(Unit) {
-                delay(2000)
-                update.value = false
             }
         }
     }
