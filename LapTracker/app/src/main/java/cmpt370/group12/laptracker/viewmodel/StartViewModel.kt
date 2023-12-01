@@ -189,10 +189,10 @@ class StartViewModel @Inject constructor(
         }
     }
 
-    fun getAchievementState(achievmentName: String) {
+    fun getAchievementState(achievementName: String) {
         viewModelScope.launch {
             val allAchievements = db.Achievement_getAll()
-            allAchievements.forEach{ achi -> if (achi.name == achievmentName) {
+            allAchievements.forEach{ achi -> if (achi.name == achievementName) {
                 achieved = achi.achieved
                 delay(2000)
                 db.Achievement_insert(Achievement(achi.id, achi.name, achi.description, true, achi.iconID, LocalDateTime.now().year.toLong()))
