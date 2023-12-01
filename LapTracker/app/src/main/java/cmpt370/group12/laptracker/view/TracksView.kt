@@ -33,8 +33,13 @@ import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
@@ -47,9 +52,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.DialogWindowProvider
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.viewModelScope
 import cmpt370.group12.laptracker.R
+import cmpt370.group12.laptracker.model.domain.model.Track
 import cmpt370.group12.laptracker.viewmodel.TracksViewModel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class TracksView(
     private val viewModel: TracksViewModel
@@ -60,8 +68,7 @@ class TracksView(
         - All data is stored retrieved from class view model */
     @Composable
     fun View() {
-        // TODO build view from class defined composable functions.
-        // TODO initialize necessary view data in viewmodel/main/TracksViewModel.kt. Data is accessed through constructor var 'viewModel'
+        LaunchedEffect(Unit) { viewModel.fetchTracks() }
         Column (modifier = Modifier.padding(20.dp)) {
             Header()
             if (!viewModel.trackDetailsVisible) TrackListView()
@@ -162,7 +169,9 @@ class TracksView(
                                         .padding(bottom = 25.dp)
                                         .fillMaxWidth()
                                         .clickable {
-                                            if (viewModel.deleteModeToggled) viewModel.toggleSelectTrack(trackCard)
+                                            if (viewModel.deleteModeToggled) viewModel.toggleSelectTrack(
+                                                trackCard
+                                            )
                                             else viewModel.toggleTrackDetails(trackCard.track)
                                         }
                                 ) {
@@ -298,7 +307,6 @@ class TracksView(
     }
 
 
-
     @Composable
     fun TrackDetailsOverview(/*lapDataList: List<LapData> */) {
 
@@ -314,6 +322,7 @@ class TracksView(
         }
     }
 
+
     @Composable
     fun TrackDetailsRuns() { // TODO make this
         Box(
@@ -322,11 +331,11 @@ class TracksView(
         ) {
             Column {
                 Text(text = "Run History")
-                if (viewModel.currentTrackDetailsRuns.isNotEmpty()) {
+                if (viewModel.currentTrackDetails.lapTimes.isNotEmpty()) {
                     LazyColumn {
-                        viewModel.currentTrackDetailsRuns.forEach { run ->
+                        viewModel.currentTrackDetails.lapTimes.forEach { run ->
                             item {
-                                Text(text = "Date: Start time: ${run.startTime} End time: ${run.endTime}")
+                                Text(text = "Date: Start time: ${run.first} End time: ${run.second}")
                             }
                         }
                     }
@@ -338,12 +347,28 @@ class TracksView(
 
 
     @Composable
-    fun TrackDetailsNotes() { // TODO make this
+    fun TrackDetailsNotes() {
         Box(
             contentAlignment = Center,
             modifier = Modifier.fillMaxSize()
         ) {
-            Text(text = "Overview")
+            var commentInput by remember { mutableStateOf("")}
+            TextField(value = commentInput,
+                onValueChange = {
+                    newText ->
+                    commentInput = newText
+                    viewModel.viewModelScope.launch {
+                        viewModel.dao.trackInsert(Track(viewModel.currentTrackDetails.id,
+                            viewModel.currentTrackDetails.name,
+                            viewModel.currentTrackDetails.location,
+                            newText,
+                            viewModel.currentTrackDetails.mapImage,
+                            viewModel.currentTrackDetails.points,
+                            viewModel.currentTrackDetails.lapTimes
+                        ))
+                    }
+                }
+            )
         }
     }
 

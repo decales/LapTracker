@@ -12,6 +12,8 @@ import cmpt370.group12.laptracker.model.domain.model.MapPoint
 import cmpt370.group12.laptracker.model.domain.model.Runs
 import cmpt370.group12.laptracker.model.domain.model.Runtimes
 import cmpt370.group12.laptracker.model.domain.model.Track
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 
 fun MapPointEntity.toMapPoint(): MapPoint {
     return MapPoint(
@@ -90,7 +92,9 @@ fun TrackEntity.toTrack(): Track {
         name = name,
         location = location,
         comment = comment,
-        mapImage = mapImage
+        mapImage = mapImage,
+        points = Json.decodeFromString(points),
+        lapTimes = Json.decodeFromString(lapTimes)
     )
 }
 
