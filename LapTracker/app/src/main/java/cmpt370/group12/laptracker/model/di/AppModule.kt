@@ -1,9 +1,11 @@
 package cmpt370.group12.laptracker.model.di
 
+import DaoRepositoryImplementation
 import android.app.Application
 import androidx.room.Room
 import cmpt370.group12.laptracker.model.data.database.LapTrackerDatabase
 import cmpt370.group12.laptracker.model.data.location.DefaultLocationTracker
+import cmpt370.group12.laptracker.model.data.mapper.DaoRepository
 import cmpt370.group12.laptracker.model.data.repository.LapTrackerRepositoryImpl
 import cmpt370.group12.laptracker.model.domain.location.LocationTracker
 import cmpt370.group12.laptracker.model.domain.repository.LapTrackerRepository
@@ -48,6 +50,7 @@ private var DBNAME:String = "LapTrackerDB.db"
         application = application
     )
 
+
     @Singleton
     @Provides
     fun provideLapTrackerDatabase(app: Application): LapTrackerDatabase {
@@ -61,6 +64,14 @@ private var DBNAME:String = "LapTrackerDB.db"
             DBNAME
         ).build()
     }
+
+    @Singleton
+    @Provides
+    fun provideDaoRepository(db: LapTrackerDatabase): DaoRepository {
+        return DaoRepositoryImplementation(db.achievementDao, db.trackDao)
+    }
+
+
 
     @Singleton
     @Provides

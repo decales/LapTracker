@@ -32,7 +32,7 @@ interface LapTrackerRepository {
 
     suspend fun Runs_insert(runs: Runs) : Long
     suspend fun Runs_delete(runs: Runs)
-    suspend fun Runs_getByTrackId(trackId: Long?): List<Runs>
+    suspend fun Runs_getByTrackId(trackId: Int?): List<Runs>
     fun Runs_getAllFlow(): Flow<List<Runs>>
     suspend fun Runs_getAll(): List<Runs>
     suspend fun Runs_getMax(): Runs
@@ -45,7 +45,7 @@ interface LapTrackerRepository {
     suspend fun RunTimes_getAll(): List<Runtimes>
 
 
-    suspend fun Track_insert(track: Track): Long
+    suspend fun Track_insert(track: Track)
     suspend fun Track_delete(track: Track)
     fun Track_getById(id: Int): Flow<List<Track>>
     fun Track_getAllFlow(): Flow<List<Track>>
