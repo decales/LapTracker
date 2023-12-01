@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.Flow
 interface TrackDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun Track_insert(track: TrackEntity): Long
+    suspend fun Track_insert(track: TrackEntity)
 
     @Delete
     suspend fun Track_delete(track: TrackEntity)

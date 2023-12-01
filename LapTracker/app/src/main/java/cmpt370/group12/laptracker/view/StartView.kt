@@ -9,20 +9,25 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.TextField
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -165,7 +170,7 @@ class StartView(
                 onClick = {
                 viewModel.scope.launch {
                     val location = viewModel.locationClient.getAverageLocation(3)
-                    viewModel.mapPoints.add(LatLng(location.latitude, location.longitude))
+                    viewModel.mapPoints.add(Pair(location.latitude, location.longitude))
                 }
             }) {
                 Text(text = "Set on current location")
@@ -410,7 +415,7 @@ class StartView(
                 properties = viewModel.mapProperties,
                 uiSettings = viewModel.mapSettings,
                 cameraPositionState = cameraState,
-                onMapClick = {viewModel.mapPoints.add(it)},
+                onMapClick = {viewModel.mapPoints.add(Pair(it.latitude, it.longitude))},
                 modifier = Modifier
                     .fillMaxSize()
                     .blur(if (!viewModel.mapIsEnabled) 5.dp else 0.dp),
@@ -423,8 +428,8 @@ class StartView(
                         state = MarkerState(if (viewModel.currentLocation != null) LatLng(viewModel.currentLocation!!.latitude, viewModel.currentLocation!!.longitude) else LatLng(0.0,0.0)))
                     viewModel.mapPoints.forEachIndexed { index, point ->
                         Marker(
-                            state = MarkerState(LatLng(point.latitude, point.longitude)),
-                            title = "(${point.latitude}, ${point.longitude})",
+                            state = MarkerState(LatLng(point.first, point.second)),
+                            title = "(${point.first}, ${point.second})",
                             snippet = "Long click to delete",
                             onClick = { it.showInfoWindow(); true },
                             icon =
@@ -433,12 +438,52 @@ class StartView(
                         )
                     }
                 }
-                Polyline(points = viewModel.mapPoints.toList(), width = 4F)
-                if (viewModel.mapPoints.size >= 2) Polyline(points = listOf(viewModel.mapPoints.toList().first(), viewModel.mapPoints.toList().last()), width = 4F)
+                val latlngList = viewModel.mapPoints.toList().map { LatLng(it.first, it.second) }
+                Polyline(points = latlngList, width = 4F)
+                if (viewModel.mapPoints.size >= 2) Polyline(points = listOf(latlngList.first(), latlngList.last()), width = 4F)
 
                 LaunchedEffect(viewModel.mapIsEnabled) {
                     if (!viewModel.mapIsEnabled) viewModel.panMapCamera(cameraState)
                     else viewModel.panMapCameraToCurrentLocation(cameraState)
+                }
+            }
+        }
+    }
+
+    @Composable
+    fun TrackListView(trackPicked: MutableState<Boolean>) {
+        LaunchedEffect(Unit) {
+            viewModel.fetchTracks()
+        }
+        Box (
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .fillMaxSize()
+        ) {
+            Card(
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .size(width = 250.dp, height = 350.dp)
+                    .verticalScroll(rememberScrollState())
+            ) {
+                viewModel.trackCards.forEach { track ->
+                    Card(
+                        elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
+                        modifier = Modifier
+                            .padding(bottom = 10.dp)
+                            .fillMaxSize()
+                            .clickable {
+                                //for (i in track.points.indices) {
+                                //    viewModel.points.add(track.points[i])
+                                //}
+                                trackPicked.value = true
+                                viewModel.setToggle.value = true
+                            }
+                            .height(50.dp)
+                    ) {
+                        Text(text = track.track.name, textAlign = TextAlign.Center,
+                            modifier=Modifier.fillMaxSize(), fontSize = 30.sp)
+                    }
                 }
             }
         }
