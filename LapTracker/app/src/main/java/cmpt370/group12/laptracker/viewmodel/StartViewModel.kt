@@ -30,7 +30,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 @HiltViewModel
@@ -192,7 +194,8 @@ class StartViewModel @Inject constructor(
             val allAchievements = db.Achievement_getAll()
             allAchievements.forEach{ achi -> if (achi.name == achievmentName) {
                 achieved = achi.achieved
-                db.Achievement_insert(Achievement(achi.id, achi.name, achi.description, true, achi.iconID, achi.timestamp))
+                delay(2000)
+                db.Achievement_insert(Achievement(achi.id, achi.name, achi.description, true, achi.iconID, LocalDateTime.now().year.toLong()))
             } }
         }
     }

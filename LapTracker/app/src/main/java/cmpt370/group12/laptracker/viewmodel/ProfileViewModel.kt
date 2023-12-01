@@ -40,7 +40,7 @@ class ProfileViewModel @Inject constructor(
             listOf(
                 // TODO replace with actual achievement names, descriptions, and icons
                 Achievement(null, "Created First Track", "Created your first track!", false, R.drawable.ic_launcher_foreground, 0),
-                Achievement(null, "name2", "desc", false, R.drawable.ic_launcher_foreground, 0),
+                Achievement(null, "Load First Track", "Loaded your first track", false, R.drawable.ic_launcher_foreground, 0),
                 Achievement(null, "name3", "desc", false, R.drawable.ic_launcher_foreground, 0),
                 Achievement(null, "name4", "desc", false, R.drawable.ic_launcher_foreground, 0),
                 Achievement(null, "name5", "desc", false, R.drawable.ic_launcher_foreground, 0),
