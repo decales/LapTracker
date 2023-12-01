@@ -54,7 +54,6 @@ class StartViewModel @Inject constructor(
         LoadTrack,
         SaveTrack,
         InRun,
-        PostRun,
         NoServices
     }
 
@@ -179,7 +178,7 @@ class StartViewModel @Inject constructor(
             }
             thread?.cancel()
             lapCount = 0
-            viewState = ViewState.PostRun
+            viewState = ViewState.ChooseMode
         }
     }
 
