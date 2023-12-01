@@ -300,11 +300,7 @@ class StartView(
                     .padding(top = 200.dp, bottom = 200.dp, start = 50.dp, end = 50.dp)
         ) {
             Text(text = "in run")
-            val timerVM = TimerViewModel() //not sure where exactely this should be initialized
-            TimerWidget().TimeWidget(timerVM)
-            //timerVM.startTimer() // or this but this is how you start the timer
-            //viewModel.currentLocation?.let { SpeedWidget(it).SpeedPaceWidget() }
-            //DistanceWidget()
+            
                 .fillMaxSize()
                 .padding(20.dp)
         ) {
