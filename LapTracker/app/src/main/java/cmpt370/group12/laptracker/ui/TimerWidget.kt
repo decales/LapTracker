@@ -7,34 +7,37 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import kotlinx.coroutines.delay
+
 
 class TimerWidget {
 
     @Composable
-    fun TimeWidget() {
+    fun TimeWidget(timerVM: TimerViewModel) {
 
         //val timerViewModel = TimerViewModel()
-        val timerViewModel = viewModel<TimerViewModel>()
+        //val timerViewModel = viewModel<TimerViewModel>()
+        /*
         LaunchedEffect(Unit) {
-            timerViewModel.startTimer()
+            //timerViewModel.startTimer()
+            timerVM.startTimer()
         }
+        */
+
 
         Text(
-                text = formatElapsedTime(timerViewModel.elapsedTime),
+                //text = formatElapsedTime(timerViewModel.elapsedTime),
+                text = formatElapsedTime(timerVM.elapsedTime),
                 style = MaterialTheme.typography.bodyLarge.copy(),
                 modifier = Modifier
                         .fillMaxSize()
                         .padding(16.dp)
         )
+
     }
+
 
     //format the time into readable text 00:00:00:000
     @Composable

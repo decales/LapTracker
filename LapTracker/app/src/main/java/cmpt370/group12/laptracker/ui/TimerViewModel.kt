@@ -14,6 +14,10 @@ class TimerViewModel : ViewModel() {
     private var isRunningState = mutableStateOf(false)
     private var startTime = 0L
 
+    init {
+        startTimer()
+    }
+
     fun startTimer() {
 
         if (!isRunningState.value) {

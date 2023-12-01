@@ -14,7 +14,7 @@ class SideScrollMain {
         ){
 
             item {
-                TimerWidget().TimeWidget()
+                //TimerWidget().TimeWidget()
             }
             item {
                 //SpeedWidget().

@@ -51,7 +51,7 @@ class Feature12 : ComponentActivity() {
                         color = MaterialTheme.colorScheme.background
                 ) {
                     //RealTimeUI()
-                    TimerWidget().TimeWidget()
+                    //TimerWidget().TimeWidget()
                 }
             }
         }

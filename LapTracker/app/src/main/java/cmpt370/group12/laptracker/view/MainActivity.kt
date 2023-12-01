@@ -31,6 +31,7 @@ import androidx.navigation.compose.rememberNavController
 import cmpt370.group12.laptracker.R
 import cmpt370.group12.laptracker.model.LocationClient
 import cmpt370.group12.laptracker.ui.MainUITracking
+import cmpt370.group12.laptracker.ui.TimerViewModel
 import cmpt370.group12.laptracker.view.main.SettingsView
 import cmpt370.group12.laptracker.view.theme.LapTrackerTheme
 import cmpt370.group12.laptracker.viewmodel.ProfileViewModel
@@ -50,6 +51,7 @@ override fun onCreate(savedInstanceState: Bundle?) {
                 modifier = Modifier.fillMaxSize()
             ) {
                 val controller = rememberNavController() // Navigation controller
+                val timerVM : TimerViewModel
                 Scaffold (
                     bottomBar = { BottomNavigationBar(controller) },
                 ) { navBarPadding ->
@@ -73,7 +75,8 @@ override fun onCreate(savedInstanceState: Bundle?) {
         startViewModel: StartViewModel = viewModel(),
         tracksViewModel: TracksViewModel = viewModel(),
         profileViewModel: ProfileViewModel = viewModel(),
-        settingsViewModel: SettingsViewModel = viewModel()
+        settingsViewModel: SettingsViewModel = viewModel(),
+
     ) {
         NavHost(
             navController = navController,

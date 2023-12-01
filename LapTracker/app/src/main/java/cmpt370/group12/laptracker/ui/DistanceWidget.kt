@@ -16,10 +16,14 @@ import cmpt370.group12.laptracker.presentation.MapState
 import cmpt370.group12.laptracker.viewmodel.StartViewModel
 
 class DistanceWidget (location: Location){
+
+
     val local = location
-    @SuppressLint("NotConstructor")
+
+
+    //@SuppressLint("NotConstructor")
     @Composable
-    fun DistanceWidget () {
+    fun DistWidget () {
         val tracker = DistanceCalc()
         //val local = MapState().currentLocation
         //val local = StartViewModel().currentLocation

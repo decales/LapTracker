@@ -35,7 +35,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.DialogWindowProvider
+import androidx.lifecycle.viewmodel.compose.viewModel
 import cmpt370.group12.laptracker.R
+import cmpt370.group12.laptracker.old.DistanceWidget
+import cmpt370.group12.laptracker.ui.DistanceWidget
+import cmpt370.group12.laptracker.ui.SpeedWidget
+import cmpt370.group12.laptracker.ui.TimerViewModel
+import cmpt370.group12.laptracker.ui.TimerWidget
 import cmpt370.group12.laptracker.viewmodel.StartViewModel
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
@@ -88,8 +94,8 @@ class StartView(
             StartViewModel.ViewState.NoServices -> "Select track mode"
         }
         Box(modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 20.dp, top = 20.dp)
+                .fillMaxWidth()
+                .padding(start = 20.dp, top = 20.dp)
         )
         {
             Text(
@@ -105,8 +111,8 @@ class StartView(
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier
-                .fillMaxSize()
-                .padding(top = 200.dp, bottom = 200.dp, start = 30.dp, end = 30.dp)
+                    .fillMaxSize()
+                    .padding(top = 200.dp, bottom = 200.dp, start = 30.dp, end = 30.dp)
         ) {
             Column {
                 listOf(
@@ -114,18 +120,18 @@ class StartView(
                     Triple("Load Track", R.drawable.ic_launcher_foreground) { viewModel.viewState = StartViewModel.ViewState.LoadTrack }
                 ).forEach { item ->
                     Card(modifier = Modifier
-                        .fillMaxSize()
-                        .weight(0.5F)
-                        .padding(10.dp)
-                        .shadow(20.dp)
-                        .clickable(onClick = item.third)
+                            .fillMaxSize()
+                            .weight(0.5F)
+                            .padding(10.dp)
+                            .shadow(20.dp)
+                            .clickable(onClick = item.third)
                     ) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.SpaceEvenly,
                             modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(start = 20.dp, end = 20.dp)
+                                    .fillMaxWidth()
+                                    .padding(start = 20.dp, end = 20.dp)
                         ) {
                             Text(text = item.first, fontSize = 26.sp)
                             Icon(painter = painterResource(id = item.second), contentDescription = "")
@@ -141,8 +147,8 @@ class StartView(
     fun NewTrackView() {
         Box(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(30.dp)
+                    .fillMaxSize()
+                    .padding(30.dp)
         ) {
             Button(
                 onClick = { viewModel.launchChooseMode() },
@@ -190,8 +196,8 @@ class StartView(
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier
-                .fillMaxSize()
-                .padding(top = 200.dp, bottom = 200.dp, start = 50.dp, end = 50.dp)
+                    .fillMaxSize()
+                    .padding(top = 200.dp, bottom = 200.dp, start = 50.dp, end = 50.dp)
         ) {
             Text(text = "load")
         }
@@ -282,10 +288,15 @@ class StartView(
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier
-                .fillMaxSize()
-                .padding(top = 200.dp, bottom = 200.dp, start = 50.dp, end = 50.dp)
+                    .fillMaxSize()
+                    .padding(top = 200.dp, bottom = 200.dp, start = 50.dp, end = 50.dp)
         ) {
             Text(text = "in run")
+            val timerVM = TimerViewModel() //not sure where exactely this should be initialized
+            TimerWidget().TimeWidget(timerVM)
+            //timerVM.startTimer() // or this but this is how you start the timer
+            //viewModel.currentLocation?.let { SpeedWidget(it).SpeedPaceWidget() }
+            //DistanceWidget()
         }
     }
 
@@ -295,8 +306,8 @@ class StartView(
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier
-                .fillMaxSize()
-                .padding(top = 200.dp, bottom = 200.dp, start = 50.dp, end = 50.dp)
+                    .fillMaxSize()
+                    .padding(top = 200.dp, bottom = 200.dp, start = 50.dp, end = 50.dp)
         ) {
             Text(text = "post run")
         }
@@ -308,8 +319,8 @@ class StartView(
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier
-                .fillMaxSize()
-                .padding(start = 50.dp, end = 50.dp)
+                    .fillMaxSize()
+                    .padding(start = 50.dp, end = 50.dp)
         ) {
             Card {
                 Column(
@@ -320,8 +331,8 @@ class StartView(
                         painter = painterResource(id = R.drawable.startview_noservices),
                         contentDescription = "",
                         modifier = Modifier
-                            .size(48.dp)
-                            .padding(bottom = 20.dp)
+                                .size(48.dp)
+                                .padding(bottom = 20.dp)
                     )
                     if (!viewModel.locationClient.servicesEnabled()) {
                         Text(
@@ -365,8 +376,8 @@ class StartView(
                 cameraPositionState = cameraState,
                 onMapClick = {viewModel.mapPoints.add(it)},
                 modifier = Modifier
-                    .fillMaxSize()
-                    .blur(if (!viewModel.mapIsEnabled) 5.dp else 0.dp),
+                        .fillMaxSize()
+                        .blur(if (!viewModel.mapIsEnabled) 5.dp else 0.dp),
 
             ) {
                 if (viewModel.mapIsEnabled) {
