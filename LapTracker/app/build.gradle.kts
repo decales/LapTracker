@@ -1,10 +1,10 @@
 plugins {
-    id("org.jetbrains.kotlin.plugin.serialization") version "1.5.21"
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("com.google.devtools.ksp")
     id("kotlin-parcelize")
     id("dagger.hilt.android.plugin")
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.5.21"
 }
 
 android {
