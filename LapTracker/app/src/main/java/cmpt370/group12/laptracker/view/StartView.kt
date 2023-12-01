@@ -174,11 +174,12 @@ class StartView(
             ) {
                 Text(text = "Undo")
             }
-            viewModel.achievements.ShowAchievement("Created First Track", viewModel.update, false)
+            viewModel.getAchievementState("Created First Track")
+            viewModel.achievements.ShowAchievement("Created First Track", viewModel.updateCreateTrack, viewModel.achieved)
             LaunchedEffect(Unit) {
-                viewModel.update = true
+                viewModel.updateCreateTrack = true
                 delay(2000)
-                viewModel.update = false
+                viewModel.updateCreateTrack = false
             }
         }
     }
