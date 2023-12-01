@@ -33,8 +33,13 @@ import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
@@ -47,9 +52,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.DialogWindowProvider
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.viewModelScope
 import cmpt370.group12.laptracker.R
+import cmpt370.group12.laptracker.model.domain.model.Track
 import cmpt370.group12.laptracker.viewmodel.TracksViewModel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class TracksView(
     private val viewModel: TracksViewModel
@@ -338,12 +346,23 @@ class TracksView(
 
 
     @Composable
-    fun TrackDetailsNotes() { // TODO make this
+    fun TrackDetailsNotes() {
         Box(
             contentAlignment = Center,
             modifier = Modifier.fillMaxSize()
         ) {
-            Text(text = "Overview")
+            var commentInput by remember { mutableStateOf("")}
+            TextField(value = commentInput,
+                onValueChange = {
+                    newText ->
+                    commentInput = newText
+                    viewModel.viewModelScope.launch {
+                        viewModel.db.Track_insert(Track(viewModel.currentTrackDetails.id,
+                            viewModel.currentTrackDetails.name,
+                            viewModel.currentTrackDetails.location, newText,
+                            viewModel.currentTrackDetails.mapImage))
+                    }
+                })
         }
     }
 
