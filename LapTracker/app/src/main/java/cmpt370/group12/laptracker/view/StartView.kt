@@ -175,11 +175,11 @@ class StartView(
                 Text(text = "Undo")
             }
             viewModel.getAchievementState("Created First Track")
-            viewModel.achievements.ShowAchievement("Created First Track", viewModel.updateCreateTrack, viewModel.achieved)
+            viewModel.achievements.ShowAchievement("Created First Track", viewModel.updateAchievements, viewModel.achieved)
             LaunchedEffect(Unit) {
-                viewModel.updateCreateTrack = true
+                viewModel.updateAchievements = true
                 delay(2000)
-                viewModel.updateCreateTrack = false
+                viewModel.updateAchievements = false
             }
         }
     }
@@ -196,11 +196,11 @@ class StartView(
             Text(text = "load")
         }
         viewModel.getAchievementState("Load First Track")
-        viewModel.achievements.ShowAchievement("Load First Track", viewModel.updateCreateTrack, viewModel.achieved)
+        viewModel.achievements.ShowAchievement("Load First Track", viewModel.updateAchievements, viewModel.achieved)
         LaunchedEffect(Unit) {
-            viewModel.updateCreateTrack = true
+            viewModel.updateAchievements = true
             delay(2000)
-            viewModel.updateCreateTrack = false
+            viewModel.updateAchievements = false
         }
     }
 
