@@ -170,7 +170,7 @@ class StartView(
                 onClick = {
                 viewModel.scope.launch {
                     val location = viewModel.locationClient.getAverageLocation(3)
-                    viewModel.mapPoints.add(LatLng(location.latitude, location.longitude))
+                    viewModel.mapPoints.add(Pair(location.latitude, location.longitude))
                 }
             }) {
                 Text(text = "Set on current location")
@@ -415,7 +415,7 @@ class StartView(
                 properties = viewModel.mapProperties,
                 uiSettings = viewModel.mapSettings,
                 cameraPositionState = cameraState,
-                onMapClick = {viewModel.mapPoints.add(it)},
+                onMapClick = {viewModel.mapPoints.add(Pair(it.latitude, it.longitude))},
                 modifier = Modifier
                     .fillMaxSize()
                     .blur(if (!viewModel.mapIsEnabled) 5.dp else 0.dp),
@@ -428,8 +428,8 @@ class StartView(
                         state = MarkerState(if (viewModel.currentLocation != null) LatLng(viewModel.currentLocation!!.latitude, viewModel.currentLocation!!.longitude) else LatLng(0.0,0.0)))
                     viewModel.mapPoints.forEachIndexed { index, point ->
                         Marker(
-                            state = MarkerState(LatLng(point.latitude, point.longitude)),
-                            title = "(${point.latitude}, ${point.longitude})",
+                            state = MarkerState(LatLng(point.first, point.second)),
+                            title = "(${point.first}, ${point.second})",
                             snippet = "Long click to delete",
                             onClick = { it.showInfoWindow(); true },
                             icon =
@@ -438,8 +438,9 @@ class StartView(
                         )
                     }
                 }
-                Polyline(points = viewModel.mapPoints.toList(), width = 4F)
-                if (viewModel.mapPoints.size >= 2) Polyline(points = listOf(viewModel.mapPoints.toList().first(), viewModel.mapPoints.toList().last()), width = 4F)
+                val latlngList = viewModel.mapPoints.toList().map { LatLng(it.first, it.second) }
+                Polyline(points = latlngList, width = 4F)
+                if (viewModel.mapPoints.size >= 2) Polyline(points = listOf(latlngList.first(), latlngList.last()), width = 4F)
 
                 LaunchedEffect(viewModel.mapIsEnabled) {
                     if (!viewModel.mapIsEnabled) viewModel.panMapCamera(cameraState)
@@ -465,7 +466,7 @@ class StartView(
                     .size(width = 250.dp, height = 350.dp)
                     .verticalScroll(rememberScrollState())
             ) {
-                viewModel.tracksCards.value.forEach { track ->
+                viewModel.trackCards.forEach { track ->
                     Card(
                         elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
                         modifier = Modifier

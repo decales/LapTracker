@@ -68,7 +68,7 @@ class LapTrackerRepositoryImpl(
 
     // ###################### ACHIEVEMENT FUNCTIONS ######################
     override suspend fun Achievement_getAll(): List<Achievement> {
-        return achievementDao.Achievement_getAll2().map{ it.toAchievement()}
+        return achievementDao.Achievement_getAll().map{ it.toAchievement()}
     }
 
     override suspend fun Achievement_insert(achievement: Achievement){
@@ -79,10 +79,8 @@ class LapTrackerRepositoryImpl(
         achievementDao.Achievement_delete(achievement.toAchievementEntity())
     }
 
-    override fun Achievement_getAllFlow(): Flow<List<Achievement>>{
-        return achievementDao.Achievement_getAll().map { it ->
-            it.map { it.toAchievement() }
-        }
+    override fun Achievement_getAllFlow(): Flow<List<Achievement>> {
+        TODO("Not yet implemented")
     }
 
 
@@ -121,7 +119,7 @@ class LapTrackerRepositoryImpl(
         runsDao.Runs_delete(runs.toRunsEntity())
     }
 
-    override suspend fun Runs_getByTrackId(trackId: Long?): List<Runs>{
+    override suspend fun Runs_getByTrackId(trackId: Int?): List<Runs> {
         return runsDao.Runs_getByTrackId(trackId).map { it.toRuns() }
     }
 

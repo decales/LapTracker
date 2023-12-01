@@ -68,8 +68,7 @@ class TracksView(
         - All data is stored retrieved from class view model */
     @Composable
     fun View() {
-        // TODO build view from class defined composable functions.
-        // TODO initialize necessary view data in viewmodel/main/TracksViewModel.kt. Data is accessed through constructor var 'viewModel'
+        LaunchedEffect(Unit) { viewModel.fetchTracks() }
         Column (modifier = Modifier.padding(20.dp)) {
             Header()
             if (!viewModel.trackDetailsVisible) TrackListView()
@@ -170,7 +169,9 @@ class TracksView(
                                         .padding(bottom = 25.dp)
                                         .fillMaxWidth()
                                         .clickable {
-                                            if (viewModel.deleteModeToggled) viewModel.toggleSelectTrack(trackCard)
+                                            if (viewModel.deleteModeToggled) viewModel.toggleSelectTrack(
+                                                trackCard
+                                            )
                                             else viewModel.toggleTrackDetails(trackCard.track)
                                         }
                                 ) {
@@ -306,7 +307,6 @@ class TracksView(
     }
 
 
-
     @Composable
     fun TrackDetailsOverview(/*lapDataList: List<LapData> */) {
 
@@ -322,6 +322,7 @@ class TracksView(
         }
     }
 
+
     @Composable
     fun TrackDetailsRuns() { // TODO make this
         Box(
@@ -330,11 +331,11 @@ class TracksView(
         ) {
             Column {
                 Text(text = "Run History")
-                if (viewModel.currentTrackDetailsRuns.isNotEmpty()) {
+                if (viewModel.currentTrackDetails.lapTimes.isNotEmpty()) {
                     LazyColumn {
-                        viewModel.currentTrackDetailsRuns.forEach { run ->
+                        viewModel.currentTrackDetails.lapTimes.forEach { run ->
                             item {
-                                Text(text = "Date: Start time: ${run.startTime} End time: ${run.endTime}")
+                                Text(text = "Date: Start time: ${run.first} End time: ${run.second}")
                             }
                         }
                     }
@@ -357,12 +358,17 @@ class TracksView(
                     newText ->
                     commentInput = newText
                     viewModel.viewModelScope.launch {
-                        viewModel.db.Track_insert(Track(viewModel.currentTrackDetails.id,
+                        viewModel.dao.trackInsert(Track(viewModel.currentTrackDetails.id,
                             viewModel.currentTrackDetails.name,
-                            viewModel.currentTrackDetails.location, newText,
-                            viewModel.currentTrackDetails.mapImage))
+                            viewModel.currentTrackDetails.location,
+                            newText,
+                            viewModel.currentTrackDetails.mapImage,
+                            viewModel.currentTrackDetails.points,
+                            viewModel.currentTrackDetails.lapTimes
+                        ))
                     }
-                })
+                }
+            )
         }
     }
 

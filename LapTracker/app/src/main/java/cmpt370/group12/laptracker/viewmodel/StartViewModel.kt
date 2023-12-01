@@ -1,8 +1,8 @@
 package cmpt370.group12.laptracker.viewmodel
 
+import DaoRepositoryImplementation
 import android.location.Geocoder
 import android.location.Location
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
@@ -15,9 +15,9 @@ import androidx.lifecycle.viewModelScope
 import cmpt370.group12.laptracker.Achievements
 import cmpt370.group12.laptracker.R
 import cmpt370.group12.laptracker.model.LocationClient
+import cmpt370.group12.laptracker.model.data.mapper.DaoRepository
 import cmpt370.group12.laptracker.model.domain.model.Achievement
 import cmpt370.group12.laptracker.model.domain.model.Track
-import cmpt370.group12.laptracker.model.domain.repository.LapTrackerRepository
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -36,7 +36,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class StartViewModel @Inject constructor(
-    val db: LapTrackerRepository
+    val dao: DaoRepository
 ) : ViewModel() {
 
     lateinit var locationClient: LocationClient // Passed in nav controller in MainActivity
@@ -51,9 +51,8 @@ class StartViewModel @Inject constructor(
         NoServices
     }
 
-    var viewState: ViewState by mutableStateOf(ViewState.ChooseMode)
-
     // UI Variables
+    var viewState: ViewState by mutableStateOf(ViewState.ChooseMode)
     var statsBarToggled by mutableStateOf(false)
     var setToggle = mutableStateOf(false)
     val scope = CoroutineScope(Dispatchers.Main)
@@ -64,6 +63,7 @@ class StartViewModel @Inject constructor(
     var textTracking = "Start Tracking"
     var thread = mutableStateOf<Job?>(null)
 
+
     //Achievements
     val achievements = Achievements()
     var updateAchievements by mutableStateOf(false)
@@ -72,14 +72,15 @@ class StartViewModel @Inject constructor(
 
     // Tracking variables
     var runStarted by mutableStateOf(false)
-    var mapPoints:SnapshotStateList<LatLng> = mutableStateListOf()
+    var mapPoints:SnapshotStateList<Pair<Double,Double>> = mutableStateListOf()
     var currentLocation: Location? by mutableStateOf(null)
     var nextPoint: LatLng by mutableStateOf(LatLng(0.0, 0.0))
     var lapsCompleted by mutableIntStateOf(0)
     var lapCount by mutableIntStateOf(3)
 
+
     //List of tracks variables
-    val tracksCards: MutableState<List<TracksViewModel.TrackCard>> = mutableStateOf(emptyList())
+    var trackCards: List<TracksViewModel.TrackCard> by mutableStateOf(emptyList())
 
 
     //Map variables
@@ -125,6 +126,7 @@ class StartViewModel @Inject constructor(
         }
     }
 
+
     fun launchInRun() {
         viewState = ViewState.InRun
         disableMap()
@@ -155,27 +157,30 @@ class StartViewModel @Inject constructor(
         }
     }
 
+
     fun saveTrack(nameInput: String, geoCoder: Geocoder) {
         viewModelScope.launch{
-            val location = geoCoder.getFromLocation(mapPoints.first().latitude, mapPoints.first().longitude, 1)
+            val location = geoCoder.getFromLocation(mapPoints.first().first, mapPoints.first().second, 1)
             val locationStr = "${location?.first()?.locality}\n${location?.first()?.countryName}"
-            db.Track_insert(Track(null, nameInput, locationStr, "", R.drawable.ic_launcher_foreground, mapPoints))
+            dao.trackInsert(Track(null, nameInput, locationStr, "", R.drawable.ic_launcher_foreground, mapPoints, emptyList()))
         }
     }
 
+
     suspend fun fetchTracks() {
-        tracksCards.value = db.Track_getAll().map { track ->
+        trackCards = dao.trackGetAll().map { track ->
             TracksViewModel.TrackCard(track, mutableStateOf(false))
         }
     }
 
+
     fun getAchievementState(achievementName: String) {
         viewModelScope.launch {
-            val allAchievements = db.Achievement_getAll()
+            val allAchievements = dao.achievementGetAll()
             allAchievements.forEach{ achi -> if (achi.name == achievementName) {
                 achieved = achi.achieved
                 delay(2000)
-                db.Achievement_insert(Achievement(achi.id, achi.name, achi.description, true, achi.iconID, LocalDateTime.now().year.toLong()))
+                dao.achievementUpdate(Achievement(achi.id, achi.name, achi.description, true, achi.iconID, LocalDateTime.now().year.toLong()))
             } }
         }
     }
