@@ -1,6 +1,6 @@
-# name Intuitive Lap Tracking Application
+Intuitive Lap Tracking Application
 
-'name' is an innovative lap tracking application, developed in Kotlin. It is designed to provide a seamless experience for athletes, fitness enthusiasts, or anyone who wishes to maintain a detailed record of their tracks.
+Our application is an innovative lap tracking application, developed in Kotlin. It is designed to provide a seamless experience for athletes, fitness enthusiasts, or anyone who wishes to maintain a detailed record of their tracks.
 
 The application allows users to intuitively set the start location and legs of a track, and then run it. It provides comprehensive statistics for each race, including time, speed, and distance covered.
 
