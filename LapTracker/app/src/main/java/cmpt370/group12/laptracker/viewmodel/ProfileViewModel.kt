@@ -24,6 +24,12 @@ class ProfileViewModel @Inject constructor(
     var achievementDetailsVisible by mutableStateOf(false)
     var currentPage by mutableIntStateOf(0)
 
+    //Lap stats
+    var avgLapTime = 0.0
+    var maxLapTime = 0.0
+    var minLapTime = 0.0
+
+
     fun setPage(index: Int) {
         currentPage = index
     }
@@ -43,6 +49,21 @@ class ProfileViewModel @Inject constructor(
                 Achievement(null, "Checked First Track", "You looked at a previously made track", false, R.drawable.ic_launcher_foreground, 0)
             ).forEach { achievement -> db.Achievement_insert(achievement) }
             achievements.value = db.Achievement_getAll()
+        }
+    }
+
+    fun getLapStats() {
+        viewModelScope.launch {
+            if (!db.Runs_getAll().isEmpty()) {
+                maxLapTime = (db.Runs_getMax().endTime - db.Runs_getMax().startTime).toDouble()
+                minLapTime = (db.Runs_getMin().endTime - db.Runs_getMin().startTime).toDouble()
+                var total = 0.0
+
+                db.Runs_getAll().forEach { run ->
+                    total += (run.endTime - run.startTime)
+                }
+                avgLapTime = total / db.Runs_getAll().size
+            }
         }
     }
 
