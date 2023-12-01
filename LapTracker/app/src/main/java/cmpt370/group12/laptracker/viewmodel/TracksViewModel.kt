@@ -12,6 +12,7 @@ import cmpt370.group12.laptracker.model.domain.model.Achievement
 import cmpt370.group12.laptracker.model.domain.model.Runs
 import cmpt370.group12.laptracker.model.domain.model.Track
 import cmpt370.group12.laptracker.model.domain.repository.LapTrackerRepository
+import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -37,7 +38,7 @@ class TracksViewModel @Inject constructor(
     )
 
     val tracksCards: MutableState<List<TrackCard>> = mutableStateOf(emptyList())
-    var currentTrackDetails: Track by mutableStateOf(Track(null, "", "", "", 0))
+    var currentTrackDetails: Track by mutableStateOf(Track(null, "", "", "", 0, emptyList()))
     var currentTrackDetailsRuns: List<Runs> by mutableStateOf(emptyList())
     var trackDetailsVisible by mutableStateOf(false)
     var deleteConfirmationVisible by mutableStateOf(false)
@@ -93,7 +94,8 @@ class TracksViewModel @Inject constructor(
     fun addTrack() { // TODO temporary for testing, remove later
         viewModelScope.launch{
             val i = (Math.random() * 1000).toInt()
-            db.Track_insert(Track(null, "test $i", "test $i", "test comment", R.drawable.ic_launcher_foreground))
+            db.Track_insert(Track(null, "test $i", "test $i", "test comment", R.drawable.ic_launcher_foreground, listOf(
+                LatLng(52.1331886, -106.6348112), LatLng(52.13319, -106.63482))))
             fetchTracks()
         }
     }
