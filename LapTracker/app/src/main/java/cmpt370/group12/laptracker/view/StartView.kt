@@ -298,12 +298,20 @@ class StartView(
                 horizontalAlignment = Alignment.End,
                 modifier = Modifier.align(Alignment.TopEnd)
             ) {
-                Text(text = "Timer")
+                Text(text = "Lap Time: ${viewModel.elapsedTime}s")
+                Text(text = "Total Time: ${viewModel.totalTime}s")
                 Text(text = "Laps: ${viewModel.lapsCompleted}/${viewModel.lapCount}")
             }
             if (!viewModel.runStarted) {
                 Button(
-                    onClick = { viewModel.startRacing() },
+                    onClick = { viewModel.startRacing()
+                              viewModel.viewModelScope.launch {
+                                  while (true) {
+                                      viewModel.elapsedTime += 1.0
+                                      viewModel.totalTime += 1.0
+                                      delay(1000)
+                                  }
+                              }},
                     modifier = Modifier.align(Alignment.BottomCenter)
                 ) {
                     Text(text = "Start tracking")
