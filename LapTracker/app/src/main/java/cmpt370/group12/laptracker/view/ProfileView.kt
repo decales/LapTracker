@@ -53,6 +53,7 @@ class ProfileView(
     fun View() {
         LaunchedEffect(Unit) {
             viewModel.fetchAchievements()
+            viewModel.getLapStats()
         }
         Column {
             val pagerState = rememberPagerState { 2 }
@@ -123,11 +124,12 @@ class ProfileView(
         - All data is stored retrieved from class view model */
     @Composable
     fun StatisticsView() {
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier.fillMaxSize()
-        ) {
-            Text(text = "Statistics")
+        Column(horizontalAlignment = CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceEvenly,
+            modifier = Modifier.fillMaxSize()) {
+            Text(text = "Max Lap Time: ${viewModel.maxLapTime}", fontSize = 30.sp)
+            Text(text = "Min Lap Time: ${viewModel.minLapTime}", fontSize = 30.sp)
+            Text(text = "Average Lap Time: ${viewModel.avgLapTime}", fontSize = 30.sp)
         }
     }
 

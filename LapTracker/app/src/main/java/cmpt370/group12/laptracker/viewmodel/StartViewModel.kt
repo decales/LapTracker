@@ -1,9 +1,9 @@
 package cmpt370.group12.laptracker.viewmodel
 
+import DaoRepositoryImplementation
 import android.location.Geocoder
 import android.location.Location
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -15,10 +15,9 @@ import androidx.lifecycle.viewModelScope
 import cmpt370.group12.laptracker.Achievements
 import cmpt370.group12.laptracker.R
 import cmpt370.group12.laptracker.model.LocationClient
+import cmpt370.group12.laptracker.model.data.mapper.DaoRepository
 import cmpt370.group12.laptracker.model.domain.model.Achievement
-import cmpt370.group12.laptracker.model.domain.model.MapPoint
 import cmpt370.group12.laptracker.model.domain.model.Track
-import cmpt370.group12.laptracker.model.domain.repository.LapTrackerRepository
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -37,7 +36,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class StartViewModel @Inject constructor(
-    val db: LapTrackerRepository
+    val dao: DaoRepository
 ) : ViewModel() {
 
     lateinit var locationClient: LocationClient // Passed in nav controller in MainActivity
@@ -52,8 +51,9 @@ class StartViewModel @Inject constructor(
         NoServices
     }
 
+    // UI Variables
     var viewState: ViewState by mutableStateOf(ViewState.ChooseMode)
-
+    var statsBarToggled by mutableStateOf(false)
     var setToggle = mutableStateOf(false)
     val scope = CoroutineScope(Dispatchers.Main)
     var textSetPoints = "Set start"
@@ -63,19 +63,24 @@ class StartViewModel @Inject constructor(
     var textTracking = "Start Tracking"
     var thread = mutableStateOf<Job?>(null)
 
+
     //Achievements
     val achievements = Achievements()
     var updateAchievements by mutableStateOf(false)
     var achieved by mutableStateOf(false)
 
 
-    // Tracking UI variables
-
-    var mapPoints:SnapshotStateList<LatLng> = mutableStateListOf()
+    // Tracking variables
+    var runStarted by mutableStateOf(false)
+    var mapPoints:SnapshotStateList<Pair<Double,Double>> = mutableStateListOf()
     var currentLocation: Location? by mutableStateOf(null)
-    var distance = mutableDoubleStateOf(0.0)
-    var laps = mutableIntStateOf(0)
-    var next = mutableStateOf("")
+    var nextPoint: LatLng by mutableStateOf(LatLng(0.0, 0.0))
+    var lapsCompleted by mutableIntStateOf(0)
+    var lapCount by mutableIntStateOf(3)
+
+
+    //List of tracks variables
+    var trackCards: List<TracksViewModel.TrackCard> by mutableStateOf(emptyList())
 
 
     //Map variables
@@ -87,33 +92,6 @@ class StartViewModel @Inject constructor(
         scrollGesturesEnabled = false,
         scrollGesturesEnabledDuringRotateOrZoom = false
     ))
-
-    data class TrackCard(
-        val id: Int, // track reference in database
-        val name: String,
-        val location: String,
-        val points: MutableList<Point>,
-        val mapSnippet: Int
-    )
-
-    data class Point (
-        val latlon: Pair<Double, Double>,
-        val name: String,
-        var isPassed: Boolean
-    )
-
-    // TODO Dummy values, replace with array of database query result
-    val trackCards = List(12) { TrackCard(0, "Name", "Location",
-        mutableListOf(
-            Point(Pair(52.132681649999995, -106.63488491666665), "Start", false),
-            Point(Pair(52.132681649999995, -106.63488491666665), "L1", false),
-            Point(Pair(52.132681649999995, -106.63488491666665), "L2", false),
-            Point(Pair(52.132681649999995, -106.63488491666665), "L3", false),
-            Point(Pair(52.132681649999995, -106.63488491666665), "L4", false),
-            Point(Pair(52.132681649999995, -106.63488491666665), "L5", false)
-        ),
-        R.drawable.ic_launcher_foreground)
-    }
 
 
     fun enableMap() {
@@ -148,6 +126,7 @@ class StartViewModel @Inject constructor(
         }
     }
 
+
     fun launchInRun() {
         viewState = ViewState.InRun
         disableMap()
@@ -178,24 +157,30 @@ class StartViewModel @Inject constructor(
         }
     }
 
+
     fun saveTrack(nameInput: String, geoCoder: Geocoder) {
         viewModelScope.launch{
-            val location = geoCoder.getFromLocation(mapPoints.first().latitude, mapPoints.first().longitude, 1)
+            val location = geoCoder.getFromLocation(mapPoints.first().first, mapPoints.first().second, 1)
             val locationStr = "${location?.first()?.locality}\n${location?.first()?.countryName}"
-            val id = db.Track_insert(Track(null, nameInput, locationStr, "", R.drawable.ic_launcher_foreground))
-            mapPoints.forEachIndexed { index, point ->
-                db.MapPoint_insert(MapPoint(null, id.toInt(), point.latitude, point.longitude, "name?", index))
-            }
+            dao.trackInsert(Track(null, nameInput, locationStr, "", R.drawable.ic_launcher_foreground, mapPoints, emptyList()))
         }
     }
 
+
+    suspend fun fetchTracks() {
+        trackCards = dao.trackGetAll().map { track ->
+            TracksViewModel.TrackCard(track, mutableStateOf(false))
+        }
+    }
+
+
     fun getAchievementState(achievementName: String) {
         viewModelScope.launch {
-            val allAchievements = db.Achievement_getAll()
+            val allAchievements = dao.achievementGetAll()
             allAchievements.forEach{ achi -> if (achi.name == achievementName) {
                 achieved = achi.achieved
                 delay(2000)
-                db.Achievement_insert(Achievement(achi.id, achi.name, achi.description, true, achi.iconID, LocalDateTime.now().year.toLong()))
+                dao.achievementUpdate(Achievement(achi.id, achi.name, achi.description, true, achi.iconID, LocalDateTime.now().year.toLong()))
             } }
         }
     }
