@@ -106,9 +106,6 @@ class TracksView(
             .fillMaxWidth()
             .padding(bottom = 10.dp)
         ) {
-            Button(onClick = { viewModel.addTrack()}) { // TODO Remove this later
-                Text(text = "add")
-            }
             Spacer(modifier = Modifier.weight(1.0f))
             if (viewModel.deleteModeToggled) {
                 Button(

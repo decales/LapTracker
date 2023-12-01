@@ -1,7 +1,6 @@
 package cmpt370.group12.laptracker.view
 
 import android.location.Geocoder
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,8 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.TextField
@@ -27,11 +24,11 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
@@ -43,6 +40,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.DialogWindowProvider
+import androidx.lifecycle.viewModelScope
 import cmpt370.group12.laptracker.R
 import cmpt370.group12.laptracker.viewmodel.StartViewModel
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
@@ -168,7 +166,7 @@ class StartView(
             Button(
                 modifier = Modifier.align(Alignment.BottomCenter),
                 onClick = {
-                viewModel.scope.launch {
+                viewModel.viewModelScope.launch {
                     val location = viewModel.locationClient.getAverageLocation(3)
                     viewModel.mapPoints.add(Pair(location.latitude, location.longitude))
                 }
@@ -201,7 +199,7 @@ class StartView(
                 .fillMaxSize()
                 .padding(top = 200.dp, bottom = 200.dp, start = 50.dp, end = 50.dp)
         ) {
-            Text(text = "load")
+            TrackListView()
         }
         viewModel.getAchievementState("Load First Track")
         viewModel.achievements.ShowAchievement("Load First Track", viewModel.updateAchievements, viewModel.achieved)
@@ -216,7 +214,6 @@ class StartView(
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun SaveTrackView() {
-        var isSaved by remember { mutableStateOf(false) }
         Box(contentAlignment = Alignment.Center,) {
             AlertDialog(onDismissRequest = { viewModel.viewState = StartViewModel.ViewState.NewTrack },) {
                 (LocalView.current.parent as DialogWindowProvider).window.setDimAmount(0.8f)
@@ -235,7 +232,7 @@ class StartView(
                             fontSize = 26.sp,
                             modifier = Modifier.padding(bottom = 20.dp)
                         )
-                        if (!isSaved) {
+                        if (!viewModel.isSaved) {
                             Text(
                                 text = "Would you like to add this track to your saved tracks?",
                                 fontSize = 14.sp,
@@ -243,7 +240,7 @@ class StartView(
                             )
                             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                 OutlinedButton(
-                                    onClick = { isSaved = true },
+                                    onClick = { viewModel.isSaved = true },
                                     modifier = Modifier.padding(bottom = 5.dp)
                                 ) {
                                     Text(text = "Save track", color = Color(0xFF53c662))
@@ -274,7 +271,7 @@ class StartView(
                             ) {
                                 Text(text = "Save and continue", color = Color(0xFF53c662))
                             }
-                            OutlinedButton(onClick = { isSaved = false }) {
+                            OutlinedButton(onClick = { viewModel.isSaved = false }) {
                                 Text(text = "Cancel", color = Color(0xFFce3e5a))
                             }
                         }
@@ -291,7 +288,7 @@ class StartView(
             contentAlignment = Alignment.Center,
             modifier = Modifier
                 .fillMaxSize()
-                .padding(20.dp)
+                .padding(30.dp)
         ) {
             Button(
                 onClick = { viewModel.launchChooseMode() },
@@ -299,12 +296,29 @@ class StartView(
             ) {
                 Text(text = "Quit")
             }
-            Box(modifier = Modifier.align(Alignment.BottomCenter)) {
-                if (viewModel.statsBarToggled) StatisticsBar()
-
+            Column(
+                horizontalAlignment = Alignment.End,
+                modifier = Modifier.align(Alignment.TopEnd)
+            ) {
+                Text(text = "Timer")
+                Text(text = "Laps: ${viewModel.lapsCompleted}/${viewModel.lapCount}")
+            }
+            if (!viewModel.runStarted) {
+                Button(
+                    onClick = { viewModel.startRacing() },
+                    modifier = Modifier.align(Alignment.BottomCenter)
+                ) {
+                    Text(text = "Start tracking")
+                }
+            }
+            else {
+                if (viewModel.statsBarVisible) StatisticsBar(modifier = Modifier.align(Alignment.BottomCenter))
                 else {
-                    Button(onClick = {  }) {
-                        Text(text = "Start tracking")
+                    Button(
+                        onClick = { viewModel.statsBarVisible = true },
+                        modifier = Modifier.align(Alignment.BottomCenter)
+                    ) {
+                        Text(text = "Show statistics")
                     }
                 }
             }
@@ -312,33 +326,20 @@ class StartView(
     }
 
 
-    @OptIn(ExperimentalFoundationApi::class)
     @Composable
-    fun StatisticsBar() {
-        Card {
-            val pagerState = rememberPagerState { 3 }
-            HorizontalPager(state = pagerState) {
-                when(pagerState.currentPage) {
-                    0 -> {
+    fun StatisticsBar(modifier: Modifier) {
 
-                    }
-                    1 -> {
-
-                    }
-                    2 -> {
-
-                    }
+        Box(modifier = modifier) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Button(onClick = { viewModel.statsBarVisible = false }) {
+                    Text(text = "Hide statistics")
+                }
+                Card {
+                    Text(text = "Current speed:\n${viewModel.currentLocation?.speed}")
+                    Text(text = "Distance from next point:\n${viewModel.distance}")
                 }
             }
         }
-//            Text(text = "Distance from target: ")
-//            Text(text = "Laps: ${viewModel.lapsCompleted}/${viewModel.lapCount}")
-//            Text(text = "Current speed: ${viewModel.currentLocation?.speed}")
-//            Text(text = "Distance from target: " +
-//                    "${LatLng(
-//                        (viewModel.currentLocation?.latitude?.minus(viewModel.nextPoint.latitude)!!),
-//                        (viewModel.currentLocation?.longitude?.minus(viewModel.nextPoint.longitude)!!)
-//                    )}")
     }
 
 
@@ -415,13 +416,12 @@ class StartView(
                 properties = viewModel.mapProperties,
                 uiSettings = viewModel.mapSettings,
                 cameraPositionState = cameraState,
-                onMapClick = {viewModel.mapPoints.add(Pair(it.latitude, it.longitude))},
+                onMapClick = { if (viewModel.mapIsEnabled) viewModel.mapPoints.add(Pair(it.latitude, it.longitude)) },
                 modifier = Modifier
+                    .blur(if (!viewModel.mapIsEnabled && viewModel.viewState != StartViewModel.ViewState.InRun) 5.dp else 0.dp)
                     .fillMaxSize()
-                    .blur(if (!viewModel.mapIsEnabled) 5.dp else 0.dp),
-
             ) {
-                if (viewModel.mapIsEnabled) {
+                if (viewModel.mapIsEnabled || viewModel.viewState == StartViewModel.ViewState.InRun) {
                     Marker(
                         title = "Current location",
                         icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED),
@@ -433,25 +433,32 @@ class StartView(
                             snippet = "Long click to delete",
                             onClick = { it.showInfoWindow(); true },
                             icon =
-                            if (index == 0) BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)
+                            if (index == 0) BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)
                             else BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)
                         )
                     }
                 }
                 val latlngList = viewModel.mapPoints.toList().map { LatLng(it.first, it.second) }
                 Polyline(points = latlngList, width = 4F)
-                if (viewModel.mapPoints.size >= 2) Polyline(points = listOf(latlngList.first(), latlngList.last()), width = 4F)
+                if (viewModel.mapPoints.size >= 3) Polyline(points = listOf(latlngList.first(), latlngList.last()), width = 4F)
 
-                LaunchedEffect(viewModel.mapIsEnabled) {
-                    if (!viewModel.mapIsEnabled) viewModel.panMapCamera(cameraState)
-                    else viewModel.panMapCameraToCurrentLocation(cameraState)
+                LaunchedEffect(viewModel.viewState) {
+                    when(viewModel.viewState) {
+                        StartViewModel.ViewState.ChooseMode -> viewModel.panMapCamera(cameraState)
+                        StartViewModel.ViewState.NewTrack -> viewModel.panMapCameraToCurrentLocation(cameraState)
+                        StartViewModel.ViewState.PostRun -> viewModel.panMapCamera(cameraState)
+                        StartViewModel.ViewState.NoServices -> viewModel.panMapCamera(cameraState)
+                        StartViewModel.ViewState.InRun -> viewModel.panMapCameraToCurrentLocation(cameraState)
+                        else -> {}
+                    }
                 }
             }
         }
     }
 
+
     @Composable
-    fun TrackListView(trackPicked: MutableState<Boolean>) {
+    fun TrackListView() {
         LaunchedEffect(Unit) {
             viewModel.fetchTracks()
         }
@@ -472,19 +479,26 @@ class StartView(
                         modifier = Modifier
                             .padding(bottom = 10.dp)
                             .fillMaxSize()
-                            .clickable {
-                                //for (i in track.points.indices) {
-                                //    viewModel.points.add(track.points[i])
-                                //}
-                                trackPicked.value = true
-                                viewModel.setToggle.value = true
-                            }
                             .height(50.dp)
+                            .clickable {
+                                viewModel.viewModelScope.launch {
+                                    val arrayList: ArrayList<Pair<Double, Double>> = track.track.points as ArrayList<Pair<Double, Double>>
+                                    viewModel.mapPoints = arrayList.toMutableStateList()
+                                    viewModel.locationClient.startLocationFlow(0.5)
+                                    viewModel.currentLocation = viewModel.locationClient.getCurrentLocation()
+                                    viewModel.viewState = StartViewModel.ViewState.InRun
+                                }
+                            }
                     ) {
                         Text(text = track.track.name, textAlign = TextAlign.Center,
                             modifier=Modifier.fillMaxSize(), fontSize = 30.sp)
                     }
                 }
+            }
+            Button(onClick = { viewModel.launchChooseMode() },
+                modifier = Modifier.align(Alignment.BottomCenter)
+            ) {
+                Text(text = "Cancel")
             }
         }
     }

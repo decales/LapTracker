@@ -73,7 +73,7 @@ override fun onCreate(savedInstanceState: Bundle?) {
         startViewModel: StartViewModel = viewModel(),
         tracksViewModel: TracksViewModel = viewModel(),
         profileViewModel: ProfileViewModel = viewModel(),
-        settingsViewModel: SettingsViewModel = viewModel()
+        //settingsViewModel: SettingsViewModel = viewModel()
     ) {
         NavHost(
             navController = navController,
@@ -94,9 +94,9 @@ override fun onCreate(savedInstanceState: Bundle?) {
             composable("Profile") {
                 ProfileView(profileViewModel).View()
             }
-            composable("Settings") {
-                SettingsView(settingsViewModel).View()
-            }
+//            composable("Settings") {
+//                SettingsView(settingsViewModel).View()
+//            }
         }
     }
 
@@ -112,9 +112,8 @@ override fun onCreate(savedInstanceState: Bundle?) {
                 listOf(
                     // Route (first), icon (second)
                     Pair("Start", R.drawable.newtrack),
-                    Pair("Tracks", R.drawable.newtrack),
-                    Pair("Profile", R.drawable.prevtrack),
-                    Pair("Settings", R.drawable.configtrack)
+                    Pair("Tracks", R.drawable.prevtrack),
+                    Pair("Profile", R.drawable.configtrack),
                 ).forEach { item ->
                     NavigationBarItem (
                         selected = item.first == controller.currentBackStackEntryAsState().value?.destination?.route,

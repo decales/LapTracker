@@ -152,21 +152,12 @@ class LocationClient(
     }
 
 
-//    suspend fun getProximityFlow(target: Pair<Double, Double>): Flow<Double>? {
-//        return if (locationFlow !== null) {
-//            callbackFlow {
-//                locationFlow?.collectLatest { location ->
-//                    val dLat = Math.toRadians(target.first) - Math.toRadians(location!!.latitude)
-//                    val dLon = Math.toRadians(target.second) - Math.toRadians(location.longitude)
-//                    val x = sin(dLat / 2).pow(2) + cos(Math.toRadians(location.latitude)) * cos(Math.toRadians(target.first)) * sin(dLon / 2).pow(2)
-//                    val meters =  BigDecimal.valueOf(2 * atan2(sqrt(x), sqrt(1 - x)) * 6378137).setScale(2, RoundingMode.HALF_UP).toDouble()
-//                    launch {
-//                        send(meters)
-//                    }
-//                }
-//            }
-//        } else null
-//    }
+    fun getProximity(current: Pair<Double, Double>, target: Pair<Double, Double>): Double {
+        val dLat = Math.toRadians(target.first) - Math.toRadians(current.first)
+        val dLon = Math.toRadians(target.second) - Math.toRadians(current.second)
+        val x = sin(dLat / 2).pow(2) + cos(Math.toRadians(current.first)) * cos(Math.toRadians(target.first)) * sin(dLon / 2).pow(2)
+        return BigDecimal.valueOf(2 * atan2(sqrt(x), sqrt(1 - x)) * 6378137).setScale(2, RoundingMode.HALF_UP).toDouble()
+    }
 }
 
 
