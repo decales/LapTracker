@@ -45,6 +45,22 @@ Once you have the prerequisites, follow these steps to get a copy of the project
 5. **Run the project**
     Connect your Android device or start your emulator, then in Android Studio, click on `Run -> Run 'app'`, or press the shortcut `Shift+F10`.
 
+You may also run the app on an android device using the .sdk file.
+
+1. **Download .sdk file to your android device**
+
+2. **Locate and open the sdk file on your android device**
+    If you have never ran an sdk file on your android phone there will be a popup asking you to enable permissions to do so.
+
+3. **Click Install**
+
+4. **Click Open**
+    When it has finished installing a popup will come up asking if you want to open the app so click open.
+
+5. **App Crashes**
+    If the app ever crashes go to Settings->Apps->LapTracker->Storage->Clear data
+    This ensures everything is reset properly and the app can run
+
 ## Development
 
 This project uses the following tools and technologies:
