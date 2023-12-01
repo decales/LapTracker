@@ -149,7 +149,12 @@ class StartViewModel @Inject constructor(
     }
 
 
+    var elapsedTime by mutableStateOf(0.0)
+    var totalTime by mutableStateOf(0.0)
+
     fun startRacing() {
+        totalTime = 0.0
+        elapsedTime = 0.0
         runStarted = true
         thread = viewModelScope.launch {
             while (lapsCompleted <= lapCount) {
@@ -168,6 +173,7 @@ class StartViewModel @Inject constructor(
                             it < 20
                         }
                 }
+                elapsedTime = 0.0
                 lapsCompleted ++
                 lapTimes.add(Pair(startTime, currentLocation!!.time))
                 if (isSaved) {
