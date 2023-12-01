@@ -108,6 +108,7 @@ class StartViewModel @Inject constructor(
 
     fun disableMap() {
         mapSettings = MapUiSettings(
+            rotationGesturesEnabled = false,
             zoomControlsEnabled = false,
             zoomGesturesEnabled = false,
             scrollGesturesEnabled = false,
@@ -198,7 +199,6 @@ class StartViewModel @Inject constructor(
                         (CameraPosition(LatLng(currentLocation!!.latitude, currentLocation!!.longitude), 18.0F, 0.0F, 0.0F)), 2000
                 )
             }.invokeOnCompletion {
-                currentLocation = locationClient.locationFlow.value
                 enableMap()
             }
         }
