@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import cmpt370.group12.laptracker.model.data.entities.AchievementEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -29,8 +30,5 @@ interface AchievementDao {
     fun Achievement_getUnFinished(): Flow<List<AchievementEntity>>
 
     @Query("SELECT * FROM achievemententity")
-    fun Achievement_getAll(): Flow<List<AchievementEntity>>
-
-    @Query("SELECT * FROM achievemententity")
-    suspend fun Achievement_getAll2(): List<AchievementEntity>
+    suspend fun Achievement_getAll(): List<AchievementEntity>
 }
