@@ -30,7 +30,7 @@ Once you have the prerequisites, follow these steps to get a copy of the project
 
 2. **Navigate into the project directory**
     ```bash
-    cd cmpt-370
+    cd cmpt-370/LapTracker
     ```
 
 3. **Open the project in Android Studio**
