@@ -169,8 +169,8 @@ class LapTrackerRepositoryImpl(
 
 
     // ###################### TRACK FUNCTIONS ######################
-    override suspend fun Track_insert(track: Track): Long {
-        return trackDao.Track_insert(track.toTrackEntity())
+    override suspend fun Track_insert(track: Track){
+        trackDao.Track_insert(track.toTrackEntity())
     }
 
     override suspend fun Track_delete(track: Track){

@@ -9,20 +9,25 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.TextField
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -439,6 +444,45 @@ class StartView(
                 LaunchedEffect(viewModel.mapIsEnabled) {
                     if (!viewModel.mapIsEnabled) viewModel.panMapCamera(cameraState)
                     else viewModel.panMapCameraToCurrentLocation(cameraState)
+                }
+            }
+        }
+    }
+
+    @Composable
+    fun TrackListView(trackPicked: MutableState<Boolean>) {
+        LaunchedEffect(Unit) {
+            viewModel.fetchTracks()
+        }
+        Box (
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .fillMaxSize()
+        ) {
+            Card(
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .size(width = 250.dp, height = 350.dp)
+                    .verticalScroll(rememberScrollState())
+            ) {
+                viewModel.tracksCards.value.forEach { track ->
+                    Card(
+                        elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
+                        modifier = Modifier
+                            .padding(bottom = 10.dp)
+                            .fillMaxSize()
+                            .clickable {
+                                //for (i in track.points.indices) {
+                                //    viewModel.points.add(track.points[i])
+                                //}
+                                trackPicked.value = true
+                                viewModel.setToggle.value = true
+                            }
+                            .height(50.dp)
+                    ) {
+                        Text(text = track.track.name, textAlign = TextAlign.Center,
+                            modifier=Modifier.fillMaxSize(), fontSize = 30.sp)
+                    }
                 }
             }
         }

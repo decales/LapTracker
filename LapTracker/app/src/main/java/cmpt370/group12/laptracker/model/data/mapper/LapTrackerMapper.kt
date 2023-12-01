@@ -90,7 +90,8 @@ fun TrackEntity.toTrack(): Track {
         name = name,
         location = location,
         comment = comment,
-        mapImage = mapImage
+        mapImage = mapImage,
+        points = points
     )
 }
 

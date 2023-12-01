@@ -2,8 +2,8 @@ package cmpt370.group12.laptracker.viewmodel
 
 import android.location.Geocoder
 import android.location.Location
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -16,7 +16,6 @@ import cmpt370.group12.laptracker.Achievements
 import cmpt370.group12.laptracker.R
 import cmpt370.group12.laptracker.model.LocationClient
 import cmpt370.group12.laptracker.model.domain.model.Achievement
-import cmpt370.group12.laptracker.model.domain.model.MapPoint
 import cmpt370.group12.laptracker.model.domain.model.Track
 import cmpt370.group12.laptracker.model.domain.repository.LapTrackerRepository
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -78,6 +77,9 @@ class StartViewModel @Inject constructor(
     var nextPoint: LatLng by mutableStateOf(LatLng(0.0, 0.0))
     var lapsCompleted by mutableIntStateOf(0)
     var lapCount by mutableIntStateOf(3)
+
+    //List of tracks variables
+    val tracksCards: MutableState<List<TracksViewModel.TrackCard>> = mutableStateOf(emptyList())
 
 
     //Map variables
@@ -157,10 +159,13 @@ class StartViewModel @Inject constructor(
         viewModelScope.launch{
             val location = geoCoder.getFromLocation(mapPoints.first().latitude, mapPoints.first().longitude, 1)
             val locationStr = "${location?.first()?.locality}\n${location?.first()?.countryName}"
-            val id = db.Track_insert(Track(null, nameInput, locationStr, "", R.drawable.ic_launcher_foreground))
-            mapPoints.forEachIndexed { index, point ->
-                db.MapPoint_insert(MapPoint(null, id.toInt(), point.latitude, point.longitude, "name?", index))
-            }
+            db.Track_insert(Track(null, nameInput, locationStr, "", R.drawable.ic_launcher_foreground, mapPoints))
+        }
+    }
+
+    suspend fun fetchTracks() {
+        tracksCards.value = db.Track_getAll().map { track ->
+            TracksViewModel.TrackCard(track, mutableStateOf(false))
         }
     }
 
