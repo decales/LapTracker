@@ -4,7 +4,7 @@ Our application is an innovative lap tracking application, developed in Kotlin. 
 
 The application allows users to intuitively set the start location and legs of a track, and then run it. It provides comprehensive statistics for each race, including time, speed, and distance covered.
 
-In addition to basic lap tracking, cmpt-370 offers several advanced features:
+In addition to basic lap tracking, our application  offers several advanced features:
 
 - **Race Statistics**: The application provides detailed stats for each race, allowing users to analyze their performance.
 - **Comments**: Users can set comments for each race, providing a way to note strategies, conditions, or other important details.
