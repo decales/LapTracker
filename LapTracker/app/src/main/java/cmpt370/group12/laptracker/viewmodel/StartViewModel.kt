@@ -65,7 +65,7 @@ class StartViewModel @Inject constructor(
 
     //Achievements
     val achievements = Achievements()
-    var updateCreateTrack by mutableStateOf(false)
+    var updateAchievements by mutableStateOf(false)
     var achieved by mutableStateOf(false)
 
 
