@@ -1,6 +1,5 @@
 package cmpt370.group12.laptracker.viewmodel
 
-import DaoRepositoryImplementation
 import android.location.Geocoder
 import android.location.Location
 import androidx.compose.runtime.getValue
@@ -9,7 +8,6 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.graphics.Color
@@ -28,18 +26,14 @@ import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapUiSettings
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.suspendCancellableCoroutine
 import java.time.LocalDateTime
 import javax.inject.Inject
-import kotlin.time.Duration
 
 @HiltViewModel
 class StartViewModel @Inject constructor(
@@ -170,7 +164,7 @@ class StartViewModel @Inject constructor(
                         .map { locationClient.getProximity(Pair(it!!.latitude, it.longitude), nextPoint) }
                         .first {
                             distance = it
-                            it < 20
+                            it < 40
                         }
                 }
                 elapsedTime = 0.0
