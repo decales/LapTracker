@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import cmpt370.group12.laptracker.presentation.AppState
+import cmpt370.group12.laptracker.ui.SideScrollMain
 import cmpt370.group12.laptracker.view.theme.LapTrackerTheme
 import co.yml.charts.ui.linechart.LineChart
 
@@ -49,7 +50,8 @@ class Feature13 : ComponentActivity() {
                         color = MaterialTheme.colorScheme.background
                 ) {
                     //Greeting14("Feature 13")
-                    RunSelector()
+                    //RunSelector()
+                    SideScrollMain().SideScroll()
                 }
             }
         }
@@ -66,8 +68,8 @@ fun RunSelector (){
     val selectedRunsViewModel = viewModel<SelectedRunsViewModel>()
     Column(
             modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
+                .fillMaxWidth()
+                .padding(16.dp),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.End
     ){
@@ -78,10 +80,10 @@ fun RunSelector (){
                         fontWeight = FontWeight.Bold
                 ),
                 modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
-                        .wrapContentWidth(Alignment.CenterHorizontally)
-                        .wrapContentHeight(Alignment.CenterVertically)
+                    .fillMaxWidth()
+                    .padding(16.dp)
+                    .wrapContentWidth(Alignment.CenterHorizontally)
+                    .wrapContentHeight(Alignment.CenterVertically)
         )
         Button(
                 onClick = { dropOpen = true },

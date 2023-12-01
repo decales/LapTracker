@@ -57,5 +57,10 @@ class MainUITracking {
              */
         }
     }
+
+    @Composable
+    fun RealtimeUI (){
+
+    }
 }
 
