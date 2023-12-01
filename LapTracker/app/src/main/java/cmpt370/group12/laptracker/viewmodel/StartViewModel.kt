@@ -54,6 +54,8 @@ class StartViewModel @Inject constructor(
 
     var viewState: ViewState by mutableStateOf(ViewState.ChooseMode)
 
+    // UI Variables
+    var statsBarToggled by mutableStateOf(false)
     var setToggle = mutableStateOf(false)
     val scope = CoroutineScope(Dispatchers.Main)
     var textSetPoints = "Set start"
@@ -69,13 +71,13 @@ class StartViewModel @Inject constructor(
     var achieved by mutableStateOf(false)
 
 
-    // Tracking UI variables
-
+    // Tracking variables
+    var runStarted by mutableStateOf(false)
     var mapPoints:SnapshotStateList<LatLng> = mutableStateListOf()
     var currentLocation: Location? by mutableStateOf(null)
-    var distance = mutableDoubleStateOf(0.0)
-    var laps = mutableIntStateOf(0)
-    var next = mutableStateOf("")
+    var nextPoint: LatLng by mutableStateOf(LatLng(0.0, 0.0))
+    var lapsCompleted by mutableIntStateOf(0)
+    var lapCount by mutableIntStateOf(3)
 
 
     //Map variables
@@ -87,33 +89,6 @@ class StartViewModel @Inject constructor(
         scrollGesturesEnabled = false,
         scrollGesturesEnabledDuringRotateOrZoom = false
     ))
-
-    data class TrackCard(
-        val id: Int, // track reference in database
-        val name: String,
-        val location: String,
-        val points: MutableList<Point>,
-        val mapSnippet: Int
-    )
-
-    data class Point (
-        val latlon: Pair<Double, Double>,
-        val name: String,
-        var isPassed: Boolean
-    )
-
-    // TODO Dummy values, replace with array of database query result
-    val trackCards = List(12) { TrackCard(0, "Name", "Location",
-        mutableListOf(
-            Point(Pair(52.132681649999995, -106.63488491666665), "Start", false),
-            Point(Pair(52.132681649999995, -106.63488491666665), "L1", false),
-            Point(Pair(52.132681649999995, -106.63488491666665), "L2", false),
-            Point(Pair(52.132681649999995, -106.63488491666665), "L3", false),
-            Point(Pair(52.132681649999995, -106.63488491666665), "L4", false),
-            Point(Pair(52.132681649999995, -106.63488491666665), "L5", false)
-        ),
-        R.drawable.ic_launcher_foreground)
-    }
 
 
     fun enableMap() {

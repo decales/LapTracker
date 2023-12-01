@@ -1,6 +1,7 @@
 package cmpt370.group12.laptracker.view
 
 import android.location.Geocoder
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -10,6 +11,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.TextField
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -283,10 +286,54 @@ class StartView(
             contentAlignment = Alignment.Center,
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = 200.dp, bottom = 200.dp, start = 50.dp, end = 50.dp)
+                .padding(20.dp)
         ) {
-            Text(text = "in run")
+            Button(
+                onClick = { viewModel.launchChooseMode() },
+                modifier = Modifier.align(Alignment.TopStart)
+            ) {
+                Text(text = "Quit")
+            }
+            Box(modifier = Modifier.align(Alignment.BottomCenter)) {
+                if (viewModel.statsBarToggled) StatisticsBar()
+
+                else {
+                    Button(onClick = {  }) {
+                        Text(text = "Start tracking")
+                    }
+                }
+            }
         }
+    }
+
+
+    @OptIn(ExperimentalFoundationApi::class)
+    @Composable
+    fun StatisticsBar() {
+        Card {
+            val pagerState = rememberPagerState { 3 }
+            HorizontalPager(state = pagerState) {
+                when(pagerState.currentPage) {
+                    0 -> {
+
+                    }
+                    1 -> {
+
+                    }
+                    2 -> {
+
+                    }
+                }
+            }
+        }
+//            Text(text = "Distance from target: ")
+//            Text(text = "Laps: ${viewModel.lapsCompleted}/${viewModel.lapCount}")
+//            Text(text = "Current speed: ${viewModel.currentLocation?.speed}")
+//            Text(text = "Distance from target: " +
+//                    "${LatLng(
+//                        (viewModel.currentLocation?.latitude?.minus(viewModel.nextPoint.latitude)!!),
+//                        (viewModel.currentLocation?.longitude?.minus(viewModel.nextPoint.longitude)!!)
+//                    )}")
     }
 
 
@@ -389,8 +436,6 @@ class StartView(
                 Polyline(points = viewModel.mapPoints.toList(), width = 4F)
                 if (viewModel.mapPoints.size >= 2) Polyline(points = listOf(viewModel.mapPoints.toList().first(), viewModel.mapPoints.toList().last()), width = 4F)
 
-
-
                 LaunchedEffect(viewModel.mapIsEnabled) {
                     if (!viewModel.mapIsEnabled) viewModel.panMapCamera(cameraState)
                     else viewModel.panMapCameraToCurrentLocation(cameraState)
@@ -398,52 +443,6 @@ class StartView(
             }
         }
     }
-
-
-//    @Composable
-//    fun TrackingView() {
-//        Box (
-//            contentAlignment = Alignment.Center,
-//            modifier = Modifier
-//                .fillMaxSize()
-//        ) {
-//            Card(
-//                modifier = Modifier
-//                    .align(Alignment.Center)
-//                    .size(width = 250.dp, height = 350.dp)
-//            ) {
-//                Column(
-//                    horizontalAlignment = Alignment.CenterHorizontally,
-//                    modifier = Modifier.fillMaxSize()
-//                ) {
-//                    Box( // Container to display location points
-//                        modifier = Modifier
-//                            .padding(bottom = 10.dp)
-//                            .height(100.dp)
-//                            .verticalScroll(rememberScrollState())
-//                            .fillMaxWidth()
-//                    ) {
-//                        Column(
-//                            horizontalAlignment = Alignment.CenterHorizontally,
-//                            modifier = Modifier
-//                                .padding(top = 10.dp)
-//                                .fillMaxSize()
-//                        ) {
-//                            viewModel.points.forEach { point ->
-//                                Text(text = point.name)
-//                            }
-//                        }
-//                    }
-//                    if (!viewModel.setToggle.value && !viewModel.trackPicked.value) {
-//                        //SetPointButton(viewModel.points)
-//                    }
-//                    if (viewModel.points.isNotEmpty() && viewModel.setToggle.value) {
-//                            TrackingButton(viewModel.points)
-//                    }
-//                }
-//            }
-//        }
-//    }
 
 
 //    @Composable
