@@ -286,7 +286,7 @@ class StartView(
             contentAlignment = Alignment.Center,
             modifier = Modifier
                 .fillMaxSize()
-                .padding(20.dp)
+                .padding(30.dp)
         ) {
             Button(
                 onClick = { viewModel.launchChooseMode() },
@@ -294,12 +294,35 @@ class StartView(
             ) {
                 Text(text = "Quit")
             }
-            Box(modifier = Modifier.align(Alignment.BottomCenter)) {
-                if (viewModel.statsBarToggled) StatisticsBar()
-
+            Column(
+                horizontalAlignment = Alignment.End,
+                modifier = Modifier.align(Alignment.TopEnd)
+            ) {
+                Text(text = "Timer")
+                Text(text = "Laps: ${viewModel.lapsCompleted}/${viewModel.lapCount}")
+                Text(text = "Current speed: ${viewModel.currentLocation?.speed}")
+//                Text(text = "Distance from target: " +
+//                        "${LatLng(
+//                            (viewModel.currentLocation?.latitude?.minus(viewModel.nextPoint.latitude)!!),
+//                            (viewModel.currentLocation?.longitude?.minus(viewModel.nextPoint.longitude)!!)
+//                        )}")
+            }
+            if (!viewModel.runStarted) {
+                Button(
+                    onClick = { viewModel.runStarted = true },
+                    modifier = Modifier.align(Alignment.BottomCenter)
+                ) {
+                    Text(text = "Start tracking")
+                }
+            }
+            else {
+                if (viewModel.statsBarVisible) StatisticsBar(modifier = Modifier.align(Alignment.BottomCenter))
                 else {
-                    Button(onClick = {  }) {
-                        Text(text = "Start tracking")
+                    Button(
+                        onClick = { viewModel.statsBarVisible = true },
+                        modifier = Modifier.align(Alignment.BottomStart)
+                    ) {
+                        Text(text = "Show statistics")
                     }
                 }
             }
@@ -309,31 +332,29 @@ class StartView(
 
     @OptIn(ExperimentalFoundationApi::class)
     @Composable
-    fun StatisticsBar() {
-        Card {
-            val pagerState = rememberPagerState { 3 }
-            HorizontalPager(state = pagerState) {
-                when(pagerState.currentPage) {
-                    0 -> {
+    fun StatisticsBar(modifier: Modifier) {
+        val pagerState = rememberPagerState { 3 }
+        
+        Box(modifier = modifier) {
+            Button(onClick = { viewModel.statsBarVisible = false }) {
+                Text(text = "Hide statistics")
+            }
+            Card(Modifier.padding(20.dp)) {
+                HorizontalPager(state = pagerState) {
+                    when(pagerState.currentPage) {
+                        0 -> {
 
-                    }
-                    1 -> {
+                        }
+                        1 -> {
 
-                    }
-                    2 -> {
+                        }
+                        2 -> {
 
+                        }
                     }
                 }
             }
         }
-//            Text(text = "Distance from target: ")
-//            Text(text = "Laps: ${viewModel.lapsCompleted}/${viewModel.lapCount}")
-//            Text(text = "Current speed: ${viewModel.currentLocation?.speed}")
-//            Text(text = "Distance from target: " +
-//                    "${LatLng(
-//                        (viewModel.currentLocation?.latitude?.minus(viewModel.nextPoint.latitude)!!),
-//                        (viewModel.currentLocation?.longitude?.minus(viewModel.nextPoint.longitude)!!)
-//                    )}")
     }
 
 
