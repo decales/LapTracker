@@ -50,7 +50,7 @@ class Feature12 : ComponentActivity() {
                         color = MaterialTheme.colorScheme.background
                 ) {
 
-                    RealTimeUI()
+                    //RealTimeUI()
 
                 }
             }

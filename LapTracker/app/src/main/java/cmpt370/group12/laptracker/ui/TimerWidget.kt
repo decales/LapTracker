@@ -25,6 +25,7 @@ import kotlinx.coroutines.launch
 
 class TimerWidget {
 
+
     @Composable
     fun TimeWidget() {
         var isRunning by remember { mutableStateOf(false) }
@@ -32,18 +33,19 @@ class TimerWidget {
         var startTime by remember { mutableStateOf(0L) }
         val scope = rememberCoroutineScope()
         Column(
-                modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
+            modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                    text = formatElapsedTime(elapsedTime),
-                    style = MaterialTheme.typography.bodyLarge.copy(
-                            fontSize = 50.sp, // Adjust the font size as needed
-                            //fontWeight = FontWeight.Bold
-                    )
+                text = formatElapsedTime(elapsedTime),
+                style = MaterialTheme.typography.bodyLarge.copy(
+                    fontSize = 50.sp, // Adjust the font size as needed
+                    //fontWeight = FontWeight.Bold
+                )
             )
-            Spacer ( modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
+            /*
             Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceEvenly
@@ -75,19 +77,39 @@ class TimerWidget {
                         enabled = !isRunning
                 )
             }
+        }*/
+            fun resetTime() {
+                isRunning = false
+                elapsedTime = 0
+            }
+            
+            fun setTimer() {
+                if (isRunning) {
+                    isRunning = false
+                } else {
+                    isRunning = true
+                    startTime = System.currentTimeMillis() - elapsedTime
+                    scope.launch {
+                        while (isRunning) {
+                            elapsedTime = System.currentTimeMillis() - startTime
+                            delay(1000)
+                        }
+                    }
+                }
+            }
         }
     }
+
+
 
 
     //format the time into readable text 00:00:00:000
     @Composable
     fun formatElapsedTime ( elapsedTime: Long): String {
-
         val miliseconds = (elapsedTime % 1000).toInt()
         val seconds = (elapsedTime / 1000).toInt()
         val minutes = seconds / 60
         val hours = minutes / 60
-
         return String.format( "%02d:%02d:%02d:%03d", hours, minutes % 60, seconds % 60, miliseconds)
     }
 
@@ -103,3 +125,5 @@ class TimerWidget {
         }
     }
 }
+
+

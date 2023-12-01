@@ -12,7 +12,9 @@ import androidx.compose.ui.unit.sp
 import cmpt370.group12.laptracker.presentation.MapState
 
 class SpeedWidget {
-    val speed = MapState().currentLocation?.speed
+
+    //val speed = MapState().currentLocation?.speed
+    val speed =
     @Composable
     fun SpeedPaceWidget () {
         Column(

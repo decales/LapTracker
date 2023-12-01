@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.sp
 import cmpt370.group12.laptracker.presentation.MapState
+import cmpt370.group12.laptracker.viewmodel.StartViewModel
 
 class DistanceWidget {
 
@@ -19,7 +20,8 @@ class DistanceWidget {
     fun DistanceWidget () {
 
         val tracker = DistanceCalc()
-        val local = MapState().currentLocation
+        //val local = MapState().currentLocation
+        val local = StartViewModel().currentLocation
         tracker.update(local)
         val distance = tracker.getDistance()
         Column(
