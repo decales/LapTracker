@@ -34,6 +34,7 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
@@ -47,11 +48,8 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.DialogWindowProvider
 import androidx.core.content.ContextCompat
 import cmpt370.group12.laptracker.R
-import cmpt370.group12.laptracker.presentation.GetAverageSpeed
-import cmpt370.group12.laptracker.presentation.GetTotalDistance
-import cmpt370.group12.laptracker.presentation.GetTotalTimeSpentOnTrack
-import cmpt370.group12.laptracker.presentation.MapState
 import cmpt370.group12.laptracker.viewmodel.TracksViewModel
+import kotlinx.coroutines.delay
 
 class TracksView(
     private val viewModel: TracksViewModel
@@ -238,6 +236,13 @@ class TracksView(
                     }
                 }
             }
+        }
+        viewModel.getAchievementState("Checked First Track")
+        viewModel.achievements.ShowAchievement("Checked First Track", viewModel.updateAchievement, viewModel.achieved)
+        LaunchedEffect(Unit) {
+            viewModel.updateAchievement = true
+            delay(2000)
+            viewModel.updateAchievement = false
         }
     }
 

@@ -12,8 +12,10 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import cmpt370.group12.laptracker.Achievements
 import cmpt370.group12.laptracker.R
 import cmpt370.group12.laptracker.model.LocationClient
+import cmpt370.group12.laptracker.model.domain.model.Achievement
 import cmpt370.group12.laptracker.model.domain.model.MapPoint
 import cmpt370.group12.laptracker.model.domain.model.Track
 import cmpt370.group12.laptracker.model.domain.repository.LapTrackerRepository
@@ -28,7 +30,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 @HiltViewModel
@@ -58,6 +62,11 @@ class StartViewModel @Inject constructor(
     var color = Color(0, 153, 0)
     var textTracking = "Start Tracking"
     var thread = mutableStateOf<Job?>(null)
+
+    //Achievements
+    val achievements = Achievements()
+    var updateAchievements by mutableStateOf(false)
+    var achieved by mutableStateOf(false)
 
 
     // Tracking UI variables
@@ -177,6 +186,17 @@ class StartViewModel @Inject constructor(
             mapPoints.forEachIndexed { index, point ->
                 db.MapPoint_insert(MapPoint(null, id.toInt(), point.latitude, point.longitude, "name?", index))
             }
+        }
+    }
+
+    fun getAchievementState(achievementName: String) {
+        viewModelScope.launch {
+            val allAchievements = db.Achievement_getAll()
+            allAchievements.forEach{ achi -> if (achi.name == achievementName) {
+                achieved = achi.achieved
+                delay(2000)
+                db.Achievement_insert(Achievement(achi.id, achi.name, achi.description, true, achi.iconID, LocalDateTime.now().year.toLong()))
+            } }
         }
     }
 }

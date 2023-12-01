@@ -6,12 +6,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import cmpt370.group12.laptracker.Achievements
 import cmpt370.group12.laptracker.R
+import cmpt370.group12.laptracker.model.domain.model.Achievement
 import cmpt370.group12.laptracker.model.domain.model.Runs
 import cmpt370.group12.laptracker.model.domain.model.Track
 import cmpt370.group12.laptracker.model.domain.repository.LapTrackerRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 @HiltViewModel
@@ -21,6 +25,11 @@ class TracksViewModel @Inject constructor(
 
     // TODO add all data and states values required for TracksView composable functions
     // TODO (if applicable) retrieve data from database (model)
+
+    //Achievements
+    val achievements = Achievements()
+    var updateAchievement by mutableStateOf(false)
+    var achieved by mutableStateOf(false)
 
     data class TrackCard(
         val track: Track,
@@ -86,6 +95,17 @@ class TracksViewModel @Inject constructor(
             val i = (Math.random() * 1000).toInt()
             db.Track_insert(Track(null, "test $i", "test $i", "test comment", R.drawable.ic_launcher_foreground))
             fetchTracks()
+        }
+    }
+
+    fun getAchievementState(achievementName: String) {
+        viewModelScope.launch {
+            val allAchievements = db.Achievement_getAll()
+            allAchievements.forEach{ achi -> if (achi.name == achievementName) {
+                achieved = achi.achieved
+                delay(2000)
+                db.Achievement_insert(Achievement(achi.id, achi.name, achi.description, true, achi.iconID, LocalDateTime.now().year.toLong()))
+            } }
         }
     }
 
