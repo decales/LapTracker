@@ -36,6 +36,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
@@ -342,14 +346,16 @@ class TracksView(
 
 
     @Composable
-    fun TrackDetailsNotes() { // TODO make this
+    fun TrackDetailsNotes() {
         Box(
             contentAlignment = Center,
             modifier = Modifier.fillMaxSize()
         ) {
-            TextField(value = viewModel.currentTrackDetails.comment,
+            var commentInput by remember { mutableStateOf("")}
+            TextField(value = commentInput,
                 onValueChange = {
                     newText ->
+                    commentInput = newText
                     viewModel.viewModelScope.launch {
                         viewModel.db.Track_insert(Track(viewModel.currentTrackDetails.id,
                             viewModel.currentTrackDetails.name,
