@@ -20,7 +20,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TracksViewModel @Inject constructor(
-    private val db: LapTrackerRepository
+    val db: LapTrackerRepository
 ):ViewModel() {
 
     // TODO add all data and states values required for TracksView composable functions
