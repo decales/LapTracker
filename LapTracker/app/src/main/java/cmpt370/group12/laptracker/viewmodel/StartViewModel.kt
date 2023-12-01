@@ -55,7 +55,7 @@ class StartViewModel @Inject constructor(
     var viewState: ViewState by mutableStateOf(ViewState.ChooseMode)
 
     // UI Variables
-    var statsBarToggled by mutableStateOf(false)
+    var statsBarVisible by mutableStateOf(false)
     var setToggle = mutableStateOf(false)
     val scope = CoroutineScope(Dispatchers.Main)
     var textSetPoints = "Set start"
@@ -124,8 +124,23 @@ class StartViewModel @Inject constructor(
     }
 
     fun launchInRun() {
-        viewState = ViewState.InRun
         disableMap()
+        viewState = ViewState.InRun
+        viewModelScope.launch {
+            locationClient.locationFlow.collect { location ->
+                currentLocation =  location
+            }
+        }
+    }
+
+    fun pauseRun() {
+        runStarted = false
+
+    }
+
+    fun startRun() {
+        runStarted = true
+
     }
 
 

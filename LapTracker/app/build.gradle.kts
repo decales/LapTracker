@@ -4,6 +4,7 @@ plugins {
     id("com.google.devtools.ksp")
     id("kotlin-parcelize")
     id("dagger.hilt.android.plugin")
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.5.21"
 }
 
 android {
@@ -53,6 +54,8 @@ android {
 }
 
 dependencies {
+
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.0")
 
     // for graphing
     implementation ("co.yml:ycharts:2.1.0")
