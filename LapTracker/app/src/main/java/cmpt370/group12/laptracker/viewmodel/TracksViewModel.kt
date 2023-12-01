@@ -1,5 +1,6 @@
 package cmpt370.group12.laptracker.viewmodel
 
+import DaoRepositoryImplementation
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -8,10 +9,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cmpt370.group12.laptracker.Achievements
 import cmpt370.group12.laptracker.R
+import cmpt370.group12.laptracker.model.data.mapper.DaoRepository
 import cmpt370.group12.laptracker.model.domain.model.Achievement
-import cmpt370.group12.laptracker.model.domain.model.Runs
 import cmpt370.group12.laptracker.model.domain.model.Track
-import cmpt370.group12.laptracker.model.domain.repository.LapTrackerRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -20,7 +20,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TracksViewModel @Inject constructor(
-    private val db: LapTrackerRepository
+    val dao: DaoRepository
 ):ViewModel() {
 
     // TODO add all data and states values required for TracksView composable functions
@@ -37,8 +37,7 @@ class TracksViewModel @Inject constructor(
     )
 
     val tracksCards: MutableState<List<TrackCard>> = mutableStateOf(emptyList())
-    var currentTrackDetails: Track by mutableStateOf(Track(null, "", "", "", 0))
-    var currentTrackDetailsRuns: List<Runs> by mutableStateOf(emptyList())
+    var currentTrackDetails: Track by mutableStateOf(Track(null, "", "", "", 0, emptyList(), emptyList()))
     var trackDetailsVisible by mutableStateOf(false)
     var deleteConfirmationVisible by mutableStateOf(false)
     var deleteModeToggled by mutableStateOf(false)
@@ -47,7 +46,6 @@ class TracksViewModel @Inject constructor(
         viewModelScope.launch{
             trackDetailsVisible = !trackDetailsVisible
             currentTrackDetails = selectedTrack
-            fetchTrackRuns()
         }
     }
 
@@ -62,7 +60,7 @@ class TracksViewModel @Inject constructor(
     fun deleteSelectedTracks() {
         viewModelScope.launch {
             tracksCards.value.forEach { trackCard ->
-                if (trackCard.isSelected.value) db.Track_delete(trackCard.track)
+                if (trackCard.isSelected.value) dao.trackDelete(trackCard.track)
             }
             fetchTracks()
             toggleDeleteConfirmation()
@@ -71,47 +69,40 @@ class TracksViewModel @Inject constructor(
 
     fun deleteCurrentTrack() {
         viewModelScope.launch {
-            db.Track_delete(currentTrackDetails)
+            dao.trackDelete(currentTrackDetails)
             fetchTracks()
             toggleDeleteConfirmation()
             trackDetailsVisible = !trackDetailsVisible
         }
     }
 
-    private suspend fun fetchTracks() {
-        tracksCards.value = db.Track_getAll().map { track ->
-            TrackCard(track, mutableStateOf(false))
+    suspend fun fetchTracks() {
+        viewModelScope.launch {
+            tracksCards.value = dao.trackGetAll().map { track ->
+                TrackCard(track, mutableStateOf(false))
+            }
         }
     }
 
-    private suspend fun fetchTrackRuns() {
-        viewModelScope.launch {
-            currentTrackDetailsRuns = db.Runs_getByTrackId(currentTrackDetails.id)
-        }
-    }
 
     fun addTrack() { // TODO temporary for testing, remove later
         viewModelScope.launch{
             val i = (Math.random() * 1000).toInt()
-            db.Track_insert(Track(null, "test $i", "test $i", "test comment", R.drawable.ic_launcher_foreground))
+            dao.trackInsert(Track(null, "test $i", "test $i", "test comment", R.drawable.ic_launcher_foreground,
+                listOf(Pair(52.1331886, -106.6348112), Pair(52.13319, -106.63482)),
+                listOf(Pair(10L, 0L), Pair(10L, 0L))))
             fetchTracks()
         }
     }
 
     fun getAchievementState(achievementName: String) {
         viewModelScope.launch {
-            val allAchievements = db.Achievement_getAll()
+            val allAchievements = dao.achievementGetAll()
             allAchievements.forEach{ achi -> if (achi.name == achievementName) {
                 achieved = achi.achieved
                 delay(2000)
-                db.Achievement_insert(Achievement(achi.id, achi.name, achi.description, true, achi.iconID, LocalDateTime.now().year.toLong()))
+                dao.achievementUpdate(Achievement(achi.id, achi.name, achi.description, true, achi.iconID, LocalDateTime.now().year.toLong()))
             } }
-        }
-    }
-
-    init {
-        viewModelScope.launch {
-            fetchTracks()
         }
     }
 }

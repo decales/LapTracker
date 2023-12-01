@@ -1,7 +1,5 @@
 package cmpt370.group12.laptracker.model.domain.model
 
-import java.sql.Timestamp
-
 data class Achievement(
     //id : This is the Primary Key For Database Entry into Table AchievementEntity
     val id: Int? = null,
