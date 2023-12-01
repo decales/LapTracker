@@ -51,6 +51,9 @@ class ProfileView(
     @OptIn(ExperimentalFoundationApi::class)
     @Composable
     fun View() {
+        LaunchedEffect(Unit) {
+            viewModel.fetchAchievements()
+        }
         Column {
             val pagerState = rememberPagerState { 2 }
             LaunchedEffect(viewModel.currentPage) { pagerState.scrollToPage(viewModel.currentPage) }

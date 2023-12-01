@@ -15,6 +15,7 @@ import androidx.lifecycle.viewModelScope
 import cmpt370.group12.laptracker.Achievements
 import cmpt370.group12.laptracker.R
 import cmpt370.group12.laptracker.model.LocationClient
+import cmpt370.group12.laptracker.model.domain.model.Achievement
 import cmpt370.group12.laptracker.model.domain.model.MapPoint
 import cmpt370.group12.laptracker.model.domain.model.Track
 import cmpt370.group12.laptracker.model.domain.repository.LapTrackerRepository
@@ -62,7 +63,8 @@ class StartViewModel @Inject constructor(
 
     //Achievements
     val achievements = Achievements()
-    var update by mutableStateOf(false)
+    var updateCreateTrack by mutableStateOf(false)
+    var achieved by mutableStateOf(false)
 
 
     // Tracking UI variables
@@ -182,6 +184,16 @@ class StartViewModel @Inject constructor(
             mapPoints.forEachIndexed { index, point ->
                 db.MapPoint_insert(MapPoint(null, id.toInt(), point.latitude, point.longitude, "name?", index))
             }
+        }
+    }
+
+    fun getAchievementState(achievmentName: String) {
+        viewModelScope.launch {
+            val allAchievements = db.Achievement_getAll()
+            allAchievements.forEach{ achi -> if (achi.name == achievmentName) {
+                achieved = achi.achieved
+                db.Achievement_insert(Achievement(achi.id, achi.name, achi.description, true, achi.iconID, achi.timestamp))
+            } }
         }
     }
 }

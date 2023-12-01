@@ -33,13 +33,13 @@ class ProfileViewModel @Inject constructor(
         this.selectedAchievement = selectedAchievement
     }
 
-    private suspend fun fetchAchievements() {
+    suspend fun fetchAchievements() {
         val fetched = db.Achievement_getAll()
         if (fetched.isNotEmpty()) achievements.value = fetched
         else { // On app install, populate db with achievements
             listOf(
                 // TODO replace with actual achievement names, descriptions, and icons
-                Achievement(null, "name1", "desc", false, R.drawable.ic_launcher_foreground, 0),
+                Achievement(null, "Created First Track", "Created your first track!", false, R.drawable.ic_launcher_foreground, 0),
                 Achievement(null, "name2", "desc", false, R.drawable.ic_launcher_foreground, 0),
                 Achievement(null, "name3", "desc", false, R.drawable.ic_launcher_foreground, 0),
                 Achievement(null, "name4", "desc", false, R.drawable.ic_launcher_foreground, 0),
