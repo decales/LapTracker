@@ -1,7 +1,6 @@
 package cmpt370.group12.laptracker.view
 
 import android.location.Geocoder
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,8 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.TextField
@@ -27,12 +24,11 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
@@ -452,6 +448,7 @@ class StartView(
                         StartViewModel.ViewState.NewTrack -> viewModel.panMapCameraToCurrentLocation(cameraState)
                         StartViewModel.ViewState.PostRun -> viewModel.panMapCamera(cameraState)
                         StartViewModel.ViewState.NoServices -> viewModel.panMapCamera(cameraState)
+                        StartViewModel.ViewState.InRun -> viewModel.panMapCameraToCurrentLocation(cameraState)
                         else -> {}
                     }
                 }
@@ -482,17 +479,26 @@ class StartView(
                         modifier = Modifier
                             .padding(bottom = 10.dp)
                             .fillMaxSize()
-                            .clickable {
-                                viewModel.mapPoints =
-                                    track.track.points as SnapshotStateList<Pair<Double, Double>> //TODO
-                                viewModel.launchInRun()
-                            }
                             .height(50.dp)
+                            .clickable {
+                                viewModel.viewModelScope.launch {
+                                    val arrayList: ArrayList<Pair<Double, Double>> = track.track.points as ArrayList<Pair<Double, Double>>
+                                    viewModel.mapPoints = arrayList.toMutableStateList()
+                                    viewModel.locationClient.startLocationFlow(0.5)
+                                    viewModel.currentLocation = viewModel.locationClient.getCurrentLocation()
+                                    viewModel.viewState = StartViewModel.ViewState.InRun
+                                }
+                            }
                     ) {
                         Text(text = track.track.name, textAlign = TextAlign.Center,
                             modifier=Modifier.fillMaxSize(), fontSize = 30.sp)
                     }
                 }
+            }
+            Button(onClick = { viewModel.launchChooseMode() },
+                modifier = Modifier.align(Alignment.BottomCenter)
+            ) {
+                Text(text = "Cancel")
             }
         }
     }
