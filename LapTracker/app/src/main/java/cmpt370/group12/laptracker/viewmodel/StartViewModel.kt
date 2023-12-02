@@ -158,6 +158,7 @@ class StartViewModel @Inject constructor(
         runStarted = true
         thread = viewModelScope.launch {
             while (lapsCompleted <= lapCount) {
+                if (isSaved) fetchTracks()
                 mapPoints.forEachIndexed { index, point ->
                     startTime = currentLocation?.time!!
                     if (index == mapPoints.size - 1){
