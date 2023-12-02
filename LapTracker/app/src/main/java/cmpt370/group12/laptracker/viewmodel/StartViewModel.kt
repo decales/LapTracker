@@ -73,7 +73,7 @@ class StartViewModel @Inject constructor(
     var currentLocation: Location? by mutableStateOf(null)
     var nextPoint: Pair<Double,Double> by mutableStateOf(Pair(0.0, 0.0))
     var lapsCompleted by mutableIntStateOf(1)
-    var lapCount by mutableIntStateOf(3)
+    var lapCount by mutableIntStateOf(2)
     var lapTimes: SnapshotStateList<Pair<Long, Long>> =  mutableStateListOf()
     var startTime by mutableLongStateOf(0)
     var distance by mutableDoubleStateOf(0.0)
@@ -164,17 +164,11 @@ class StartViewModel @Inject constructor(
                         .map { locationClient.getProximity(Pair(it!!.latitude, it.longitude), nextPoint) }
                         .first {
                             distance = it
-                            it < 40
+                            it < 10
                         }
                 }
                 elapsedTime = 0.0
                 lapsCompleted ++
-                lapTimes.add(Pair(startTime, currentLocation!!.time))
-                if (isSaved) {
-                    val currentTrack = trackCards.last().track
-                    currentTrack.lapTimes = lapTimes.toList()
-                    dao.trackInsert(currentTrack)
-                }
             }
             thread?.cancel()
             lapCount = 0
