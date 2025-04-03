@@ -7,6 +7,12 @@ plugins {
     id("org.jetbrains.kotlin.plugin.serialization") version "1.5.21"
 }
 
+// load API key
+val secretFile = rootProject.file()
+val secret = secretFile.properies()
+if (secretFile.exists()) secret.load(secretFile.inputStream())
+
+
 android {
     namespace = "cmpt370.group12.laptracker"
     compileSdk = 34
@@ -19,9 +25,8 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        vectorDrawables {
-            useSupportLibrary = true
-        }
+        vectorDrawables { useSupportLibrary = true }
+        buildConfigField("String", "API_KEY", "\"${secrets.getProperty("API_KEY")}\"")
     }
 
     buildTypes {

@@ -1,3 +1,4 @@
 LapTracker/local.properties
 LapTracker/.gradle
 LapTracker/.idea
+LapTracker/secret.properties
